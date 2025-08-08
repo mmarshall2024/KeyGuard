@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deployment & Rollback - OMNI Empire</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --deploy-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --warning-gradient: linear-gradient(135deg, #fcb045 0%, #fd1d1d 100%);
+            --danger-gradient: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+        }
+        
+        .deploy-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+        
+        .deploy-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .deploy-btn {
+            background: var(--deploy-gradient);
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .deploy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        
+        .rollback-btn {
+            background: var(--danger-gradient);
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .rollback-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 65, 108, 0.4);
+            color: white;
+        }
+        
+        .status-indicator {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        
+        .status-operational { background-color: #28a745; }
+        .status-warning { background-color: #ffc107; }
+        .status-error { background-color: #dc3545; }
+        
+        .progress-step {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .progress-step.success {
+            background: rgba(40, 167, 69, 0.2);
+            border-left: 4px solid #28a745;
+        }
+        
+        .progress-step.error {
+            background: rgba(220, 53, 69, 0.2);
+            border-left: 4px solid #dc3545;
+        }
+        
+        .progress-step.running {
+            background: rgba(102, 126, 234, 0.2);
+            border-left: 4px solid #667eea;
+        }
+        
+        .deployment-log {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .health-score {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: var(--success-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .metric-badge {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body class="bg-dark text-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-rocket me-2"></i>OMNI Deployment
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#history">History</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#health">Health</a>
+                    </li>
+                </ul>
+                <span class="navbar-text">
+                    <span class="status-indicator status-operational"></span>
+                    System Operational
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Header -->
+    <div class="container-fluid mt-4">
+        <div class="dashboard-header p-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-rocket me-3"></i>One-Click Deployment & Rollback
+                    </h1>
+                    <p class="text-light mb-0">Instant deployment and rollback capabilities for OMNI Empire system</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="health-score" id="healthScore">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <div class="text-muted">System Health</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div class="container-fluid">
+        <!-- System Status -->
+        <section class="mb-5">
+            <div class="row g-4" id="statusRow">
+                <!-- Status cards will be loaded here -->
+                <div class="col-12 text-center">
+                    <div class="loading-spinner"></div>
+                    <p class="text-muted mt-3">Loading system status...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Deployment Actions -->
+        <section class="mb-5">
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="deploy-card p-4 h-100">
+                        <div class="text-center">
+                            <i class="fas fa-rocket fa-3x text-primary mb-3"></i>
+                            <h3 class="fw-bold mb-3">One-Click Deploy</h3>
+                            <p class="text-muted mb-4">Deploy all pending changes instantly with automated backup and health checks.</p>
+                            <button class="btn deploy-btn" id="deployBtn" onclick="startDeployment()">
+                                <i class="fas fa-rocket me-2"></i>Deploy Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="deploy-card p-4 h-100">
+                        <div class="text-center">
+                            <i class="fas fa-undo fa-3x text-danger mb-3"></i>
+                            <h3 class="fw-bold mb-3">One-Click Rollback</h3>
+                            <p class="text-muted mb-4">Instantly rollback to previous stable version with complete system restoration.</p>
+                            <button class="btn rollback-btn" id="rollbackBtn" onclick="startRollback()">
+                                <i class="fas fa-undo me-2"></i>Rollback Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Deployment Progress -->
+        <section class="mb-5" id="progressSection" style="display: none;">
+            <div class="deploy-card p-4">
+                <h4 class="fw-bold mb-3">
+                    <i class="fas fa-cogs me-2"></i>Deployment Progress
+                </h4>
+                <div id="progressSteps">
+                    <!-- Progress steps will be shown here -->
+                </div>
+                <div class="deployment-log mt-4" id="deploymentLog">
+                    <div class="text-muted">Deployment log will appear here...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Deployment History -->
+        <section class="mb-5" id="history">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2 class="fw-bold mb-3">
+                        <i class="fas fa-history me-2"></i>Deployment History
+                    </h2>
+                </div>
+            </div>
+            
+            <div class="deploy-card p-4">
+                <div id="historyContainer">
+                    <div class="text-center">
+                        <div class="loading-spinner"></div>
+                        <p class="text-muted mt-3">Loading deployment history...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- System Health -->
+        <section class="mb-5" id="health">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2 class="fw-bold mb-3">
+                        <i class="fas fa-heartbeat me-2"></i>System Health Monitoring
+                    </h2>
+                </div>
+            </div>
+            
+            <div class="row g-4" id="healthRow">
+                <div class="col-12 text-center">
+                    <div class="loading-spinner"></div>
+                    <p class="text-muted mt-3">Running health diagnostics...</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Deployment Dashboard JavaScript
+        class DeploymentDashboard {
+            constructor() {
+                this.init();
+            }
+            
+            async init() {
+                await this.loadSystemStatus();
+                await this.loadDeploymentHistory();
+                await this.loadSystemHealth();
+                this.startAutoRefresh();
+            }
+            
+            async loadSystemStatus() {
+                try {
+                    const response = await fetch('/api/deployment-status');
+                    const status = await response.json();
+                    this.renderSystemStatus(status);
+                } catch (error) {
+                    console.error('Error loading system status:', error);
+                }
+            }
+            
+            renderSystemStatus(status) {
+                const statusRow = document.getElementById('statusRow');
+                statusRow.innerHTML = `
+                    <div class="col-lg-3 col-md-6">
+                        <div class="deploy-card p-4 text-center">
+                            <i class="fas fa-code-branch fa-2x text-primary mb-2"></i>
+                            <h5 class="fw-bold">Current Version</h5>
+                            <h3 class="text-primary mb-0">${status.current_version}</h3>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="deploy-card p-4 text-center">
+                            <i class="fas fa-server fa-2x text-success mb-2"></i>
+                            <h5 class="fw-bold">System Status</h5>
+                            <h6 class="text-success mb-0">${status.system_status.toUpperCase()}</h6>
+                            <small class="text-muted">Uptime: ${status.uptime}</small>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="deploy-card p-4 text-center">
+                            <i class="fas fa-rocket fa-2x text-warning mb-2"></i>
+                            <h5 class="fw-bold">Deployments Today</h5>
+                            <h3 class="text-warning mb-0">${status.deployments_today}</h3>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="deploy-card p-4 text-center">
+                            <i class="fas fa-chart-line fa-2x text-info mb-2"></i>
+                            <h5 class="fw-bold">Success Rate</h5>
+                            <h3 class="text-info mb-0">${status.success_rate}%</h3>
+                        </div>
+                    </div>
+                `;
+                
+                // Update health score
+                document.getElementById('healthScore').innerHTML = `
+                    <div class="health-score">${status.health_score}</div>
+                `;
+            }
+            
+            async loadDeploymentHistory() {
+                try {
+                    const response = await fetch('/api/deployment-history');
+                    const history = await response.json();
+                    this.renderDeploymentHistory(history);
+                } catch (error) {
+                    console.error('Error loading deployment history:', error);
+                }
+            }
+            
+            renderDeploymentHistory(history) {
+                const container = document.getElementById('historyContainer');
+                
+                if (!history || history.length === 0) {
+                    container.innerHTML = '<p class="text-muted text-center">No deployment history available</p>';
+                    return;
+                }
+                
+                let historyHTML = '<div class="table-responsive"><table class="table table-dark table-hover">';
+                historyHTML += `
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Version</th>
+                            <th>Duration</th>
+                            <th>User</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                `;
+                
+                history.forEach(deployment => {
+                    const statusIcon = deployment.status === 'success' ? '✅' : '❌';
+                    const typeIcon = deployment.type === 'deployment' ? '🚀' : '⏪';
+                    const timestamp = new Date(deployment.timestamp).toLocaleString();
+                    
+                    historyHTML += `
+                        <tr>
+                            <td>${timestamp}</td>
+                            <td>${typeIcon} ${deployment.type.toUpperCase()}</td>
+                            <td>${statusIcon} ${deployment.status.toUpperCase()}</td>
+                            <td><span class="metric-badge">${deployment.version}</span></td>
+                            <td>${deployment.duration}s</td>
+                            <td>${deployment.user}</td>
+                        </tr>
+                    `;
+                });
+                
+                historyHTML += '</tbody></table></div>';
+                container.innerHTML = historyHTML;
+            }
+            
+            async loadSystemHealth() {
+                try {
+                    const response = await fetch('/api/system-health');
+                    const health = await response.json();
+                    this.renderSystemHealth(health);
+                } catch (error) {
+                    console.error('Error loading system health:', error);
+                }
+            }
+            
+            renderSystemHealth(health) {
+                const healthRow = document.getElementById('healthRow');
+                let healthHTML = '';
+                
+                Object.keys(health.components).forEach(component => {
+                    const comp = health.components[component];
+                    const statusClass = comp.status === 'healthy' ? 'success' : 'warning';
+                    
+                    healthHTML += `
+                        <div class="col-lg-2 col-md-4">
+                            <div class="deploy-card p-3 text-center">
+                                <h6 class="fw-bold text-capitalize">${component}</h6>
+                                <div class="text-${statusClass} mb-2">
+                                    <i class="fas fa-circle"></i> ${comp.status}
+                                </div>
+                                <div class="small text-muted">Score: ${comp.score}/100</div>
+                                ${comp.response_time ? `<div class="small text-muted">${comp.response_time}</div>` : ''}
+                                ${comp.usage ? `<div class="small text-muted">${comp.usage} used</div>` : ''}
+                                ${comp.loaded ? `<div class="small text-muted">${comp.loaded} loaded</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                healthRow.innerHTML = healthHTML;
+            }
+            
+            startAutoRefresh() {
+                setInterval(() => {
+                    this.loadSystemStatus();
+                }, 30000); // Refresh every 30 seconds
+            }
+        }
+        
+        // Deployment functions
+        async function startDeployment() {
+            const deployBtn = document.getElementById('deployBtn');
+            const progressSection = document.getElementById('progressSection');
+            
+            // Disable button and show progress
+            deployBtn.disabled = true;
+            deployBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Deploying...';
+            progressSection.style.display = 'block';
+            
+            try {
+                const response = await fetch('/deployment/deploy', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'}
+                });
+                
+                const result = await response.json();
+                displayDeploymentResult(result);
+                
+            } catch (error) {
+                console.error('Deployment error:', error);
+                displayDeploymentResult({status: 'error', message: error.message});
+            } finally {
+                deployBtn.disabled = false;
+                deployBtn.innerHTML = '<i class="fas fa-rocket me-2"></i>Deploy Now';
+            }
+        }
+        
+        async function startRollback() {
+            const rollbackBtn = document.getElementById('rollbackBtn');
+            const progressSection = document.getElementById('progressSection');
+            
+            // Confirm rollback
+            if (!confirm('Are you sure you want to rollback to the previous version?')) {
+                return;
+            }
+            
+            // Disable button and show progress
+            rollbackBtn.disabled = true;
+            rollbackBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Rolling back...';
+            progressSection.style.display = 'block';
+            
+            try {
+                const response = await fetch('/deployment/rollback', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'}
+                });
+                
+                const result = await response.json();
+                displayDeploymentResult(result);
+                
+            } catch (error) {
+                console.error('Rollback error:', error);
+                displayDeploymentResult({status: 'error', message: error.message});
+            } finally {
+                rollbackBtn.disabled = false;
+                rollbackBtn.innerHTML = '<i class="fas fa-undo me-2"></i>Rollback Now';
+            }
+        }
+        
+        function displayDeploymentResult(result) {
+            const progressSteps = document.getElementById('progressSteps');
+            const deploymentLog = document.getElementById('deploymentLog');
+            
+            let stepsHTML = '';
+            let logHTML = `<div class="text-success">[${new Date().toLocaleTimeString()}] ${result.status === 'success' ? 'Operation completed successfully' : 'Operation failed'}</div>`;
+            
+            if (result.steps) {
+                result.steps.forEach(step => {
+                    const stepClass = step.status === 'success' ? 'success' : step.status === 'failed' ? 'error' : 'running';
+                    const stepIcon = step.status === 'success' ? '✅' : step.status === 'failed' ? '❌' : '⏳';
+                    
+                    stepsHTML += `
+                        <div class="progress-step ${stepClass}">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>${stepIcon} ${step.step}</span>
+                                <small class="text-muted">${step.duration ? step.duration.toFixed(2) + 's' : ''}</small>
+                            </div>
+                        </div>
+                    `;
+                    
+                    logHTML += `<div class="text-muted">[${new Date().toLocaleTimeString()}] ${step.step}: ${step.status}</div>`;
+                });
+            }
+            
+            progressSteps.innerHTML = stepsHTML;
+            deploymentLog.innerHTML = logHTML;
+            
+            // Reload data after operation
+            setTimeout(() => {
+                dashboard.loadSystemStatus();
+                dashboard.loadDeploymentHistory();
+                progressSection.style.display = 'none';
+            }, 2000);
+        }
+        
+        // Initialize dashboard
+        let dashboard;
+        document.addEventListener('DOMContentLoaded', () => {
+            dashboard = new DeploymentDashboard();
+        });
+    </script>
+</body>
+</html>

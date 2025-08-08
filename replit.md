@@ -57,6 +57,7 @@ Preferred communication style: Simple, everyday language.
 - **Credentials Manager Plugin**: Secure collection, storage, and management of all user credentials and accounts
 - **Analytics Dashboard Plugin**: Visual analytics dashboard with predictive insights and AI-powered recommendations
 - **Auto-Approval Plugin**: Automatic approval system for all changes, updates, and deployments
+- **Deployment & Rollback Plugin**: One-click deployment and rollback mechanism with automated backups
 - **Modular Upgrades**: Hot-swappable plugin system for continuous evolution
 
 ### Update Management System
