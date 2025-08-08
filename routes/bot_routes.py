@@ -10,18 +10,35 @@ logger = logging.getLogger(__name__)
 def telegram_webhook():
     """Handle Telegram webhook updates"""
     try:
-        from app import app
+        from flask import current_app
         update_data = request.get_json(force=True)
         
-        logger.info(f"Received Telegram update: {update_data}")
+        if not update_data:
+            logger.warning("Received empty webhook data")
+            return "OK", 200
         
-        if hasattr(app, 'bot_core'):
-            app.bot_core.process_telegram_update(update_data)
+        logger.info(f"Processing Telegram update: {update_data}")
         
-        return "OK"
+        # Get bot core instance
+        if hasattr(current_app, 'bot_core'):
+            bot_core = current_app.bot_core
+        else:
+            from bot_core import BotCore
+            bot_core = BotCore()
+            bot_core.setup_bot()
+            bot_core.load_plugins()
+            current_app.bot_core = bot_core
+        
+        # Process the update
+        bot_core.process_telegram_update(update_data)
+        
+        return "OK", 200
+        
     except Exception as e:
         logger.error(f"Telegram webhook error: {e}")
-        return "Error", 500
+        import traceback
+        logger.error(f"Full traceback: {traceback.format_exc()}")
+        return "OK", 200  # Always return OK to prevent Telegram retries
 
 @bot_bp.route('/setup-telegram-webhook', methods=['POST'])
 def setup_telegram_webhook():

@@ -340,18 +340,53 @@ Just let me know what you'd like to do, and I can create a secure checkout link 
         try:
             if not self.telegram_token:
                 logger.warning("No Telegram token available")
-                return
+                return False
                 
             url = f"https://api.telegram.org/bot{self.telegram_token}/sendMessage"
-            data = {
-                'chat_id': chat_id,
-                'text': text,
-                'parse_mode': 'Markdown'
-            }
             
-            response = requests.post(url, json=data, timeout=10)
-            if response.status_code != 200:
-                logger.error(f"Failed to send Telegram message: {response.status_code}")
+            # Handle long messages by splitting them
+            max_length = 4096
+            if len(text) > max_length:
+                # Split into chunks
+                chunks = [text[i:i+max_length] for i in range(0, len(text), max_length)]
+                success = True
+                for chunk in chunks:
+                    if not self._send_message_chunk(url, chat_id, chunk):
+                        success = False
+                return success
+            else:
+                return self._send_message_chunk(url, chat_id, text)
                 
         except Exception as e:
             logger.error(f"Error sending Telegram message: {e}")
+            return False
+    
+    def _send_message_chunk(self, url, chat_id, text):
+        """Send a single message chunk to Telegram"""
+        try:
+            data = {
+                'chat_id': chat_id,
+                'text': text,
+                'parse_mode': 'Markdown',
+                'disable_web_page_preview': True
+            }
+            
+            response = requests.post(url, json=data, timeout=15)
+            
+            if response.status_code == 200:
+                logger.info(f"Message sent successfully to chat {chat_id}")
+                return True
+            else:
+                logger.error(f"Failed to send message: {response.status_code} - {response.text}")
+                # Try without markdown if it failed due to formatting
+                if 'parse_mode' in data:
+                    del data['parse_mode']
+                    retry_response = requests.post(url, json=data, timeout=15)
+                    if retry_response.status_code == 200:
+                        logger.info(f"Message sent successfully without markdown to chat {chat_id}")
+                        return True
+                return False
+                
+        except Exception as e:
+            logger.error(f"Error sending message chunk: {e}")
+            return False
