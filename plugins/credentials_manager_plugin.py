@@ -9,8 +9,9 @@ import json
 import os
 import hashlib
 import hmac
+import logging
 from datetime import datetime, timedelta
-from plugin_manager import BasePlugin
+from plugins.base_plugin import BasePlugin
 from models import db, BotConfig
 import base64
 import secrets
@@ -25,6 +26,7 @@ class CredentialsManagerPlugin(BasePlugin):
         self.plugin_name = "Credentials Manager"
         self.version = "1.0.0"
         self.description = "Secure credentials collection and account management for all OMNI Empire platforms"
+        self.logger = logging.getLogger(__name__)
         
         # Initialize encryption key
         self.encryption_key = self._get_or_create_encryption_key()
@@ -143,27 +145,21 @@ class CredentialsManagerPlugin(BasePlugin):
             # Fallback to session-based key (less secure but functional)
             return Fernet.generate_key()
 
-    def register_commands(self, bot):
+    def register_commands(self, application=None):
         """Register all credential management commands"""
         try:
-            # Main credential management commands
-            bot.add_command_handler('setup_credentials', self.setup_credentials, 'Interactive credential setup wizard')
-            bot.add_command_handler('add_credentials', self.add_credentials, 'Add credentials for specific platform')
-            bot.add_command_handler('list_credentials', self.list_credentials, 'List all configured platforms')
-            bot.add_command_handler('test_credentials', self.test_credentials, 'Test platform connection')
-            bot.add_command_handler('update_credentials', self.update_credentials, 'Update existing credentials')
-            bot.add_command_handler('remove_credentials', self.remove_credentials, 'Remove platform credentials')
-            
-            # Security and management
-            bot.add_command_handler('credential_status', self.credential_status, 'Show credential status dashboard')
-            bot.add_command_handler('security_audit', self.security_audit, 'Run security audit on all credentials')
-            bot.add_command_handler('export_config', self.export_config, 'Export sanitized configuration')
-            bot.add_command_handler('import_config', self.import_config, 'Import configuration from file')
-            
-            # Quick setup commands for common platforms
-            bot.add_command_handler('setup_stripe', self.setup_stripe, 'Quick Stripe setup')
-            bot.add_command_handler('setup_openai', self.setup_openai, 'Quick OpenAI setup')
-            bot.add_command_handler('setup_email', self.setup_email, 'Quick email setup')
+            # Store commands in self.commands dictionary for the plugin system
+            self.commands = {
+                'setup_credentials': {'handler': self.setup_credentials, 'description': 'Interactive credential setup wizard'},
+                'add_credentials': {'handler': self.add_credentials, 'description': 'Add credentials for specific platform'},
+                'list_credentials': {'handler': self.list_credentials, 'description': 'List all configured platforms'},
+                'test_credentials': {'handler': self.test_credentials, 'description': 'Test platform connection'},
+                'credential_status': {'handler': self.credential_status, 'description': 'Show credential status dashboard'},
+                'security_audit': {'handler': self.security_audit, 'description': 'Run security audit on all credentials'},
+                'setup_stripe': {'handler': self.setup_stripe, 'description': 'Quick Stripe setup'},
+                'setup_openai': {'handler': self.setup_openai, 'description': 'Quick OpenAI setup'},
+                'setup_email': {'handler': self.setup_email, 'description': 'Quick email setup'}
+            }
             
             self.logger.info("CredentialsManagerPlugin commands registered successfully")
             
@@ -352,7 +348,9 @@ Use `/setup_credentials [platform]` for detailed setup guidance.
             if existing:
                 existing.value = stored_value
             else:
-                new_credential = BotConfig(key=credential_key, value=stored_value)
+                new_credential = BotConfig()
+                new_credential.key = credential_key
+                new_credential.value = stored_value
                 db.session.add(new_credential)
             
             db.session.commit()

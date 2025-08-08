@@ -7,8 +7,9 @@ Features include funnel builders, magnet generators, campaign automation, and co
 
 import json
 import os
+import logging
 from datetime import datetime, timedelta
-from plugin_manager import BasePlugin
+from plugins.base_plugin import BasePlugin
 from models import db, BotConfig
 import requests
 
@@ -19,6 +20,7 @@ class FunnelMagnetPlugin(BasePlugin):
         self.plugin_name = "Funnel & Magnet Creator"
         self.version = "1.0.0"
         self.description = "AI-powered funnel and lead magnet creation for all campaign types"
+        self.logger = logging.getLogger(__name__)
         
         # Funnel templates for different industries
         self.funnel_templates = {
@@ -94,23 +96,21 @@ class FunnelMagnetPlugin(BasePlugin):
             }
         }
 
-    def register_commands(self, bot):
+    def register_commands(self, application=None):
         """Register all funnel and magnet commands"""
         try:
-            # Funnel creation commands
-            bot.add_command_handler('create_funnel', self.create_funnel, 'Create a custom sales funnel for your campaign')
-            bot.add_command_handler('analyze_funnel', self.analyze_funnel, 'Analyze and optimize existing funnel performance')
-            bot.add_command_handler('funnel_templates', self.show_funnel_templates, 'Browse funnel templates by industry')
-            
-            # Lead magnet commands
-            bot.add_command_handler('create_magnet', self.create_magnet, 'Generate AI-powered lead magnets')
-            bot.add_command_handler('magnet_ideas', self.generate_magnet_ideas, 'Get lead magnet ideas for your niche')
-            bot.add_command_handler('optimize_magnet', self.optimize_magnet, 'Improve existing lead magnet performance')
-            
-            # Campaign automation
-            bot.add_command_handler('automate_campaign', self.automate_campaign, 'Set up automated campaign sequences')
-            bot.add_command_handler('campaign_metrics', self.show_campaign_metrics, 'View campaign performance analytics')
-            bot.add_command_handler('split_test', self.setup_split_test, 'Create A/B tests for funnels and magnets')
+            # Store commands in self.commands dictionary for the plugin system
+            self.commands = {
+                'create_funnel': {'handler': self.create_funnel, 'description': 'Create a custom sales funnel for your campaign'},
+                'analyze_funnel': {'handler': self.analyze_funnel, 'description': 'Analyze and optimize existing funnel performance'},
+                'funnel_templates': {'handler': self.get_funnel_creation_menu, 'description': 'Browse funnel templates by industry'},
+                'create_magnet': {'handler': self.create_magnet, 'description': 'Generate AI-powered lead magnets'},
+                'magnet_ideas': {'handler': self.generate_magnet_ideas, 'description': 'Get lead magnet ideas for your niche'},
+                'optimize_magnet': {'handler': self.optimize_magnet, 'description': 'Improve existing lead magnet performance'},
+                'automate_campaign': {'handler': self.automate_campaign, 'description': 'Set up automated campaign sequences'},
+                'campaign_metrics': {'handler': self.show_campaign_metrics, 'description': 'View campaign performance analytics'},
+                'split_test': {'handler': self.setup_split_test, 'description': 'Create A/B tests for funnels and magnets'}
+            }
             
             self.logger.info("FunnelMagnetPlugin funnel and magnet commands registered successfully")
             
