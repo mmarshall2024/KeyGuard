@@ -106,6 +106,49 @@ class AutoApprovalPlugin(BasePlugin):
         except Exception as e:
             self.logger.error(f"Error registering auto-approval commands: {e}")
 
+    async def configure_approval_system(self, update, context):
+        """Configure approval system settings"""
+        try:
+            args = context.args if context.args else []
+            
+            if not args:
+                response = f"""
+⚙️ **Auto-Approval System Configuration**
+
+**Current Status:** {'Enabled' if self.approval_config['enabled'] else 'Disabled'}
+**Auto Deploy:** {'Yes' if self.approval_config['auto_deploy'] else 'No'}
+**Auto Update:** {'Yes' if self.approval_config['auto_update'] else 'No'}
+
+**Available Settings:**
+• `/configure_approvals enable` - Enable all auto-approvals
+• `/configure_approvals disable` - Disable auto-approvals
+• `/configure_approvals deploy_on` - Enable auto-deployment
+• `/configure_approvals deploy_off` - Disable auto-deployment
+
+**Current Approval Types:** All enabled for instant processing
+                """
+            else:
+                setting = args[0].lower()
+                if setting == "enable":
+                    self.approval_config["enabled"] = True
+                    response = "✅ Auto-approval system enabled for all changes"
+                elif setting == "disable":
+                    self.approval_config["enabled"] = False
+                    response = "❌ Auto-approval system disabled"
+                elif setting == "deploy_on":
+                    self.approval_config["auto_deploy"] = True
+                    response = "🚀 Auto-deployment enabled"
+                elif setting == "deploy_off":
+                    self.approval_config["auto_deploy"] = False
+                    response = "⏸️ Auto-deployment disabled"
+                else:
+                    response = "Invalid setting. Use: enable, disable, deploy_on, deploy_off"
+            
+            await update.message.reply_text(response, parse_mode='Markdown')
+        except Exception as e:
+            self.logger.error(f"Error configuring approval system: {e}")
+            await update.message.reply_text("Error configuring approval system. Please try again.")
+
     async def enable_auto_approval(self, update, context):
         """Enable automatic approvals for all system changes"""
         try:

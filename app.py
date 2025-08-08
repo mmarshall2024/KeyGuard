@@ -32,13 +32,22 @@ db.init_app(app)
 # Import routes and models after app creation
 from routes.admin import admin_bp
 from routes.bot_routes import bot_bp
+from routes.revenue_landing import revenue_landing_bp
+from routes.analytics import analytics_bp
+from routes.revenue import revenue_bp
+from routes.landing_pages import landing_pages_bp
 
 app.register_blueprint(admin_bp, url_prefix='/admin')
 app.register_blueprint(bot_bp)
+app.register_blueprint(revenue_landing_bp)
+app.register_blueprint(analytics_bp, url_prefix='/analytics')
+app.register_blueprint(revenue_bp)
+# Landing pages blueprint already registered in routes - skip duplicate registration
 
 with app.app_context():
     # Import models to ensure tables are created
     import models
+    import models_business
     db.create_all()
     
     # Initialize bot core
@@ -52,7 +61,8 @@ with app.app_context():
 
 @app.route('/')
 def index():
-    return "🧠 OMNICore_Bot: LIVE - Self-Evolving System Active"
+    from flask import redirect, url_for
+    return redirect('/empire')
 
 @app.route('/health')
 def health():

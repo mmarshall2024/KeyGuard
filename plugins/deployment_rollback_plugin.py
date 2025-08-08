@@ -104,6 +104,53 @@ class DeploymentRollbackPlugin(BasePlugin):
         except Exception as e:
             self.logger.error(f"Error registering deployment commands: {e}")
 
+    async def configure_deployment(self, update, context):
+        """Configure deployment settings"""
+        try:
+            args = context.args if context.args else []
+            
+            if not args:
+                response = f"""
+🚀 **Deployment System Configuration**
+
+**Current Settings:**
+• Auto Deploy: {'Enabled' if self.deployment_config['auto_deploy'] else 'Disabled'}
+• Backup Before Deploy: {'Yes' if self.deployment_config['backup_before_deploy'] else 'No'}
+• Rollback Enabled: {'Yes' if self.deployment_config['rollback_enabled'] else 'No'}
+• Max Versions: {self.deployment_config['max_versions']}
+
+**Available Commands:**
+• `/deploy_config auto_on` - Enable auto-deployment
+• `/deploy_config auto_off` - Disable auto-deployment
+• `/deploy_config backup_on` - Enable backup before deploy
+• `/deploy_config backup_off` - Disable backup before deploy
+
+**Environments:**
+• Production: {'Active' if self.deployment_config['environments']['production']['enabled'] else 'Inactive'}
+• Staging: {'Active' if self.deployment_config['environments']['staging']['enabled'] else 'Inactive'}
+                """
+            else:
+                setting = args[0].lower()
+                if setting == "auto_on":
+                    self.deployment_config["auto_deploy"] = True
+                    response = "✅ Auto-deployment enabled"
+                elif setting == "auto_off":
+                    self.deployment_config["auto_deploy"] = False
+                    response = "❌ Auto-deployment disabled"
+                elif setting == "backup_on":
+                    self.deployment_config["backup_before_deploy"] = True
+                    response = "💾 Backup before deploy enabled"
+                elif setting == "backup_off":
+                    self.deployment_config["backup_before_deploy"] = False
+                    response = "🚫 Backup before deploy disabled"
+                else:
+                    response = "Invalid setting. Use: auto_on, auto_off, backup_on, backup_off"
+            
+            await update.message.reply_text(response, parse_mode='Markdown')
+        except Exception as e:
+            self.logger.error(f"Error configuring deployment: {e}")
+            await update.message.reply_text("Error configuring deployment system. Please try again.")
+
     async def one_click_deploy(self, update, context):
         """Execute one-click deployment"""
         try:
