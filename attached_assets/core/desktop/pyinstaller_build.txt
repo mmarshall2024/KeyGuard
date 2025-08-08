@@ -1,0 +1,6 @@
+
+Build your .exe using:
+pyinstaller --onefile main.py --name "OMNI_Launcher"
+
+For macOS (.app):
+Use py2app or Xcode with WebView

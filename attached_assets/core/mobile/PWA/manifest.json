@@ -1,0 +1,10 @@
+
+{
+  "name": "OMNI AI",
+  "short_name": "OMNI",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "description": "OMNI AI Business System",
+  "theme_color": "#00FF00"
+}

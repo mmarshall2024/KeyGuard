@@ -1,0 +1,6 @@
+
+/start - Begin interaction
+/ask [question] - Ask the OMNI AI anything
+/buy - Trigger Stripe checkout flow
+/status - Check operational status
+/download - Get latest package or zip

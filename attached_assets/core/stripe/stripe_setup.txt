@@ -1,0 +1,5 @@
+
+1. Go to Stripe Dashboard > Developers > API Keys
+2. Paste SECRET KEY into .env
+3. Set up Webhook > Events: checkout.session.completed
+4. Use /webhook endpoint from main.py to handle payment triggers
