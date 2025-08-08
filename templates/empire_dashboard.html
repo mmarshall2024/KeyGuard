@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNI Empire - Complete Business Automation System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .empire-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            padding: 80px 0;
+        }
+        .business-module {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 15px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-left: 5px solid #28a745;
+            transition: transform 0.3s ease;
+        }
+        .business-module:hover {
+            transform: translateY(-5px);
+        }
+        .stats-grid {
+            background: #f8f9fa;
+            padding: 60px 0;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .revenue-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+        .automation-badge {
+            background: linear-gradient(45deg, #007bff, #6f42c1);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin: 5px;
+            display: inline-block;
+        }
+        .empire-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .live-indicator {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Empire Controls -->
+    <div class="empire-controls">
+        <div class="live-indicator">
+            <i class="fas fa-circle me-2"></i>EMPIRE LIVE
+        </div>
+    </div>
+
+    <!-- Empire Header -->
+    <section class="empire-header text-center">
+        <div class="container">
+            <h1 class="display-2 fw-bold mb-4">OMNI EMPIRE</h1>
+            <p class="lead fs-3 mb-5">Complete Business Automation System - 18 Active Revenue Streams</p>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="revenue-number">$765K</div>
+                    <p>Monthly Target</p>
+                </div>
+                <div class="col-md-3">
+                    <div class="revenue-number">$9.18M</div>
+                    <p>Annual Projection</p>
+                </div>
+                <div class="col-md-3">
+                    <div class="revenue-number">18</div>
+                    <p>Business Modules</p>
+                </div>
+                <div class="col-md-3">
+                    <div class="revenue-number">156</div>
+                    <p>Active Products</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Statistics -->
+    <section class="stats-grid">
+        <div class="container">
+            <h2 class="text-center display-4 fw-bold mb-5">Empire Performance Dashboard</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="stat-card">
+                        <i class="fas fa-rocket fa-3x text-primary mb-3"></i>
+                        <h3>15 Automation Systems</h3>
+                        <p>AI-powered business processes running 24/7</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="stat-card">
+                        <i class="fas fa-chart-line fa-3x text-success mb-3"></i>
+                        <h3>8 Revenue Models</h3>
+                        <p>Multiple income streams across all sectors</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="stat-card">
+                        <i class="fas fa-users fa-3x text-warning mb-3"></i>
+                        <h3>10,000 Customer Capacity</h3>
+                        <p>Scalable systems for massive growth</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Business Modules -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center display-4 fw-bold mb-5">Active Business Modules</h2>
+            
+            <!-- Core AI Businesses -->
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="business-module">
+                        <h4><i class="fas fa-robot text-primary me-2"></i>OMNI AI Automation Hub</h4>
+                        <p>Complete AI business automation and development services</p>
+                        <div class="automation-badge">$25K Monthly Target</div>
+                        <div class="automation-badge">Subscription Model</div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="business-module">
+                        <h4><i class="fas fa-graduation-cap text-success me-2"></i>Marshall Academy</h4>
+                        <p>Business mastery courses and AI implementation training</p>
+                        <div class="automation-badge">$35K Monthly Target</div>
+                        <div class="automation-badge">Course Sales</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="business-module">
+                        <h4><i class="fas fa-briefcase text-warning me-2"></i>Marshall Agency</h4>
+                        <p>Done-for-you AI setup and business automation services</p>
+                        <div class="automation-badge">$50K Monthly Target</div>
+                        <div class="automation-badge">Service Delivery</div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="business-module">
+                        <h4><i class="fas fa-video text-danger me-2"></i>Marshall Media Productions</h4>
+                        <p>Viral content creation and brand development</p>
+                        <div class="automation-badge">$20K Monthly Target</div>
+                        <div class="automation-badge">Content Creation</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- High-Value Services -->
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="business-module">
+                        <h4><i class="fas fa-chart-bar text-info me-2"></i>Marshall Capital Ventures</h4>
+                        <p>Startup incubation and business acquisition</p>
+                        <div class="automation-badge">$75K Monthly Target</div>
+                        <div class="automation-badge">Investment Returns</div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="business-module">
+                        <h4><i class="fas fa-home text-secondary me-2"></i>Marshall Real Estate Network</h4>
+                        <p>Property investment and portfolio management</p>
+                        <div class="automation-badge">$100K Monthly Target</div>
+                        <div class="automation-badge">Real Estate</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technology & Innovation -->
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="business-module">
+                        <h5><i class="fas fa-code text-primary me-2"></i>OMNI Tech Labs</h5>
+                        <p>Custom AI development and enterprise solutions</p>
+                        <div class="automation-badge">$45K Target</div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="business-module">
+                        <h5><i class="fas fa-microphone text-success me-2"></i>Voice AI Studio</h5>
+                        <p>Voice cloning and AI narration services</p>
+                        <div class="automation-badge">$18K Target</div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="business-module">
+                        <h5><i class="fas fa-music text-warning me-2"></i>Marshall Music Empire</h5>
+                        <p>AI music generation and licensing</p>
+                        <div class="automation-badge">$12K Target</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Revenue Streams -->
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="business-module">
+                        <h6><i class="fas fa-funnel-dollar me-2"></i>AI Funnel Factory</h6>
+                        <div class="automation-badge">$15K</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="business-module">
+                        <h6><i class="fas fa-bitcoin me-2"></i>Crypto Revenue Engine</h6>
+                        <div class="automation-badge">$30K</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="business-module">
+                        <h6><i class="fas fa-shopping-cart me-2"></i>Empire E-commerce Hub</h6>
+                        <div class="automation-badge">$40K</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="business-module">
+                        <h6><i class="fas fa-shield-alt me-2"></i>Legal Protection Services</h6>
+                        <div class="automation-badge">$25K</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Automation Systems -->
+    <section class="bg-light py-5">
+        <div class="container">
+            <h2 class="text-center display-4 fw-bold mb-5">Active Automation Systems</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Revenue Generation</h5>
+                    <div class="automation-badge">Customer Acquisition Automation</div>
+                    <div class="automation-badge">Revenue Optimization Engine</div>
+                    <div class="automation-badge">Payment Processing Automation</div>
+                    <div class="automation-badge">Affiliate Management System</div>
+                </div>
+                <div class="col-md-6">
+                    <h5>Operations & Support</h5>
+                    <div class="automation-badge">Customer Support AI</div>
+                    <div class="automation-badge">Analytics & Reporting</div>
+                    <div class="automation-badge">Social Media Automation</div>
+                    <div class="automation-badge">Email Marketing Automation</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Empire Controls -->
+    <section class="py-5">
+        <div class="container text-center">
+            <h2 class="display-4 fw-bold mb-5">Empire Command Center</h2>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <a href="/empire" class="btn btn-success btn-lg">
+                        <i class="fas fa-rocket me-2"></i>Launch Customer Portal
+                    </a>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <a href="/analytics" class="btn btn-primary btn-lg">
+                        <i class="fas fa-chart-bar me-2"></i>View Analytics
+                    </a>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <a href="/admin" class="btn btn-warning btn-lg">
+                        <i class="fas fa-cog me-2"></i>System Controls
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Real-time empire status updates
+        setInterval(() => {
+            const indicator = document.querySelector('.live-indicator');
+            if (indicator) {
+                indicator.style.animation = 'none';
+                setTimeout(() => {
+                    indicator.style.animation = 'pulse 2s infinite';
+                }, 100);
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

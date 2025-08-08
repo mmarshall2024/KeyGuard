@@ -64,6 +64,11 @@ def index():
     from flask import redirect, url_for
     return redirect('/empire')
 
+@app.route('/empire-dashboard')
+def empire_dashboard():
+    """Complete empire overview dashboard"""
+    return render_template('empire_dashboard.html')
+
 @app.route('/health')
 def health():
     """Health check endpoint for monitoring"""
