@@ -7,6 +7,7 @@ OMNICore Bot is a comprehensive, self-evolving Telegram bot platform built with 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+Primary Goal: Generate immediate revenue from OMNI Empire system with focus on quick wins and monetization.
 
 ## System Architecture
 

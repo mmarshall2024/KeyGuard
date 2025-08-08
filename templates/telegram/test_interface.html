@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Bot Test Interface - OMNI Empire</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --telegram-blue: #0088cc;
+            --telegram-gradient: linear-gradient(135deg, #0088cc 0%, #00a8e6 100%);
+        }
+        
+        .telegram-card {
+            background: rgba(0, 136, 204, 0.1);
+            border: 1px solid rgba(0, 136, 204, 0.3);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .telegram-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 136, 204, 0.3);
+        }
+        
+        .chat-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            height: 400px;
+            overflow-y: auto;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .message {
+            margin-bottom: 16px;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        .message-user {
+            text-align: right;
+        }
+        
+        .message-user .message-bubble {
+            background: var(--telegram-gradient);
+            color: white;
+            display: inline-block;
+            padding: 12px 16px;
+            border-radius: 18px 18px 4px 18px;
+            max-width: 70%;
+            margin-left: auto;
+        }
+        
+        .message-bot {
+            text-align: left;
+        }
+        
+        .message-bot .message-bubble {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e9ecef;
+            display: inline-block;
+            padding: 12px 16px;
+            border-radius: 18px 18px 18px 4px;
+            max-width: 70%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .message-time {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin-top: 4px;
+        }
+        
+        .send-btn {
+            background: var(--telegram-gradient);
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            transition: all 0.3s ease;
+        }
+        
+        .send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 136, 204, 0.4);
+            color: white;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        
+        .status-active { background-color: #28a745; }
+        .status-error { background-color: #dc3545; }
+        .status-warning { background-color: #ffc107; }
+        
+        .typing-indicator {
+            display: none;
+            text-align: left;
+            margin-bottom: 16px;
+        }
+        
+        .typing-bubble {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 12px 16px;
+            display: inline-block;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .typing-dots {
+            display: inline-flex;
+            gap: 4px;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #6c757d;
+            animation: typing 1.5s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0.4; }
+            30% { opacity: 1; }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .quick-message {
+            background: rgba(0, 136, 204, 0.2);
+            border: 1px solid rgba(0, 136, 204, 0.4);
+            border-radius: 20px;
+            padding: 8px 16px;
+            margin: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .quick-message:hover {
+            background: rgba(0, 136, 204, 0.4);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-dark text-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fab fa-telegram me-2"></i>OMNI Telegram Bot
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text">
+                    <span class="status-indicator status-active" id="statusIndicator"></span>
+                    <span id="statusText">Bot Active</span>
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Interface -->
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Chat Interface -->
+            <div class="col-lg-8">
+                <div class="telegram-card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="fw-bold mb-0">
+                            <i class="fas fa-comments me-2"></i>Bot Test Chat
+                        </h3>
+                        <button class="btn btn-outline-light btn-sm" onclick="clearChat()">
+                            <i class="fas fa-trash me-1"></i>Clear
+                        </button>
+                    </div>
+                    
+                    <!-- Chat Container -->
+                    <div class="chat-container" id="chatContainer">
+                        <div class="message message-bot">
+                            <div class="message-bubble">
+                                Welcome to the OMNI Telegram Bot test interface! 🤖<br>
+                                Send me a message to see how I respond.
+                            </div>
+                            <div class="message-time">System message</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Typing Indicator -->
+                    <div class="typing-indicator" id="typingIndicator">
+                        <div class="typing-bubble">
+                            <span class="typing-dots">
+                                <span class="typing-dot"></span>
+                                <span class="typing-dot"></span>
+                                <span class="typing-dot"></span>
+                            </span>
+                            Bot is typing...
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Messages -->
+                    <div class="mb-3">
+                        <small class="text-muted">Quick messages:</small><br>
+                        <span class="quick-message" onclick="sendQuickMessage('/start')">🚀 /start</span>
+                        <span class="quick-message" onclick="sendQuickMessage('Hello!')">👋 Hello!</span>
+                        <span class="quick-message" onclick="sendQuickMessage('Tell me a joke')">😄 Tell me a joke</span>
+                        <span class="quick-message" onclick="sendQuickMessage('What can you do?')">❓ What can you do?</span>
+                        <span class="quick-message" onclick="sendQuickMessage('/status')">📊 /status</span>
+                        <span class="quick-message" onclick="sendQuickMessage('Weather in London')">🌤️ Weather</span>
+                    </div>
+                    
+                    <!-- Message Input -->
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="messageInput" 
+                               placeholder="Type your message..." 
+                               onkeypress="handleKeyPress(event)">
+                        <button class="send-btn" type="button" onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bot Status & Info -->
+            <div class="col-lg-4">
+                <div class="telegram-card p-4 mb-4">
+                    <h4 class="fw-bold mb-3">
+                        <i class="fas fa-robot me-2"></i>Bot Status
+                    </h4>
+                    <div id="botStatusContainer">
+                        <div class="text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="text-muted mt-2">Checking bot status...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="telegram-card p-4">
+                    <h4 class="fw-bold mb-3">
+                        <i class="fas fa-info-circle me-2"></i>Test Info
+                    </h4>
+                    <div class="small">
+                        <p><strong>Purpose:</strong> Test Telegram bot responses without sending real messages</p>
+                        <p><strong>Features:</strong></p>
+                        <ul class="mb-0">
+                            <li>Natural conversation</li>
+                            <li>Command processing</li>
+                            <li>Plugin integration</li>
+                            <li>Real-time responses</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        class TelegramTest {
+            constructor() {
+                this.loadBotStatus();
+                this.focusInput();
+            }
+            
+            async loadBotStatus() {
+                try {
+                    const response = await fetch('/api/telegram-bot-status');
+                    const status = await response.json();
+                    this.renderBotStatus(status);
+                } catch (error) {
+                    console.error('Error loading bot status:', error);
+                    this.renderBotStatus({status: 'error', message: 'Failed to load status'});
+                }
+            }
+            
+            renderBotStatus(status) {
+                const container = document.getElementById('botStatusContainer');
+                const statusIndicator = document.getElementById('statusIndicator');
+                const statusText = document.getElementById('statusText');
+                
+                if (status.status === 'active') {
+                    statusIndicator.className = 'status-indicator status-active';
+                    statusText.textContent = 'Bot Active';
+                    
+                    container.innerHTML = `
+                        <div class="mb-3">
+                            <small class="text-muted">Bot Information</small>
+                            <div><strong>Name:</strong> ${status.bot_info?.first_name || 'N/A'}</div>
+                            <div><strong>Username:</strong> @${status.bot_info?.username || 'N/A'}</div>
+                            <div><strong>ID:</strong> ${status.bot_info?.id || 'N/A'}</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <small class="text-muted">Webhook Status</small>
+                            <div><strong>URL:</strong> ${status.webhook_info?.url ? '✅ Set' : '❌ Not set'}</div>
+                            <div><strong>Pending:</strong> ${status.webhook_info?.pending_update_count || 0} updates</div>
+                            <div><strong>Errors:</strong> ${status.webhook_info?.last_error_message || 'None'}</div>
+                        </div>
+                        
+                        <div class="text-success">
+                            <i class="fas fa-check-circle me-1"></i>Ready to receive messages
+                        </div>
+                    `;
+                } else {
+                    statusIndicator.className = 'status-indicator status-error';
+                    statusText.textContent = 'Bot Error';
+                    
+                    container.innerHTML = `
+                        <div class="text-danger">
+                            <i class="fas fa-exclamation-triangle me-1"></i>
+                            ${status.message || 'Unknown error'}
+                        </div>
+                    `;
+                }
+            }
+            
+            async sendMessage(text, userName = 'TestUser') {
+                const chatContainer = document.getElementById('chatContainer');
+                const typingIndicator = document.getElementById('typingIndicator');
+                
+                // Add user message
+                this.addMessage(text, 'user', userName);
+                
+                // Show typing indicator
+                typingIndicator.style.display = 'block';
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                try {
+                    const response = await fetch('/api/test-telegram-message', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: text,
+                            user_name: userName,
+                            chat_id: 123456789
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    // Hide typing indicator
+                    typingIndicator.style.display = 'none';
+                    
+                    if (result.success && result.response) {
+                        this.addMessage(result.response, 'bot', 'OMNI Bot');
+                    } else {
+                        this.addMessage('Sorry, I encountered an error processing your message.', 'bot', 'OMNI Bot');
+                    }
+                    
+                } catch (error) {
+                    console.error('Error sending message:', error);
+                    typingIndicator.style.display = 'none';
+                    this.addMessage('Error: Could not connect to bot', 'bot', 'System');
+                }
+            }
+            
+            addMessage(text, type, sender) {
+                const chatContainer = document.getElementById('chatContainer');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message message-${type}`;
+                
+                const currentTime = new Date().toLocaleTimeString();
+                
+                messageDiv.innerHTML = `
+                    <div class="message-bubble">${this.formatMessage(text)}</div>
+                    <div class="message-time">${sender} • ${currentTime}</div>
+                `;
+                
+                chatContainer.appendChild(messageDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+            
+            formatMessage(text) {
+                // Basic markdown-like formatting
+                return text
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/`(.*?)`/g, '<code>$1</code>')
+                    .replace(/\n/g, '<br>');
+            }
+            
+            clearChat() {
+                const chatContainer = document.getElementById('chatContainer');
+                chatContainer.innerHTML = `
+                    <div class="message message-bot">
+                        <div class="message-bubble">
+                            Chat cleared! Send me a message to continue testing. 🤖
+                        </div>
+                        <div class="message-time">System message</div>
+                    </div>
+                `;
+            }
+            
+            focusInput() {
+                document.getElementById('messageInput').focus();
+            }
+        }
+        
+        // Global functions
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            
+            if (text) {
+                telegramTest.sendMessage(text);
+                input.value = '';
+            }
+        }
+        
+        function sendQuickMessage(text) {
+            telegramTest.sendMessage(text);
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+        
+        function clearChat() {
+            telegramTest.clearChat();
+        }
+        
+        // Initialize
+        let telegramTest;
+        document.addEventListener('DOMContentLoaded', () => {
+            telegramTest = new TelegramTest();
+        });
+    </script>
+</body>
+</html>

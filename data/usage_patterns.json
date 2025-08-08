@@ -35,6 +35,30 @@
       "timestamp": "2025-08-08T21:04:29.175715",
       "hour": 21,
       "day_of_week": 4
+    },
+    {
+      "user_id": "987654321",
+      "action": "natural_chat",
+      "context": {
+        "message_length": 31,
+        "user_name": "TestUser",
+        "contains_question": true
+      },
+      "timestamp": "2025-08-08T23:12:49.243951",
+      "hour": 23,
+      "day_of_week": 4
+    },
+    {
+      "user_id": "987654321",
+      "action": "entertainment_request",
+      "context": {
+        "message_length": 14,
+        "user_name": "TestUser",
+        "contains_question": false
+      },
+      "timestamp": "2025-08-08T23:12:51.469951",
+      "hour": 23,
+      "day_of_week": 4
     }
   ],
   "feature_requests": [],

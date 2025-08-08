@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revenue Dashboard - OMNI Empire</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --money-green: #28a745;
+            --money-gradient: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            --gold-gradient: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        }
+        
+        .revenue-card {
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .revenue-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(40, 167, 69, 0.3);
+        }
+        
+        .money-amount {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: var(--money-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .revenue-growth {
+            color: var(--money-green);
+            font-weight: bold;
+        }
+        
+        .opportunity-card {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .opportunity-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 193, 7, 0.2);
+        }
+        
+        .launch-btn {
+            background: var(--money-gradient);
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .launch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+            color: white;
+        }
+        
+        .target-progress {
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .target-fill {
+            height: 100%;
+            background: var(--money-gradient);
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-dark text-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-dollar-sign me-2"></i>Revenue Dashboard
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/pricing">
+                    <i class="fas fa-tags me-1"></i>Pricing
+                </a>
+                <a class="nav-link" href="/telegram-test">
+                    <i class="fab fa-telegram me-1"></i>Bot Test
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Dashboard -->
+    <div class="container-fluid mt-4">
+        <!-- Revenue Overview -->
+        <section class="mb-5">
+            <h2 class="fw-bold mb-4">
+                <i class="fas fa-chart-line me-2"></i>Revenue Overview
+            </h2>
+            
+            <div class="row g-4" id="revenueOverview">
+                <!-- Revenue cards will be loaded here -->
+                <div class="col-12 text-center">
+                    <div class="spinner-border text-success" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="text-muted mt-3">Loading revenue data...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Daily Target Progress -->
+        <section class="mb-5">
+            <div class="revenue-card p-4">
+                <h3 class="fw-bold mb-3">Daily Revenue Target</h3>
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Progress to $25,000 daily target</span>
+                            <span id="targetPercentage">0%</span>
+                        </div>
+                        <div class="target-progress">
+                            <div class="target-fill" id="targetFill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <div class="money-amount" id="todayRevenue">$0</div>
+                        <div class="text-muted">Today's Revenue</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Revenue Chart -->
+        <section class="mb-5">
+            <div class="revenue-card p-4">
+                <h3 class="fw-bold mb-3">Revenue Trend (Last 30 Days)</h3>
+                <canvas id="revenueChart" height="100"></canvas>
+            </div>
+        </section>
+
+        <!-- Revenue Opportunities -->
+        <section class="mb-5">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2 class="fw-bold mb-3">
+                        <i class="fas fa-lightbulb me-2"></i>Revenue Opportunities
+                    </h2>
+                    <p class="text-muted">Immediate actions to start generating revenue with your OMNI Empire system</p>
+                </div>
+            </div>
+            
+            <div id="opportunitiesContainer">
+                <div class="text-center">
+                    <div class="spinner-border text-warning" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="text-muted mt-3">Loading opportunities...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Top Services -->
+        <section class="mb-5">
+            <div class="revenue-card p-4">
+                <h3 class="fw-bold mb-3">Top Performing Services</h3>
+                <div id="topServicesContainer">
+                    <div class="text-center">
+                        <div class="spinner-border text-info" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        class RevenueDashboard {
+            constructor() {
+                this.init();
+            }
+            
+            async init() {
+                await this.loadRevenueData();
+                await this.loadOpportunities();
+            }
+            
+            async loadRevenueData() {
+                try {
+                    const response = await fetch('/api/revenue-stats');
+                    const data = await response.json();
+                    
+                    this.renderRevenueOverview(data);
+                    this.renderRevenueChart(data.daily_data);
+                    this.renderTopServices(data.top_services);
+                    this.updateDailyTarget(data.daily_revenue, data.target_daily);
+                    
+                } catch (error) {
+                    console.error('Error loading revenue data:', error);
+                }
+            }
+            
+            renderRevenueOverview(data) {
+                const container = document.getElementById('revenueOverview');
+                container.innerHTML = `
+                    <div class="col-lg-3 col-md-6">
+                        <div class="revenue-card p-4 text-center">
+                            <i class="fas fa-dollar-sign fa-2x text-success mb-2"></i>
+                            <h5 class="fw-bold">Daily Revenue</h5>
+                            <div class="money-amount">$${data.daily_revenue.toLocaleString()}</div>
+                            <div class="revenue-growth">+${data.revenue_growth}%</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="revenue-card p-4 text-center">
+                            <i class="fas fa-calendar-alt fa-2x text-info mb-2"></i>
+                            <h5 class="fw-bold">Monthly Revenue</h5>
+                            <div class="money-amount">$${data.monthly_revenue.toLocaleString()}</div>
+                            <small class="text-muted">This month</small>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="revenue-card p-4 text-center">
+                            <i class="fas fa-chart-bar fa-2x text-warning mb-2"></i>
+                            <h5 class="fw-bold">Total Revenue</h5>
+                            <div class="money-amount">$${data.total_revenue.toLocaleString()}</div>
+                            <small class="text-muted">All time</small>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="revenue-card p-4 text-center">
+                            <i class="fas fa-users fa-2x text-primary mb-2"></i>
+                            <h5 class="fw-bold">Active Subscriptions</h5>
+                            <div class="money-amount">${data.active_subscriptions}</div>
+                            <small class="text-muted">MRR: $${data.subscription_mrr.toLocaleString()}</small>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            renderRevenueChart(dailyData) {
+                const ctx = document.getElementById('revenueChart').getContext('2d');
+                
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: dailyData.map(d => new Date(d.date).toLocaleDateString()),
+                        datasets: [{
+                            label: 'Daily Revenue',
+                            data: dailyData.map(d => d.revenue),
+                            borderColor: '#28a745',
+                            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: '#ffffff'
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: {
+                                    color: '#ffffff'
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    color: '#ffffff',
+                                    callback: function(value) {
+                                        return '$' + value.toLocaleString();
+                                    }
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            renderTopServices(services) {
+                const container = document.getElementById('topServicesContainer');
+                let html = '<div class="row g-3">';
+                
+                services.forEach(service => {
+                    html += `
+                        <div class="col-md-6">
+                            <div class="border border-secondary rounded p-3">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="fw-bold mb-0">${service.name}</h6>
+                                    <span class="badge bg-success">+${service.growth}%</span>
+                                </div>
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <div class="text-success fw-bold">$${service.revenue.toLocaleString()}</div>
+                                        <small class="text-muted">Revenue</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="text-info fw-bold">${service.subscribers}</div>
+                                        <small class="text-muted">Subscribers</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="text-warning fw-bold">$${service.mrr.toLocaleString()}</div>
+                                        <small class="text-muted">MRR</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+                container.innerHTML = html;
+            }
+            
+            updateDailyTarget(current, target) {
+                const percentage = Math.min((current / target) * 100, 100);
+                
+                document.getElementById('todayRevenue').textContent = `$${current.toLocaleString()}`;
+                document.getElementById('targetPercentage').textContent = `${percentage.toFixed(1)}%`;
+                document.getElementById('targetFill').style.width = `${percentage}%`;
+            }
+            
+            async loadOpportunities() {
+                try {
+                    const response = await fetch('/api/revenue-opportunities');
+                    const data = await response.json();
+                    this.renderOpportunities(data);
+                } catch (error) {
+                    console.error('Error loading opportunities:', error);
+                }
+            }
+            
+            renderOpportunities(data) {
+                const container = document.getElementById('opportunitiesContainer');
+                let html = '';
+                
+                // Immediate actions first
+                html += `
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h4 class="fw-bold text-warning mb-3">
+                                <i class="fas fa-rocket me-2"></i>Quick Wins - Start Making Money This Week
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="row g-4 mb-5">
+                `;
+                
+                data.immediate_actions.forEach(action => {
+                    const statusColor = action.status === 'ready_to_launch' ? 'success' : 
+                                       action.status === 'partially_ready' ? 'warning' : 'info';
+                    
+                    html += `
+                        <div class="col-lg-6">
+                            <div class="opportunity-card p-4">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h5 class="fw-bold mb-0">${action.action}</h5>
+                                    <span class="badge bg-${statusColor}">${action.status.replace('_', ' ')}</span>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="text-warning fw-bold">${action.revenue_impact}</div>
+                                    <small class="text-muted">Potential monthly revenue</small>
+                                </div>
+                                <div class="row text-center mb-3">
+                                    <div class="col-4">
+                                        <div class="fw-bold">${action.effort}</div>
+                                        <small class="text-muted">Effort</small>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="fw-bold">${action.timeline}</div>
+                                        <small class="text-muted">Timeline</small>
+                                    </div>
+                                </div>
+                                <button class="btn launch-btn w-100" onclick="launchOpportunity('${action.action}')">
+                                    <i class="fas fa-play me-2"></i>Launch Now
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <h4 class="fw-bold mb-3">
+                                <i class="fas fa-chart-line me-2"></i>Long-term Opportunities
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="row g-4">
+                `;
+                
+                data.opportunities.forEach(opp => {
+                    const statusColor = opp.status === 'ready' ? 'success' : 
+                                       opp.status === 'development' ? 'warning' : 
+                                       opp.status === 'planning' ? 'info' : 'secondary';
+                    
+                    html += `
+                        <div class="col-lg-6">
+                            <div class="revenue-card p-4">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h5 class="fw-bold mb-0">${opp.title}</h5>
+                                    <span class="badge bg-${statusColor}">${opp.status}</span>
+                                </div>
+                                <p class="text-muted mb-3">${opp.description}</p>
+                                <div class="row text-center mb-3">
+                                    <div class="col-4">
+                                        <div class="text-success fw-bold">$${opp.potential_monthly.toLocaleString()}</div>
+                                        <small class="text-muted">Monthly</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="fw-bold">${opp.difficulty}</div>
+                                        <small class="text-muted">Difficulty</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="fw-bold">${opp.timeframe}</div>
+                                        <small class="text-muted">Timeline</small>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <small class="text-muted fw-bold">Next Steps:</small>
+                                    <ul class="small mb-0 mt-1">
+                                        ${opp.actions.map(action => `<li>${action}</li>`).join('')}
+                                    </ul>
+                                </div>
+                                <button class="btn btn-outline-success w-100" onclick="planOpportunity('${opp.title}')">
+                                    <i class="fas fa-calendar-plus me-2"></i>Add to Roadmap
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+                container.innerHTML = html;
+            }
+        }
+        
+        // Global functions
+        function launchOpportunity(action) {
+            alert(`Launching: ${action}\n\nThis would redirect to the setup wizard for immediate implementation.`);
+        }
+        
+        function planOpportunity(title) {
+            alert(`Adding "${title}" to development roadmap.\n\nThis would create project tasks and timeline.`);
+        }
+        
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            new RevenueDashboard();
+        });
+    </script>
+</body>
+</html>
