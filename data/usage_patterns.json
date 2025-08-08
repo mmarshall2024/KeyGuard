@@ -23,6 +23,18 @@
       "timestamp": "2025-08-08T11:35:31.811616",
       "hour": 11,
       "day_of_week": 4
+    },
+    {
+      "user_id": "7916410589",
+      "action": "natural_chat",
+      "context": {
+        "message_length": 9,
+        "user_name": "whitesmoke",
+        "contains_question": false
+      },
+      "timestamp": "2025-08-08T21:04:29.175715",
+      "hour": 21,
+      "day_of_week": 4
     }
   ],
   "feature_requests": [],
