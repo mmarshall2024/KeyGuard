@@ -135,6 +135,11 @@ def rollback_update(update_id):
         logger.error(f"Error rolling back update {update_id}: {e}")
         return jsonify({'error': str(e)}), 500
 
+@admin_bp.route('/telegram')
+def telegram():
+    """Telegram bot management"""
+    return render_template('admin/telegram.html')
+
 @admin_bp.route('/config')
 def config():
     """Configuration management"""

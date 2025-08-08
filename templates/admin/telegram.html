@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block title %}Telegram Setup - OMNICore Bot Admin{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1><i class="fab fa-telegram me-2"></i>Telegram Bot Setup</h1>
+            <p class="text-muted">Configure and test your Telegram bot connection</p>
+        </div>
+    </div>
+
+    <!-- Bot Status Card -->
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-robot me-2"></i>Bot Status</h5>
+                </div>
+                <div class="card-body">
+                    <div id="bot-status-content">
+                        <div class="text-center py-3">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">Checking bot status...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <button class="btn btn-primary me-2" onclick="testBot()">
+                            <i class="fas fa-check me-2"></i>Test Bot Connection
+                        </button>
+                        <button class="btn btn-success" onclick="setupWebhook()">
+                            <i class="fas fa-link me-2"></i>Setup Webhook
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-info-circle me-2"></i>Quick Setup</h5>
+                </div>
+                <div class="card-body">
+                    <ol class="list-group list-group-numbered">
+                        <li class="list-group-item border-0 px-0">Get bot token from @BotFather</li>
+                        <li class="list-group-item border-0 px-0">Add token to Replit Secrets</li>
+                        <li class="list-group-item border-0 px-0">Click "Test Bot Connection"</li>
+                        <li class="list-group-item border-0 px-0">Click "Setup Webhook"</li>
+                        <li class="list-group-item border-0 px-0">Start chatting with your bot!</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bot Commands Card -->
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-terminal me-2"></i>Available Commands</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Command</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>/start</code></td>
+                                    <td>Activate the bot system</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/help</code></td>
+                                    <td>Show all available commands</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/status</code></td>
+                                    <td>Check system status</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/joke</code></td>
+                                    <td>Get a random joke</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/quote</code></td>
+                                    <td>Get inspirational quote</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/weather [city]</code></td>
+                                    <td>Get weather information</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-history me-2"></i>Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    <div id="activity-log">
+                        <p class="text-muted">No recent activity</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let activityLog = [];
+
+function testBot() {
+    showActivity('Testing bot connection...');
+    
+    fetch('/test-telegram-bot')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const botInfo = data.bot_info;
+                document.getElementById('bot-status-content').innerHTML = `
+                    <div class="alert alert-success">
+                        <h6><i class="fas fa-check-circle me-2"></i>Bot Connected Successfully!</h6>
+                        <div class="row mt-3">
+                            <div class="col-sm-6">
+                                <strong>Name:</strong> ${botInfo.name}<br>
+                                <strong>Username:</strong> @${botInfo.username}<br>
+                                <strong>ID:</strong> ${botInfo.id}
+                            </div>
+                            <div class="col-sm-6">
+                                <strong>Can join groups:</strong> ${botInfo.can_join_groups ? 'Yes' : 'No'}<br>
+                                <strong>Can read group messages:</strong> ${botInfo.can_read_all_group_messages ? 'Yes' : 'No'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                showActivity(`✅ Bot connected: @${botInfo.username}`);
+            } else {
+                document.getElementById('bot-status-content').innerHTML = `
+                    <div class="alert alert-danger">
+                        <h6><i class="fas fa-exclamation-triangle me-2"></i>Connection Failed</h6>
+                        <p class="mb-0">${data.error}</p>
+                    </div>
+                `;
+                showActivity(`❌ Connection failed: ${data.error}`);
+            }
+        })
+        .catch(error => {
+            document.getElementById('bot-status-content').innerHTML = `
+                <div class="alert alert-danger">
+                    <h6><i class="fas fa-exclamation-triangle me-2"></i>Error</h6>
+                    <p class="mb-0">Network error occurred</p>
+                </div>
+            `;
+            showActivity('❌ Network error occurred');
+        });
+}
+
+function setupWebhook() {
+    showActivity('Setting up webhook...');
+    
+    fetch('/setup-telegram-webhook', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showActivity(`✅ Webhook set: ${data.webhook_url}`);
+                showAlert('Webhook setup successful! Your bot is now ready to receive messages.', 'success');
+            } else {
+                showActivity(`❌ Webhook failed: ${data.error}`);
+                showAlert(`Webhook setup failed: ${data.error}`, 'danger');
+            }
+        })
+        .catch(error => {
+            showActivity('❌ Webhook setup error');
+            showAlert('Network error during webhook setup', 'danger');
+        });
+}
+
+function showActivity(message) {
+    const timestamp = new Date().toLocaleTimeString();
+    activityLog.unshift(`[${timestamp}] ${message}`);
+    
+    // Keep only last 10 entries
+    if (activityLog.length > 10) {
+        activityLog = activityLog.slice(0, 10);
+    }
+    
+    const logHtml = activityLog.map(entry => `<small class="d-block text-muted">${entry}</small>`).join('');
+    document.getElementById('activity-log').innerHTML = logHtml || '<p class="text-muted">No recent activity</p>';
+}
+
+// Test bot connection on page load
+document.addEventListener('DOMContentLoaded', function() {
+    testBot();
+});
+</script>
+{% endblock %}
