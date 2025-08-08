@@ -9,17 +9,21 @@ from telegram import Update, Bot
 from telegram.ext import Dispatcher, CommandHandler, MessageHandler, filters, CallbackContext
 
 # === CONFIGURATION ===
-TELEGRAM_TOKEN = "8246573345:AAEI7_e1Pwm8xhF1_ytc03kwKi3OsIKJ9qI"
-STRIPE_SECRET_KEY = "sk_test_XXXX"  # Replace with your real key
-STRIPE_WEBHOOK_SECRET = "whsec_ABd7j76Mfs6wBgFaP77gBfuYRqkkwOy4"
-PAYPAL_CLIENT_ID = "YOUR_PAYPAL_CLIENT_ID"
-PAYPAL_CLIENT_SECRET = "YOUR_PAYPAL_SECRET"
-CRYPTO_WALLET = "0xYourCryptoAddressHere"
-MASTODON_TOKEN = "IiQnGndaD5wrGwb703axT8SXQd4BVBYjI02wCfXPVog"
-MASTODON_URL = "https://mastodon.social"
-DEVTO_KEY = "JMbH7SctGzT4ZzZLyshTMFxS"
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
+PAYPAL_CLIENT_ID = os.getenv("PAYPAL_CLIENT_ID")
+PAYPAL_CLIENT_SECRET = os.getenv("PAYPAL_CLIENT_SECRET")
+CRYPTO_WALLET = os.getenv("CRYPTO_WALLET")
+MASTODON_TOKEN = os.getenv("MASTODON_TOKEN")
+MASTODON_URL = os.getenv("MASTODON_URL", "https://mastodon.social")
+DEVTO_KEY = os.getenv("DEVTO_KEY")
 
 # === BOT INITIALIZATION ===
+# Validate required environment variables
+if not TELEGRAM_TOKEN:
+    raise ValueError("TELEGRAM_TOKEN environment variable is required")
+
 app = Flask(__name__)
 bot = Bot(token=TELEGRAM_TOKEN)
 dp = Dispatcher(bot, None, workers=0, use_context=True)

@@ -9,6 +9,14 @@ OMNICore Bot is a comprehensive, self-evolving Telegram bot platform built with 
 Preferred communication style: Simple, everyday language.
 Primary Goal: Generate immediate revenue from OMNI Empire system with focus on quick wins and monetization.
 
+## Recent Changes
+
+**2025-08-08: Security Vulnerability Fix**
+- Fixed hardcoded Telegram Bot API token and other credentials in `attached_assets/OMNICore_Bot_Full_Block_1754649327857.py`
+- Replaced all hardcoded API keys with environment variable references using `os.getenv()`
+- Added validation to prevent bot startup without required TELEGRAM_TOKEN
+- Security issue was legitimate - exposed real API credentials that could be exploited
+
 ## System Architecture
 
 ### Web Framework Architecture
