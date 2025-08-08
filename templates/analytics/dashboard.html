@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard - OMNI Empire</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@2.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --warning-gradient: linear-gradient(135deg, #fcb045 0%, #fd1d1d 100%);
+            --info-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .gradient-bg {
+            background: var(--primary-gradient);
+        }
+        
+        .success-gradient {
+            background: var(--success-gradient);
+        }
+        
+        .warning-gradient {
+            background: var(--warning-gradient);
+        }
+        
+        .info-gradient {
+            background: var(--info-gradient);
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .performance-score {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .insight-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+        
+        .insight-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-left-color: #764ba2;
+        }
+        
+        .alert-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        
+        .alert-high { background-color: #dc3545; }
+        .alert-medium { background-color: #ffc107; }
+        .alert-low { background-color: #28a745; }
+        
+        .trend-up { color: #28a745; }
+        .trend-down { color: #dc3545; }
+        .trend-stable { color: #ffc107; }
+        
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .section-padding {
+            padding: 4rem 0;
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .prediction-badge {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-dark text-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-chart-line me-2"></i>OMNI Analytics
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#overview">Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#metrics">Metrics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#predictions">Predictions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#insights">Insights</a>
+                    </li>
+                </ul>
+                <span class="navbar-text">
+                    <i class="fas fa-sync-alt me-2"></i>
+                    <span id="lastUpdate">Loading...</span>
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Header -->
+    <div class="container-fluid mt-4">
+        <div class="dashboard-header p-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-tachometer-alt me-3"></i>Analytics Dashboard
+                    </h1>
+                    <p class="text-light mb-0">Real-time performance metrics and predictive insights for OMNI Empire</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="performance-score" id="performanceScore">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <div class="text-muted">Performance Score</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div class="container-fluid" id="overview">
+        <!-- Key Metrics -->
+        <section class="section-padding">
+            <div class="row g-4" id="metricsRow">
+                <!-- Metrics cards will be dynamically loaded -->
+                <div class="col-12 text-center">
+                    <div class="loading-spinner"></div>
+                    <p class="text-muted mt-3">Loading performance metrics...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="section-padding" id="metrics">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2 class="fw-bold mb-3">
+                        <i class="fas fa-chart-area me-2"></i>Performance Trends
+                    </h2>
+                </div>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="chart-container">
+                        <h4 class="text-center mb-3">Revenue Trend</h4>
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="chart-container">
+                        <h4 class="text-center mb-3">User Growth</h4>
+                        <canvas id="usersChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="chart-container">
+                        <h4 class="text-center mb-3">Conversion Rate</h4>
+                        <canvas id="conversionChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="chart-container">
+                        <h4 class="text-center mb-3">Engagement Metrics</h4>
+                        <canvas id="engagementChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Predictions Section -->
+        <section class="section-padding bg-secondary bg-opacity-10 rounded" id="predictions">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2 class="fw-bold mb-3">
+                        <i class="fas fa-crystal-ball me-2"></i>Predictive Analytics
+                        <span class="prediction-badge ms-3">AI Powered</span>
+                    </h2>
+                </div>
+            </div>
+            
+            <div class="row g-4" id="predictionsRow">
+                <div class="col-12 text-center">
+                    <div class="loading-spinner"></div>
+                    <p class="text-muted mt-3">Generating AI predictions...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Insights Section -->
+        <section class="section-padding" id="insights">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2 class="fw-bold mb-3">
+                        <i class="fas fa-lightbulb me-2"></i>AI Insights & Recommendations
+                    </h2>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-12">
+                    <div id="insightsContainer">
+                        <div class="text-center">
+                            <div class="loading-spinner"></div>
+                            <p class="text-muted mt-3">Analyzing data for insights...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Dashboard JavaScript
+        class AnalyticsDashboard {
+            constructor() {
+                this.charts = {};
+                this.updateInterval = 30000; // 30 seconds
+                this.init();
+            }
+            
+            async init() {
+                await this.loadDashboardData();
+                await this.loadPredictions();
+                await this.loadInsights();
+                this.startAutoRefresh();
+            }
+            
+            async loadDashboardData() {
+                try {
+                    const response = await fetch('/api/dashboard-data');
+                    const data = await response.json();
+                    
+                    this.renderMetrics(data.overview);
+                    this.renderCharts(data.charts);
+                    this.updatePerformanceScore(data.performance_score);
+                    this.updateLastRefresh();
+                    
+                } catch (error) {
+                    console.error('Error loading dashboard data:', error);
+                    this.showError('Failed to load dashboard data');
+                }
+            }
+            
+            renderMetrics(metrics) {
+                const metricsRow = document.getElementById('metricsRow');
+                metricsRow.innerHTML = '';
+                
+                const metricKeys = ['revenue', 'users', 'conversion', 'engagement'];
+                const metricIcons = {
+                    revenue: 'fas fa-dollar-sign',
+                    users: 'fas fa-users', 
+                    conversion: 'fas fa-bullseye',
+                    engagement: 'fas fa-chart-pulse'
+                };
+                
+                metricKeys.forEach(key => {
+                    const metric = metrics[key];
+                    const trendClass = metric.growth > 0 ? 'trend-up' : metric.growth < 0 ? 'trend-down' : 'trend-stable';
+                    const trendIcon = metric.growth > 0 ? 'fa-arrow-up' : metric.growth < 0 ? 'fa-arrow-down' : 'fa-minus';
+                    
+                    const card = document.createElement('div');
+                    card.className = 'col-lg-3 col-md-6';
+                    card.innerHTML = `
+                        <div class="metric-card p-4 h-100">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div class="metric-icon">
+                                    <i class="${metricIcons[key]} fa-2x text-primary"></i>
+                                </div>
+                                <div class="text-end">
+                                    <small class="text-muted">${key.toUpperCase()}</small>
+                                </div>
+                            </div>
+                            <div class="metric-value">
+                                <h3 class="fw-bold mb-1">
+                                    ${this.formatValue(metric.current, metric.unit)}
+                                </h3>
+                                <div class="${trendClass}">
+                                    <i class="fas ${trendIcon} me-1"></i>
+                                    ${this.formatChange(metric.growth, metric.unit)}
+                                </div>
+                            </div>
+                            <div class="progress mt-3" style="height: 6px;">
+                                <div class="progress-bar bg-primary" style="width: ${Math.min((metric.current / metric.target) * 100, 100)}%"></div>
+                            </div>
+                            <small class="text-muted">Target: ${this.formatValue(metric.target, metric.unit)}</small>
+                        </div>
+                    `;
+                    metricsRow.appendChild(card);
+                });
+            }
+            
+            renderCharts(chartData) {
+                Object.keys(chartData).forEach(chartKey => {
+                    const chart = chartData[chartKey];
+                    const canvasId = chartKey.replace('_chart', 'Chart');
+                    this.createChart(canvasId, chart);
+                });
+            }
+            
+            createChart(canvasId, chartConfig) {
+                const ctx = document.getElementById(canvasId);
+                if (!ctx) return;
+                
+                // Destroy existing chart
+                if (this.charts[canvasId]) {
+                    this.charts[canvasId].destroy();
+                }
+                
+                this.charts[canvasId] = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: chartConfig.labels,
+                        datasets: [{
+                            label: 'Value',
+                            data: chartConfig.data,
+                            borderColor: chartConfig.color,
+                            backgroundColor: chartConfig.color + '20',
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 3,
+                            pointBackgroundColor: chartConfig.color,
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                },
+                                ticks: {
+                                    color: 'rgba(255, 255, 255, 0.7)',
+                                    maxTicksLimit: 7
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                },
+                                ticks: {
+                                    color: 'rgba(255, 255, 255, 0.7)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            async loadPredictions() {
+                try {
+                    const response = await fetch('/api/predictions');
+                    const predictions = await response.json();
+                    this.renderPredictions(predictions);
+                } catch (error) {
+                    console.error('Error loading predictions:', error);
+                }
+            }
+            
+            renderPredictions(predictions) {
+                const predictionsRow = document.getElementById('predictionsRow');
+                predictionsRow.innerHTML = '';
+                
+                Object.keys(predictions).forEach(key => {
+                    const prediction = predictions[key];
+                    const card = document.createElement('div');
+                    card.className = 'col-lg-4 col-md-6';
+                    
+                    card.innerHTML = `
+                        <div class="metric-card p-4 h-100">
+                            <h5 class="fw-bold mb-3 text-capitalize">
+                                <i class="fas fa-chart-line me-2"></i>${key} Forecast
+                            </h5>
+                            <div class="mb-3">
+                                <h4 class="text-primary mb-1">
+                                    ${this.formatValue(prediction.next_30_days[prediction.next_30_days.length - 1], key === 'conversion' ? '%' : key === 'revenue' ? '$' : '')}
+                                </h4>
+                                <small class="text-muted">30-day prediction</small>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Confidence:</span>
+                                    <strong class="text-success">${prediction.confidence.toFixed(0)}%</strong>
+                                </div>
+                                <div class="progress mt-2" style="height: 6px;">
+                                    <div class="progress-bar bg-success" style="width: ${prediction.confidence}%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <span class="badge bg-primary">${prediction.trend.replace('_', ' ')}</span>
+                            </div>
+                            <div class="text-muted small">
+                                <strong>Key Factors:</strong><br>
+                                ${prediction.factors.join(', ')}
+                            </div>
+                        </div>
+                    `;
+                    predictionsRow.appendChild(card);
+                });
+            }
+            
+            async loadInsights() {
+                try {
+                    const response = await fetch('/api/insights');
+                    const insights = await response.json();
+                    this.renderInsights(insights);
+                } catch (error) {
+                    console.error('Error loading insights:', error);
+                }
+            }
+            
+            renderInsights(insights) {
+                const container = document.getElementById('insightsContainer');
+                container.innerHTML = '';
+                
+                insights.forEach((insight, index) => {
+                    const priorityClass = insight.priority === 'high' ? 'alert-high' : 
+                                        insight.priority === 'medium' ? 'alert-medium' : 'alert-low';
+                    
+                    const card = document.createElement('div');
+                    card.className = 'insight-card p-4 mb-3 rounded';
+                    
+                    card.innerHTML = `
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <div class="d-flex align-items-start">
+                                    <span class="alert-indicator ${priorityClass}"></span>
+                                    <div>
+                                        <h5 class="fw-bold mb-2">${insight.title}</h5>
+                                        <p class="mb-2">${insight.description}</p>
+                                        <small class="text-muted">
+                                            <strong>Recommended Action:</strong> ${insight.action}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="mb-2">
+                                    <span class="badge bg-${insight.priority === 'high' ? 'danger' : insight.priority === 'medium' ? 'warning' : 'success'} text-uppercase">
+                                        ${insight.priority}
+                                    </span>
+                                </div>
+                                <div class="text-primary fw-bold">${insight.impact}</div>
+                                <small class="text-muted">Confidence: ${(insight.confidence * 100).toFixed(0)}%</small>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+            
+            updatePerformanceScore(score) {
+                const scoreElement = document.getElementById('performanceScore');
+                if (score) {
+                    scoreElement.innerHTML = `
+                        <div class="performance-score">${score.score}</div>
+                        <div class="text-muted">Grade: ${score.grade} | ${score.trend}</div>
+                    `;
+                }
+            }
+            
+            updateLastRefresh() {
+                const now = new Date();
+                document.getElementById('lastUpdate').textContent = now.toLocaleTimeString();
+            }
+            
+            formatValue(value, unit) {
+                if (unit === '$') {
+                    return new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: 'USD',
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0
+                    }).format(value);
+                } else if (unit === '%') {
+                    return `${value.toFixed(1)}%`;
+                } else if (unit === 'users') {
+                    return new Intl.NumberFormat('en-US').format(Math.round(value));
+                } else {
+                    return value.toFixed(1);
+                }
+            }
+            
+            formatChange(change, unit) {
+                const prefix = change > 0 ? '+' : '';
+                if (unit === '$') {
+                    return `${prefix}${change.toFixed(1)}%`;
+                } else if (unit === '%') {
+                    return `${prefix}${change.toFixed(1)}pp`;
+                } else {
+                    return `${prefix}${change.toFixed(1)}%`;
+                }
+            }
+            
+            showError(message) {
+                console.error(message);
+                // Could implement toast notifications here
+            }
+            
+            startAutoRefresh() {
+                setInterval(() => {
+                    this.loadDashboardData();
+                }, this.updateInterval);
+            }
+        }
+        
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new AnalyticsDashboard();
+        });
+    </script>
+</body>
+</html>
