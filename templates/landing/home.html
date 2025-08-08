@@ -1,0 +1,308 @@
+{% extends "landing/base.html" %}
+
+{% block title %}OMNI Empire - Choose Your AI Business Solution{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold text-white mb-4">
+                    Transform Your Business with 
+                    <span class="gradient-text">AI-Powered Automation</span>
+                </h1>
+                <p class="lead text-white-50 mb-5">
+                    Choose from 6 specialized AI business solutions designed to automate, optimize, and scale your operations. Each niche features custom bots, landing pages, and proven systems.
+                </p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="#solutions" class="btn btn-primary btn-lg px-5">
+                        <i class="fas fa-rocket me-2"></i>Explore Solutions
+                    </a>
+                    <a href="#demo" class="btn btn-outline-light btn-lg px-5">
+                        <i class="fas fa-play me-2"></i>Watch Demo
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="demo-container text-center">
+                    <div class="feature-icon mx-auto mb-4">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h4 class="text-white mb-3">18 Business Units Ready</h4>
+                    <div class="row text-center text-white">
+                        <div class="col-4">
+                            <h2 class="fw-bold gradient-text">$35k</h2>
+                            <small>Daily Revenue Target</small>
+                        </div>
+                        <div class="col-4">
+                            <h2 class="fw-bold gradient-text">18</h2>
+                            <small>Business Units</small>
+                        </div>
+                        <div class="col-4">
+                            <h2 class="fw-bold gradient-text">6</h2>
+                            <small>Specialized Niches</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Business Solutions Section -->
+<section id="solutions" class="section-padding bg-dark">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold gradient-text mb-3">Choose Your Business Focus</h2>
+            <p class="lead text-light">Each solution includes custom AI bots, professional landing pages, and automated systems</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for niche_id, niche in niches.items() %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card bg-dark border-secondary card-hover h-100" style="--primary-color: {{ niche.primary_color }}; --secondary-color: {{ niche.secondary_color }}">
+                    <div class="card-body p-4">
+                        <div class="feature-icon mb-3" style="background: linear-gradient(135deg, {{ niche.primary_color }}, {{ niche.secondary_color }})">
+                            {{ niche.icon }}
+                        </div>
+                        <h4 class="card-title text-white mb-3">{{ niche.title }}</h4>
+                        <p class="text-light mb-3" style="color: {{ niche.primary_color }}">{{ niche.tagline }}</p>
+                        <p class="card-text text-light mb-4">{{ niche.description }}</p>
+                        
+                        <div class="mb-4">
+                            <h6 class="text-white mb-2">Key Features:</h6>
+                            <ul class="list-unstyled">
+                                {% for feature in niche.features %}
+                                <li class="text-light mb-1">
+                                    <i class="fas fa-check me-2" style="color: {{ niche.primary_color }}"></i>{{ feature }}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <small class="text-muted">Starting at</small>
+                            <h3 class="text-white fw-bold">${{ niche.pricing.starter.price }}/month</h3>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('landing_pages.niche_landing', niche_id=niche_id) }}" 
+                               class="btn btn-primary" 
+                               style="background: linear-gradient(135deg, {{ niche.primary_color }}, {{ niche.secondary_color }}); border: none;">
+                                <i class="fas fa-arrow-right me-2"></i>View Solution
+                            </a>
+                            <a href="{{ url_for('landing_pages.niche_demo', niche_id=niche_id) }}" 
+                               class="btn btn-outline-secondary">
+                                <i class="fas fa-play me-2"></i>Try Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="section-padding bg-secondary bg-opacity-10">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <h2 class="display-6 fw-bold text-white mb-4">
+                    Why Choose OMNI Empire?
+                </h2>
+                <p class="lead text-light mb-4">
+                    Our AI-powered business solutions are designed to deliver results from day one. Each niche includes everything you need to start generating revenue immediately.
+                </p>
+                
+                <div class="row g-4">
+                    <div class="col-sm-6">
+                        <div class="d-flex">
+                            <div class="feature-icon me-3 flex-shrink-0" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-white mb-2">Instant Deployment</h5>
+                                <p class="text-light mb-0">Launch your AI business in minutes with pre-built systems</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex">
+                            <div class="feature-icon me-3 flex-shrink-0" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-white mb-2">Proven Results</h5>
+                                <p class="text-light mb-0">Systems targeting $25k+ daily revenue with real tracking</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex">
+                            <div class="feature-icon me-3 flex-shrink-0" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-white mb-2">Full Automation</h5>
+                                <p class="text-light mb-0">Complete business automation from leads to revenue</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex">
+                            <div class="feature-icon me-3 flex-shrink-0" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-white mb-2">Expert Support</h5>
+                                <p class="text-light mb-0">Dedicated support team and comprehensive documentation</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="demo-container">
+                    <h4 class="text-white mb-4 text-center">Real-Time Empire Metrics</h4>
+                    <div class="row text-center text-white mb-4">
+                        <div class="col-6 mb-3">
+                            <div class="h2 fw-bold gradient-text" id="activeUsers">1,247</div>
+                            <small>Active Users</small>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="h2 fw-bold gradient-text" id="dailyRevenue">$18,439</div>
+                            <small>Daily Revenue</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="h2 fw-bold gradient-text" id="automationHours">34,582</div>
+                            <small>Hours Automated</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="h2 fw-bold gradient-text" id="businessUnits">18</div>
+                            <small>Business Units</small>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="badge bg-success fs-6 px-3 py-2">
+                            <i class="fas fa-arrow-up me-2"></i>Growing 15% Daily
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section id="get-started" class="section-padding" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color))">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="display-5 fw-bold text-white mb-4">
+                    Ready to Transform Your Business?
+                </h2>
+                <p class="lead text-white mb-5">
+                    Join hundreds of businesses already using OMNI Empire to automate operations and scale revenue. Choose your niche and start generating results today.
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="#solutions" class="btn btn-light btn-lg px-5">
+                        <i class="fas fa-rocket me-2"></i>Choose Your Solution
+                    </a>
+                    <a href="#contact" class="btn btn-outline-light btn-lg px-5">
+                        <i class="fas fa-calendar me-2"></i>Book Consultation
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="section-padding bg-dark">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="display-6 fw-bold text-white mb-4">Get Expert Consultation</h2>
+                <p class="lead text-light mb-5">
+                    Not sure which solution is right for you? Our experts will analyze your business and recommend the best AI automation strategy.
+                </p>
+                
+                <form class="row g-3 justify-content-center">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control form-control-lg" placeholder="Your Name" required>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="email" class="form-control form-control-lg" placeholder="Email Address" required>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select form-select-lg" required>
+                            <option value="">Choose Interest</option>
+                            {% for niche_id, niche in niches.items() %}
+                            <option value="{{ niche_id }}">{{ niche.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary btn-lg px-5">
+                            <i class="fas fa-paper-plane me-2"></i>Get Free Consultation
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Animate numbers
+function animateNumber(element, target) {
+    let current = 0;
+    const increment = target / 100;
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            current = target;
+            clearInterval(timer);
+        }
+        element.textContent = Math.floor(current).toLocaleString();
+    }, 20);
+}
+
+// Start animations when section is visible
+const metricsSection = document.querySelector('.demo-container');
+if (metricsSection) {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateNumber(document.getElementById('activeUsers'), 1247);
+                animateNumber(document.getElementById('dailyRevenue'), 18439);
+                animateNumber(document.getElementById('automationHours'), 34582);
+                animateNumber(document.getElementById('businessUnits'), 18);
+                observer.unobserve(entry.target);
+            }
+        });
+    });
+    observer.observe(metricsSection);
+}
+
+// Handle contact form
+document.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
+    submitBtn.disabled = true;
+    
+    setTimeout(() => {
+        alert('Thank you! We\'ll contact you within 24 hours.');
+        this.reset();
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Get Free Consultation';
+        submitBtn.disabled = false;
+    }, 2000);
+});
+</script>
+{% endblock %}

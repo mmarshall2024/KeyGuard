@@ -1,0 +1,527 @@
+{% extends "landing/base.html" %}
+
+{% block title %}{{ niche.title }} - OMNI Empire{% endblock %}
+
+{% block primary_color %}{{ niche.primary_color }}{% endblock %}
+{% block secondary_color %}{{ niche.secondary_color }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6">
+                <div class="display-1 mb-3">{{ niche.icon }}</div>
+                <h1 class="display-4 fw-bold text-white mb-4">{{ niche.title }}</h1>
+                <p class="lead text-white mb-4">{{ niche.tagline }}</p>
+                <p class="text-white-50 mb-5">{{ niche.description }}</p>
+                
+                <div class="d-flex gap-3 flex-wrap mb-4">
+                    <a href="#pricing" class="btn btn-primary btn-lg px-5">
+                        <i class="fas fa-rocket me-2"></i>Get Started Now
+                    </a>
+                    <a href="#demo" class="btn btn-outline-light btn-lg px-5">
+                        <i class="fas fa-play me-2"></i>Try Interactive Demo
+                    </a>
+                </div>
+                
+                <div class="d-flex gap-4 text-white">
+                    <div>
+                        <div class="h4 fw-bold gradient-text mb-0">24/7</div>
+                        <small>Automation</small>
+                    </div>
+                    <div>
+                        <div class="h4 fw-bold gradient-text mb-0">90%</div>
+                        <small>Profit Margin</small>
+                    </div>
+                    <div>
+                        <div class="h4 fw-bold gradient-text mb-0">5min</div>
+                        <small>Setup Time</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="demo-container">
+                    <h4 class="text-white mb-4 text-center">Live {{ niche.title }} Bot</h4>
+                    <div id="bot-interface" class="bg-dark rounded p-4 mb-3" style="max-height: 400px; overflow-y: auto;">
+                        <div class="chat-message bot mb-3">
+                            <div class="d-flex align-items-start">
+                                <div class="me-3">{{ niche.icon }}</div>
+                                <div class="message-content bg-secondary rounded p-3 text-white">
+                                    <p class="mb-2">Hi! I'm your {{ niche.title }} AI assistant. I can help you:</p>
+                                    <ul class="list-unstyled mb-0">
+                                        {% for feature in niche.features %}
+                                        <li class="mb-1"><i class="fas fa-check me-2 text-success"></i>{{ feature }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    <p class="mt-3 mb-0">What would you like to explore first?</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-actions d-grid gap-2">
+                        <button class="btn btn-primary demo-btn" data-action="analyze">
+                            <i class="fas fa-chart-line me-2"></i>Analyze My Business
+                        </button>
+                        <button class="btn btn-outline-primary demo-btn" data-action="demo">
+                            <i class="fas fa-cog me-2"></i>Show Demo Features
+                        </button>
+                        <button class="btn btn-outline-primary demo-btn" data-action="pricing">
+                            <i class="fas fa-dollar-sign me-2"></i>View Pricing Options
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="section-padding bg-dark">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold gradient-text mb-3">Complete {{ niche.title }} Solution</h2>
+            <p class="lead text-light">Everything you need to automate and scale your {{ niche.category.lower() }} business</p>
+        </div>
+        
+        <div class="row g-4 mb-5">
+            {% for feature in niche.features %}
+            <div class="col-lg-3 col-md-6">
+                <div class="card bg-secondary bg-opacity-25 border-0 card-hover h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-{% if loop.index == 1 %}robot{% elif loop.index == 2 %}cogs{% elif loop.index == 3 %}chart-bar{% else %}shield-alt{% endif %}"></i>
+                        </div>
+                        <h5 class="text-white mb-3">{{ feature }}</h5>
+                        <p class="text-light">Advanced AI-powered automation for {{ feature.lower() }} with real-time optimization and analytics.</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h3 class="text-white mb-4">How It Works</h3>
+                <div class="process-steps">
+                    <div class="d-flex mb-4">
+                        <div class="step-number bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                            <span class="fw-bold text-white">1</span>
+                        </div>
+                        <div>
+                            <h5 class="text-white mb-2">Choose Your Plan</h5>
+                            <p class="text-light">Select the perfect {{ niche.title.lower() }} package for your business needs</p>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-4">
+                        <div class="step-number bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                            <span class="fw-bold text-white">2</span>
+                        </div>
+                        <div>
+                            <h5 class="text-white mb-2">Instant Setup</h5>
+                            <p class="text-light">AI automatically configures your bots and systems in under 5 minutes</p>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-4">
+                        <div class="step-number bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                            <span class="fw-bold text-white">3</span>
+                        </div>
+                        <div>
+                            <h5 class="text-white mb-2">Start Earning</h5>
+                            <p class="text-light">Begin generating revenue immediately with full automation running</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="demo-container">
+                    <h5 class="text-white mb-3">Expected Results</h5>
+                    <div class="results-metrics">
+                        <div class="metric mb-3 p-3 bg-dark bg-opacity-50 rounded">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-light">Time Saved per Week</span>
+                                <span class="h5 gradient-text mb-0">25+ Hours</span>
+                            </div>
+                        </div>
+                        <div class="metric mb-3 p-3 bg-dark bg-opacity-50 rounded">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-light">Revenue Increase</span>
+                                <span class="h5 gradient-text mb-0">300%+</span>
+                            </div>
+                        </div>
+                        <div class="metric mb-3 p-3 bg-dark bg-opacity-50 rounded">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-light">Customer Satisfaction</span>
+                                <span class="h5 gradient-text mb-0">95%+</span>
+                            </div>
+                        </div>
+                        <div class="metric p-3 bg-dark bg-opacity-50 rounded">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-light">ROI Timeline</span>
+                                <span class="h5 gradient-text mb-0">< 30 Days</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section id="pricing" class="section-padding bg-secondary bg-opacity-10">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold gradient-text mb-3">Choose Your Plan</h2>
+            <p class="lead text-light">Transparent pricing with no hidden fees. Start small and scale as you grow.</p>
+        </div>
+        
+        <div class="row g-4 justify-content-center">
+            {% for plan_key, plan in niche.pricing.items() %}
+            <div class="col-lg-4">
+                <div class="card pricing-card bg-dark border-secondary h-100 {% if plan_key == 'professional' %}featured{% endif %}">
+                    {% if plan_key == 'professional' %}
+                    <div class="badge bg-primary position-absolute top-0 start-50 translate-middle px-3 py-2">
+                        Most Popular
+                    </div>
+                    {% endif %}
+                    
+                    <div class="card-header bg-transparent border-bottom border-secondary text-center py-4">
+                        <h4 class="text-white mb-2">{{ plan_key.title() }}</h4>
+                        <div class="price mb-3">
+                            <span class="display-4 fw-bold text-white">${{ plan.price }}</span>
+                            <span class="text-light">/month</span>
+                        </div>
+                        <p class="text-light mb-0">Perfect for {{ 'startups' if plan_key == 'starter' else 'growing businesses' if plan_key == 'professional' else 'large enterprises' }}</p>
+                    </div>
+                    
+                    <div class="card-body p-4">
+                        <ul class="list-unstyled mb-4">
+                            {% for feature in plan.features %}
+                            <li class="mb-3 d-flex align-items-center">
+                                <i class="fas fa-check text-success me-3"></i>
+                                <span class="text-light">{{ feature }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        
+                        <div class="d-grid">
+                            <button class="btn {% if plan_key == 'professional' %}btn-primary{% else %}btn-outline-primary{% endif %} btn-lg signup-btn" 
+                                    data-plan="{{ plan_key }}" 
+                                    data-price="{{ plan.price }}">
+                                <i class="fas fa-rocket me-2"></i>Start {{ plan_key.title() }} Plan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-5">
+            <p class="text-light mb-3">✅ 30-Day Money Back Guarantee | ✅ Cancel Anytime | ✅ 24/7 Support</p>
+            <a href="#contact" class="btn btn-outline-light">
+                <i class="fas fa-phone me-2"></i>Need Custom Solution? Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Interactive Demo Section -->
+<section id="demo" class="section-padding bg-dark">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold gradient-text mb-3">Try It Live</h2>
+            <p class="lead text-light">Experience the power of {{ niche.title }} automation right now</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="demo-container">
+                    <div id="live-demo" class="p-4">
+                        <h4 class="text-white mb-4 text-center">{{ niche.title }} Live Demo</h4>
+                        
+                        <div class="demo-interface bg-dark rounded p-4 mb-4" style="min-height: 300px;">
+                            <div id="demo-output" class="text-light">
+                                <div class="text-center">
+                                    <div class="spinner-border text-primary mb-3" role="status" style="display: none;">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="lead">Click a demo button below to see the AI in action</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="demo-controls row g-3">
+                            <div class="col-md-6">
+                                <button class="btn btn-primary w-100 demo-action-btn" data-action="analyze_workflow">
+                                    <i class="fas fa-search me-2"></i>Analyze Workflow
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-primary w-100 demo-action-btn" data-action="create_automation">
+                                    <i class="fas fa-plus me-2"></i>Create Automation
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-outline-primary w-100 demo-action-btn" data-action="generate_report">
+                                    <i class="fas fa-chart-bar me-2"></i>Generate Report
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-outline-primary w-100 demo-action-btn" data-action="optimize_performance">
+                                    <i class="fas fa-rocket me-2"></i>Optimize Performance
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <button class="btn btn-success btn-lg signup-btn" data-plan="professional" data-price="{{ niche.pricing.professional.price }}">
+                                <i class="fas fa-check me-2"></i>Get Full Access - ${{ niche.pricing.professional.price }}/month
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Signup Modal -->
+<div class="modal fade" id="signupModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title text-white">Start Your {{ niche.title }} Journey</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="signupForm">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-white">Full Name</label>
+                            <input type="text" name="name" class="form-control form-control-lg" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-white">Email Address</label>
+                            <input type="email" name="email" class="form-control form-control-lg" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-white">Company Name</label>
+                            <input type="text" name="company" class="form-control form-control-lg">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-white">Phone Number</label>
+                            <input type="tel" name="phone" class="form-control form-control-lg">
+                        </div>
+                    </div>
+                    
+                    <div class="selected-plan mt-4 p-3 bg-primary bg-opacity-25 rounded">
+                        <h6 class="text-white mb-2">Selected Plan:</h6>
+                        <div id="plan-details" class="text-light"></div>
+                    </div>
+                    
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-credit-card me-2"></i>Continue to Payment
+                        </button>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <small class="text-light">🔒 Secure payment powered by Stripe | 30-day money-back guarantee</small>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const nicheId = '{{ niche_id }}';
+let selectedPlan = null;
+let selectedPrice = null;
+
+// Demo bot interactions
+document.querySelectorAll('.demo-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const action = this.dataset.action;
+        addBotMessage(getDemoResponse(action));
+    });
+});
+
+// Live demo actions
+document.querySelectorAll('.demo-action-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const action = this.dataset.action;
+        runLiveDemo(action);
+    });
+});
+
+function addBotMessage(message) {
+    const chatInterface = document.getElementById('bot-interface');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'chat-message bot mb-3';
+    messageDiv.innerHTML = `
+        <div class="d-flex align-items-start">
+            <div class="me-3">{{ niche.icon }}</div>
+            <div class="message-content bg-primary rounded p-3 text-white">
+                ${message}
+            </div>
+        </div>
+    `;
+    chatInterface.appendChild(messageDiv);
+    chatInterface.scrollTop = chatInterface.scrollHeight;
+}
+
+function getDemoResponse(action) {
+    const responses = {
+        analyze: `I've analyzed your business profile. Here are immediate optimization opportunities:
+            <ul class="mt-2 mb-0">
+                <li>Automate 15 hours of weekly tasks</li>
+                <li>Increase conversion rates by 45%</li>
+                <li>Reduce operational costs by $2,400/month</li>
+            </ul>`,
+        demo: `Here's what your {{ niche.title }} system includes:
+            <ul class="mt-2 mb-0">
+                {% for feature in niche.features %}
+                <li>{{ feature }}</li>
+                {% endfor %}
+            </ul>
+            Ready to see more advanced features?`,
+        pricing: `Perfect! Here's what I recommend based on your needs:
+            <strong>Professional Plan - ${{ niche.pricing.professional.price }}/month</strong>
+            <ul class="mt-2 mb-0">
+                {% for feature in niche.pricing.professional.features %}
+                <li>{{ feature }}</li>
+                {% endfor %}
+            </ul>
+            <p class="mt-2 mb-0">ROI typically achieved in under 30 days!</p>`
+    };
+    
+    return responses[action] || 'Thanks for trying the demo! Ready to get started?';
+}
+
+async function runLiveDemo(action) {
+    const demoOutput = document.getElementById('demo-output');
+    const spinner = demoOutput.querySelector('.spinner-border');
+    
+    // Show loading
+    spinner.style.display = 'block';
+    demoOutput.innerHTML = `
+        <div class="text-center">
+            <div class="spinner-border text-primary mb-3" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="lead">AI is processing your request...</p>
+        </div>
+    `;
+    
+    try {
+        const response = await fetch(`/api/demo/${nicheId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ action: action })
+        });
+        
+        const result = await response.json();
+        
+        setTimeout(() => {
+            demoOutput.innerHTML = `
+                <div class="demo-result">
+                    <div class="alert alert-success border-0 mb-3">
+                        <h5><i class="fas fa-check-circle me-2"></i>${result.result}</h5>
+                        <p class="mb-0">${result.details}</p>
+                    </div>
+                    ${result.suggestions ? `
+                        <div class="suggestions mb-3">
+                            <h6 class="text-white">Suggestions:</h6>
+                            <ul class="text-light">
+                                ${result.suggestions.map(s => `<li>${s}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                    ${result.next_steps ? `
+                        <div class="next-steps">
+                            <h6 class="text-white">Next Steps:</h6>
+                            <ul class="text-light">
+                                ${result.next_steps.map(s => `<li>${s}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }, 2000);
+        
+    } catch (error) {
+        demoOutput.innerHTML = `
+            <div class="alert alert-danger border-0">
+                <h5><i class="fas fa-exclamation-triangle me-2"></i>Demo Error</h5>
+                <p class="mb-0">Unable to connect to demo system. Please try again or contact support.</p>
+            </div>
+        `;
+    }
+}
+
+// Signup modal handling
+document.querySelectorAll('.signup-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        selectedPlan = this.dataset.plan;
+        selectedPrice = this.dataset.price;
+        
+        document.getElementById('plan-details').innerHTML = `
+            <strong>${selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)} Plan - $${selectedPrice}/month</strong>
+        `;
+        
+        const modal = new bootstrap.Modal(document.getElementById('signupModal'));
+        modal.show();
+    });
+});
+
+// Handle signup form
+document.getElementById('signupForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const data = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        company: formData.get('company'),
+        phone: formData.get('phone')
+    };
+    
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+    submitBtn.disabled = true;
+    
+    try {
+        const response = await fetch(`/signup/${nicheId}/${selectedPlan}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            window.location.href = result.redirect_url;
+        } else {
+            alert(result.error || 'Signup failed. Please try again.');
+            submitBtn.innerHTML = '<i class="fas fa-credit-card me-2"></i>Continue to Payment';
+            submitBtn.disabled = false;
+        }
+    } catch (error) {
+        alert('Network error. Please check your connection and try again.');
+        submitBtn.innerHTML = '<i class="fas fa-credit-card me-2"></i>Continue to Payment';
+        submitBtn.disabled = false;
+    }
+});
+</script>
+{% endblock %}
