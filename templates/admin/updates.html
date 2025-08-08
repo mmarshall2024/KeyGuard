@@ -1,0 +1,410 @@
+{% extends "base.html" %}
+
+{% block title %}Updates - OMNICore Bot Admin{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1><i class="fas fa-sync me-2"></i>System Updates</h1>
+            <p class="text-muted">Manage automatic updates and version control</p>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-primary" onclick="checkForUpdates()">
+                <i class="fas fa-search me-2"></i>Check for Updates
+            </button>
+        </div>
+    </div>
+
+    <!-- Current Version Info -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5><i class="fas fa-info-circle me-2"></i>Current System Information</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Current Version</h6>
+                    <p class="font-monospace">{{ current_version }}</p>
+                    
+                    <h6>Auto-Updates</h6>
+                    <p>
+                        <span class="badge bg-success">Enabled</span>
+                        <small class="text-muted ms-2">Checks every 6 hours</small>
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Repository</h6>
+                    <p class="font-monospace text-break">https://github.com/your-username/omnicore-bot.git</p>
+                    
+                    <h6>Last Update Check</h6>
+                    <p id="last-check">
+                        {% if update_history %}
+                            {{ update_history[0].started_at.strftime('%Y-%m-%d %H:%M UTC') }}
+                        {% else %}
+                            Never
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Status -->
+    <div class="card mb-4" id="update-status-card">
+        <div class="card-header">
+            <h5><i class="fas fa-cloud-download-alt me-2"></i>Update Status</h5>
+        </div>
+        <div class="card-body" id="update-status-body">
+            {% if update_check.error %}
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Error checking for updates: {{ update_check.error }}
+                </div>
+            {% elif update_check.available %}
+                <div class="alert alert-warning">
+                    <h6><i class="fas fa-download me-2"></i>Update Available!</h6>
+                    <p class="mb-2">New version: <strong>{{ update_check.version }}</strong></p>
+                    <p class="mb-3">{{ update_check.message }}</p>
+                    <button class="btn btn-success" onclick="applyUpdate()">
+                        <i class="fas fa-rocket me-2"></i>Apply Update
+                    </button>
+                    <button class="btn btn-outline-secondary ms-2" onclick="viewChanges()">
+                        <i class="fas fa-list me-2"></i>View Changes
+                    </button>
+                </div>
+            {% else %}
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i>
+                    System is up to date
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Update History -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5><i class="fas fa-history me-2"></i>Update History</h5>
+            <button class="btn btn-sm btn-outline-secondary" onclick="refreshHistory()">
+                <i class="fas fa-refresh me-1"></i>Refresh
+            </button>
+        </div>
+        <div class="card-body">
+            {% if update_history %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>From Version</th>
+                                <th>To Version</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for update in update_history %}
+                            <tr>
+                                <td>{{ update.started_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td>
+                                    {% if update.version_from %}
+                                        <code>{{ update.version_from }}</code>
+                                    {% else %}
+                                        <span class="text-muted">N/A</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if update.version_to %}
+                                        <code>{{ update.version_to }}</code>
+                                    {% else %}
+                                        <span class="text-muted">N/A</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if update.status == 'success' %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check me-1"></i>Success
+                                        </span>
+                                    {% elif update.status == 'failed' %}
+                                        <span class="badge bg-danger" title="{{ update.error_message }}">
+                                            <i class="fas fa-times me-1"></i>Failed
+                                        </span>
+                                    {% elif update.status == 'rolled_back' %}
+                                        <span class="badge bg-warning">
+                                            <i class="fas fa-undo me-1"></i>Rolled Back
+                                        </span>
+                                    {% elif update.status == 'pending' %}
+                                        <span class="badge bg-info">
+                                            <i class="fas fa-clock me-1"></i>Pending
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ update.status.title() }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if update.status == 'success' and update.backup_path %}
+                                        <button class="btn btn-sm btn-warning" onclick="confirmRollback({{ update.id }})">
+                                            <i class="fas fa-undo me-1"></i>Rollback
+                                        </button>
+                                    {% elif update.status == 'failed' and update.error_message %}
+                                        <button class="btn btn-sm btn-info" onclick="showError('{{ update.error_message|e }}')">
+                                            <i class="fas fa-info-circle me-1"></i>View Error
+                                        </button>
+                                    {% else %}
+                                        <span class="text-muted">No actions</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-history fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No Update History</h5>
+                    <p class="text-muted">Updates will appear here once you start using the system.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Rollback Confirmation Modal -->
+<div class="modal fade" id="rollbackModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Rollback</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Warning!</strong> Rolling back will revert the system to a previous state.
+                </div>
+                <p>Are you sure you want to rollback to this version? This will:</p>
+                <ul>
+                    <li>Replace current files with backup version</li>
+                    <li>Potentially lose recent changes</li>
+                    <li>Restart system components</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-warning" id="confirm-rollback">
+                    <i class="fas fa-undo me-2"></i>Confirm Rollback
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Error Details Modal -->
+<div class="modal fade" id="errorModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Error Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <pre class="bg-dark text-light p-3 rounded" id="error-details"></pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let updateInProgress = false;
+let rollbackUpdateId = null;
+
+function checkForUpdates() {
+    if (updateInProgress) return;
+    
+    const statusBody = document.getElementById('update-status-body');
+    statusBody.innerHTML = `
+        <div class="text-center py-3">
+            <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+            <p>Checking for updates...</p>
+        </div>
+    `;
+    
+    fetch('/admin/updates/check', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                statusBody.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Error checking for updates: ${data.error}
+                    </div>
+                `;
+            } else if (data.available) {
+                statusBody.innerHTML = `
+                    <div class="alert alert-warning">
+                        <h6><i class="fas fa-download me-2"></i>Update Available!</h6>
+                        <p class="mb-2">New version: <strong>${data.version}</strong></p>
+                        <p class="mb-3">${data.message}</p>
+                        <button class="btn btn-success" onclick="applyUpdate()">
+                            <i class="fas fa-rocket me-2"></i>Apply Update
+                        </button>
+                        <button class="btn btn-outline-secondary ms-2" onclick="viewChanges()">
+                            <i class="fas fa-list me-2"></i>View Changes
+                        </button>
+                    </div>
+                `;
+            } else {
+                statusBody.innerHTML = `
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle me-2"></i>
+                        System is up to date
+                    </div>
+                `;
+            }
+            
+            document.getElementById('last-check').textContent = new Date().toLocaleString();
+        })
+        .catch(error => {
+            statusBody.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Network error checking for updates
+                </div>
+            `;
+        });
+}
+
+function applyUpdate() {
+    if (updateInProgress) return;
+    
+    updateInProgress = true;
+    const statusBody = document.getElementById('update-status-body');
+    
+    statusBody.innerHTML = `
+        <div class="alert alert-info">
+            <h6><i class="fas fa-spinner fa-spin me-2"></i>Update in Progress</h6>
+            <p class="mb-2">Applying update... This may take a few minutes.</p>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%"></div>
+            </div>
+            <small class="text-muted mt-2 d-block">Do not close this page during the update.</small>
+        </div>
+    `;
+    
+    fetch('/admin/updates/apply', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            updateInProgress = false;
+            
+            if (data.status === 'updated') {
+                statusBody.innerHTML = `
+                    <div class="alert alert-success">
+                        <h6><i class="fas fa-check-circle me-2"></i>Update Successful!</h6>
+                        <p class="mb-2">Updated to version: <strong>${data.version}</strong></p>
+                        <p class="mb-0">System will restart automatically in 5 seconds.</p>
+                    </div>
+                `;
+                
+                setTimeout(() => {
+                    location.reload();
+                }, 5000);
+                
+                showAlert('Update completed successfully!', 'success');
+            } else if (data.status === 'failed') {
+                statusBody.innerHTML = `
+                    <div class="alert alert-danger">
+                        <h6><i class="fas fa-times-circle me-2"></i>Update Failed</h6>
+                        <p class="mb-2">Error: ${data.error}</p>
+                        <p class="mb-0">System has been rolled back to the previous version.</p>
+                    </div>
+                `;
+                
+                showAlert('Update failed and was rolled back', 'danger');
+            }
+            
+            refreshHistory();
+        })
+        .catch(error => {
+            updateInProgress = false;
+            statusBody.innerHTML = `
+                <div class="alert alert-danger">
+                    <h6><i class="fas fa-exclamation-triangle me-2"></i>Update Error</h6>
+                    <p class="mb-0">Network error during update. Please try again.</p>
+                </div>
+            `;
+            
+            showAlert('Update error occurred', 'danger');
+        });
+}
+
+function viewChanges() {
+    showAlert('Opening change log...', 'info');
+    // This would show a modal with git diff or change log
+}
+
+function confirmRollback(updateId) {
+    rollbackUpdateId = updateId;
+    new bootstrap.Modal(document.getElementById('rollbackModal')).show();
+}
+
+function showError(errorMessage) {
+    document.getElementById('error-details').textContent = errorMessage;
+    new bootstrap.Modal(document.getElementById('errorModal')).show();
+}
+
+function refreshHistory() {
+    // Reload the page to get fresh history
+    location.reload();
+}
+
+// Rollback confirmation handler
+document.getElementById('confirm-rollback').addEventListener('click', function() {
+    if (rollbackUpdateId) {
+        this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Rolling back...';
+        this.disabled = true;
+        
+        fetch(`/admin/updates/rollback/${rollbackUpdateId}`, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showAlert('Rollback completed successfully', 'success');
+                    setTimeout(() => location.reload(), 2000);
+                } else {
+                    showAlert(data.error || 'Rollback failed', 'danger');
+                }
+                
+                bootstrap.Modal.getInstance(document.getElementById('rollbackModal')).hide();
+            })
+            .catch(error => {
+                showAlert('Error during rollback', 'danger');
+                bootstrap.Modal.getInstance(document.getElementById('rollbackModal')).hide();
+            });
+    }
+});
+
+// Auto-refresh update status every 30 seconds when not updating
+setInterval(() => {
+    if (!updateInProgress) {
+        // Silently check for updates without UI changes
+        fetch('/admin/updates/check', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                // Only update UI if there's a significant change
+                if (data.available && !document.querySelector('.alert-warning')) {
+                    checkForUpdates();
+                }
+            })
+            .catch(() => {
+                // Ignore errors in background checks
+            });
+    }
+}, 30000);
+</script>
+{% endblock %}

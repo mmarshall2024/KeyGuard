@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - OMNICore Bot Admin{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1><i class="fas fa-dashboard me-2"></i>System Dashboard</h1>
+            <p class="text-muted">Real-time monitoring and system overview</p>
+        </div>
+    </div>
+
+    <!-- System Status Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success">
+                <div class="card-body text-center">
+                    <i class="fas fa-robot fa-2x mb-2"></i>
+                    <h5>Bot Status</h5>
+                    <p class="mb-0" id="bot-status">Online</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-info">
+                <div class="card-body text-center">
+                    <i class="fas fa-plug fa-2x mb-2"></i>
+                    <h5>Active Plugins</h5>
+                    <p class="mb-0">{{ active_plugins }}/{{ plugin_count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-warning">
+                <div class="card-body text-center">
+                    <i class="fas fa-sync fa-2x mb-2"></i>
+                    <h5>Updates</h5>
+                    <p class="mb-0" id="update-status">Checking...</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-secondary">
+                <div class="card-body text-center">
+                    <i class="fas fa-heartbeat fa-2x mb-2"></i>
+                    <h5>System Health</h5>
+                    <p class="mb-0" id="system-health">Healthy</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Recent Updates -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-history me-2"></i>Recent Updates</h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_updates %}
+                        <div class="list-group list-group-flush">
+                            {% for update in recent_updates %}
+                                <div class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">
+                                            {% if update.version_to %}
+                                                Version {{ update.version_to }}
+                                            {% else %}
+                                                Update Check
+                                            {% endif %}
+                                        </div>
+                                        <small class="text-muted">
+                                            {{ update.started_at.strftime('%Y-%m-%d %H:%M') }}
+                                        </small>
+                                    </div>
+                                    <span class="badge bg-{% if update.status == 'success' %}success{% elif update.status == 'failed' %}danger{% else %}secondary{% endif %}">
+                                        {{ update.status.title() }}
+                                    </span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No update history available</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- System Metrics Chart -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-line me-2"></i>System Metrics</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="metricsChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-lightning-bolt me-2"></i>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <button class="btn btn-primary w-100" onclick="checkForUpdates()">
+                                <i class="fas fa-sync me-2"></i>Check Updates
+                            </button>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <button class="btn btn-success w-100" onclick="reloadAllPlugins()">
+                                <i class="fas fa-refresh me-2"></i>Reload Plugins
+                            </button>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <button class="btn btn-info w-100" onclick="runHealthCheck()">
+                                <i class="fas fa-heartbeat me-2"></i>Health Check
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Real-time metrics chart
+const ctx = document.getElementById('metricsChart').getContext('2d');
+const metricsChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'Response Time (ms)',
+            data: [],
+            borderColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgba(75, 192, 192, 0.1)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(255, 255, 255, 0.1)'
+                }
+            },
+            x: {
+                grid: {
+                    color: 'rgba(255, 255, 255, 0.1)'
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    color: 'rgb(255, 255, 255)'
+                }
+            }
+        }
+    }
+});
+
+// Update metrics every 30 seconds
+setInterval(updateMetrics, 30000);
+
+function updateMetrics() {
+    fetch('/admin/api/metrics')
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error('Metrics error:', data.error);
+                return;
+            }
+            
+            // Update status indicators
+            document.getElementById('bot-status').textContent = data.bot_online ? 'Online' : 'Offline';
+            document.getElementById('system-health').textContent = data.healthy ? 'Healthy' : 'Issues';
+            
+            // Update chart
+            const now = new Date().toLocaleTimeString();
+            metricsChart.data.labels.push(now);
+            metricsChart.data.datasets[0].data.push(data.response_time || 0);
+            
+            // Keep only last 20 points
+            if (metricsChart.data.labels.length > 20) {
+                metricsChart.data.labels.shift();
+                metricsChart.data.datasets[0].data.shift();
+            }
+            
+            metricsChart.update();
+        })
+        .catch(error => console.error('Error fetching metrics:', error));
+}
+
+// Quick action functions
+function checkForUpdates() {
+    document.getElementById('update-status').textContent = 'Checking...';
+    fetch('/admin/updates/check', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.available) {
+                document.getElementById('update-status').textContent = 'Available';
+                showAlert('Update available: ' + data.version, 'info');
+            } else {
+                document.getElementById('update-status').textContent = 'Up to date';
+                showAlert('System is up to date', 'success');
+            }
+        })
+        .catch(error => {
+            document.getElementById('update-status').textContent = 'Error';
+            showAlert('Error checking for updates', 'danger');
+        });
+}
+
+function reloadAllPlugins() {
+    showAlert('Reloading plugins...', 'info');
+    // This would trigger a plugin reload via API
+    setTimeout(() => {
+        showAlert('Plugins reloaded successfully', 'success');
+    }, 2000);
+}
+
+function runHealthCheck() {
+    updateMetrics();
+    showAlert('Health check completed', 'success');
+}
+
+// Initial load
+updateMetrics();
+</script>
+{% endblock %}

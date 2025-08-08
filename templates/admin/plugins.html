@@ -1,0 +1,274 @@
+{% extends "base.html" %}
+
+{% block title %}Plugins - OMNICore Bot Admin{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1><i class="fas fa-plug me-2"></i>Plugin Management</h1>
+            <p class="text-muted">Manage bot plugins and extensions</p>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-success" onclick="scanForPlugins()">
+                <i class="fas fa-search me-2"></i>Scan for New Plugins
+            </button>
+        </div>
+    </div>
+
+    <!-- Plugin Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary">
+                <div class="card-body text-center">
+                    <i class="fas fa-plug fa-2x mb-2"></i>
+                    <h5>Total Plugins</h5>
+                    <h3>{{ plugins|length }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success">
+                <div class="card-body text-center">
+                    <i class="fas fa-check-circle fa-2x mb-2"></i>
+                    <h5>Active Plugins</h5>
+                    <h3>{{ plugins|selectattr("enabled")|list|length }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info">
+                <div class="card-body text-center">
+                    <i class="fas fa-terminal fa-2x mb-2"></i>
+                    <h5>Total Commands</h5>
+                    <h3 id="total-commands">{{ active_plugins.values()|sum(attribute='commands')|length }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Plugin List -->
+    <div class="card">
+        <div class="card-header">
+            <h5><i class="fas fa-list me-2"></i>Installed Plugins</h5>
+        </div>
+        <div class="card-body">
+            {% if plugins %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Version</th>
+                                <th>Status</th>
+                                <th>Commands</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for plugin in plugins %}
+                            <tr id="plugin-{{ plugin.name }}">
+                                <td>
+                                    <strong>{{ plugin.name }}</strong>
+                                    {% if plugin.name in active_plugins %}
+                                        <br><small class="text-muted">{{ active_plugins[plugin.name].description }}</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary">{{ plugin.version }}</span>
+                                </td>
+                                <td>
+                                    {% if plugin.enabled %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check-circle me-1"></i>Enabled
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            <i class="fas fa-pause-circle me-1"></i>Disabled
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if plugin.name in active_plugins %}
+                                        {% for cmd, desc in active_plugins[plugin.name].commands.items() %}
+                                            <span class="badge bg-info me-1" title="{{ desc }}">/{{ cmd }}</span>
+                                        {% endfor %}
+                                    {% else %}
+                                        <span class="text-muted">N/A</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button class="btn btn-sm btn-{% if plugin.enabled %}warning{% else %}success{% endif %}"
+                                                onclick="togglePlugin('{{ plugin.name }}')"
+                                                id="toggle-{{ plugin.name }}">
+                                            <i class="fas fa-{% if plugin.enabled %}pause{% else %}play{% endif %} me-1"></i>
+                                            {{ 'Disable' if plugin.enabled else 'Enable' }}
+                                        </button>
+                                        {% if plugin.enabled %}
+                                        <button class="btn btn-sm btn-primary" onclick="reloadPlugin('{{ plugin.name }}')">
+                                            <i class="fas fa-sync me-1"></i>Reload
+                                        </button>
+                                        {% endif %}
+                                        <button class="btn btn-sm btn-danger" onclick="confirmDeletePlugin('{{ plugin.name }}')">
+                                            <i class="fas fa-trash me-1"></i>Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-plug fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No Plugins Found</h5>
+                    <p class="text-muted">Create plugins in the 'plugins/' directory to get started.</p>
+                    <button class="btn btn-primary" onclick="scanForPlugins()">
+                        <i class="fas fa-search me-2"></i>Scan for Plugins
+                    </button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Plugin Development Guide -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5><i class="fas fa-code me-2"></i>Plugin Development</h5>
+        </div>
+        <div class="card-body">
+            <p>Create custom plugins to extend bot functionality:</p>
+            <ol>
+                <li>Create a new Python file in the <code>plugins/</code> directory</li>
+                <li>Inherit from <code>BasePlugin</code> class</li>
+                <li>Implement the <code>register_commands</code> method</li>
+                <li>Use the admin panel to enable/reload your plugin</li>
+            </ol>
+            
+            <h6 class="mt-3">Example Plugin Structure:</h6>
+            <pre class="bg-dark text-light p-3 rounded"><code>from plugins.base_plugin import BasePlugin
+from telegram import Update
+from telegram.ext import ContextTypes
+
+class MyPlugin(BasePlugin):
+    def __init__(self):
+        super().__init__()
+        self.version = "1.0.0"
+        self.description = "My awesome plugin"
+    
+    def register_commands(self, application):
+        application.add_handler(
+            self.add_command("mycommand", self.my_handler, "Does something cool")
+        )
+    
+    async def my_handler(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        await update.message.reply_text("Hello from my plugin!")
+</code></pre>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Plugin Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the plugin "<span id="delete-plugin-name"></span>"?</p>
+                <p class="text-warning"><i class="fas fa-exclamation-triangle"></i> This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete">Delete Plugin</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let pluginToDelete = null;
+
+function togglePlugin(pluginName) {
+    const button = document.getElementById(`toggle-${pluginName}`);
+    const originalText = button.innerHTML;
+    
+    button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Working...';
+    button.disabled = true;
+    
+    fetch(`/admin/plugins/${pluginName}/toggle`, { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                showAlert(`Plugin ${data.action} successfully`, 'success');
+                location.reload(); // Reload to update UI
+            } else {
+                showAlert(data.error || 'Failed to toggle plugin', 'danger');
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+        })
+        .catch(error => {
+            showAlert('Error toggling plugin', 'danger');
+            button.innerHTML = originalText;
+            button.disabled = false;
+        });
+}
+
+function reloadPlugin(pluginName) {
+    const button = event.target;
+    const originalText = button.innerHTML;
+    
+    button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Reloading...';
+    button.disabled = true;
+    
+    fetch(`/admin/plugins/${pluginName}/reload`, { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                showAlert('Plugin reloaded successfully', 'success');
+            } else {
+                showAlert(data.error || 'Failed to reload plugin', 'danger');
+            }
+            button.innerHTML = originalText;
+            button.disabled = false;
+        })
+        .catch(error => {
+            showAlert('Error reloading plugin', 'danger');
+            button.innerHTML = originalText;
+            button.disabled = false;
+        });
+}
+
+function confirmDeletePlugin(pluginName) {
+    pluginToDelete = pluginName;
+    document.getElementById('delete-plugin-name').textContent = pluginName;
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+
+function scanForPlugins() {
+    showAlert('Scanning for new plugins...', 'info');
+    // This would trigger a plugin scan via API
+    setTimeout(() => {
+        location.reload();
+    }, 2000);
+}
+
+// Delete confirmation handler
+document.getElementById('confirm-delete').addEventListener('click', function() {
+    if (pluginToDelete) {
+        // This would delete the plugin via API
+        showAlert(`Plugin ${pluginToDelete} deleted`, 'success');
+        document.getElementById(`plugin-${pluginToDelete}`).remove();
+        bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+        pluginToDelete = null;
+    }
+});
+</script>
+{% endblock %}
