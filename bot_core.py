@@ -56,6 +56,9 @@ class BotCore:
                     if not response:
                         response = f"I don't recognize that command. Type /help to see what I can do, or just chat with me naturally!"
                 else:
+                    # Track usage for AI suggestions
+                    self.track_interaction(chat_id, text, user_name)
+                    
                     # Handle natural conversation
                     response = self.handle_natural_chat(text, user_name, chat_id)
                 
@@ -304,6 +307,33 @@ Just let me know what you'd like to do, and I can create a secure checkout link 
             ]
             import random
             return random.choice(responses) + "\n\nYou can ask me for jokes, weather, quotes, or just keep chatting!"
+    
+    def track_interaction(self, chat_id, text, user_name):
+        """Track user interactions for AI analysis"""
+        try:
+            # Get AI suggestions plugin for usage tracking
+            ai_plugin = self.plugin_manager.loaded_plugins.get('ai_suggestions_plugin')
+            if ai_plugin and hasattr(ai_plugin, 'track_usage'):
+                # Determine action type
+                action = "natural_chat"
+                if any(word in text.lower() for word in ['weather', 'forecast']):
+                    action = "weather_request"
+                elif any(word in text.lower() for word in ['joke', 'funny', 'laugh']):
+                    action = "entertainment_request" 
+                elif any(word in text.lower() for word in ['help', 'what can you do']):
+                    action = "help_seeking"
+                elif any(word in text.lower() for word in ['payment', 'pay', 'crypto', 'bitcoin']):
+                    action = "payment_inquiry"
+                
+                context = {
+                    "message_length": len(text),
+                    "user_name": user_name,
+                    "contains_question": "?" in text
+                }
+                
+                ai_plugin.track_usage(chat_id, action, context)
+        except Exception as e:
+            logger.error(f"Error tracking interaction: {e}")
     
     def send_telegram_message(self, chat_id, text):
         """Send message to Telegram"""

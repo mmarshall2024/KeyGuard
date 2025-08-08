@@ -34,6 +34,10 @@ class PluginManager:
                         if hasattr(plugin, 'register_commands'):
                             plugin.register_commands()
                         logger.info(f"Loaded plugin: {plugin_record.name}")
+                        
+                        # Auto-enable AI suggestions plugin
+                        if plugin_record.name == 'ai_suggestions_plugin':
+                            logger.info("AI Suggestions plugin loaded - usage tracking enabled")
                 except Exception as e:
                     logger.error(f"Failed to load plugin {plugin_record.name}: {e}")
                     

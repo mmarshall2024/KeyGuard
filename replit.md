@@ -17,10 +17,18 @@ Preferred communication style: Simple, everyday language.
 - **Proxy Fix Middleware**: Handles reverse proxy headers for deployment environments
 
 ### Bot Architecture
-- **Centralized Bot Core**: `BotCore` class manages Telegram bot initialization and command registration
+- **Centralized Bot Core**: `BotCore` class manages Telegram bot initialization and natural conversation
 - **Plugin System**: Dynamic plugin loading through `PluginManager` with base class inheritance
+- **Natural Language Processing**: Conversational AI with context-aware responses
 - **Command Registration**: Core commands registered in bot setup, plugins register additional commands
 - **Update Processing**: Webhook-based update handling for real-time message processing
+- **Usage Tracking**: AI-driven pattern analysis for feature suggestions
+
+### AI & Intelligence Layer
+- **Conversational AI**: Natural language understanding and contextual responses
+- **Usage Pattern Analysis**: AI-driven feature suggestions based on interaction patterns
+- **Smart Recommendations**: Machine learning insights for system optimization
+- **Behavioral Analytics**: User profiling and engagement analysis
 
 ### Database Design
 - **Configuration Storage**: `BotConfig` model for dynamic configuration management
@@ -33,6 +41,10 @@ Preferred communication style: Simple, everyday language.
 - **Dynamic Loading**: Filesystem scanning and database-driven plugin activation
 - **Command Registration**: Plugins register commands with the main application
 - **Configuration Management**: Plugin-specific configuration through base class methods
+- **AI Suggestions Plugin**: Analyzes usage patterns and suggests new features
+- **Mastodon Integration**: Social media posting and engagement features
+- **Crypto Payments Plugin**: Multi-provider cryptocurrency payment processing
+- **Modular Upgrades**: Hot-swappable plugin system for continuous evolution
 
 ### Update Management System
 - **Git Integration**: Automatic updates from GitHub repository
