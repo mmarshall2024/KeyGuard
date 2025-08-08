@@ -1,0 +1,393 @@
+{% extends "landing/base.html" %}
+
+{% block title %}Welcome to {{ niche.title }} - OMNI Empire{% endblock %}
+
+{% block primary_color %}{{ niche.primary_color }}{% endblock %}
+{% block secondary_color %}{{ niche.secondary_color }}{% endblock %}
+
+{% block content %}
+<!-- Onboarding Hero -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center min-vh-100 align-items-center">
+            <div class="col-lg-8">
+                <div class="text-center mb-5">
+                    <div class="display-1 mb-3">🎉</div>
+                    <h1 class="display-4 fw-bold text-white mb-4">Welcome to {{ niche.title }}!</h1>
+                    <p class="lead text-white-50 mb-5">
+                        You're now part of the OMNI Empire. Let's get your AI-powered {{ niche.category.lower() }} system up and running in just a few minutes.
+                    </p>
+                </div>
+                
+                <div class="demo-container">
+                    <div class="onboarding-progress mb-5">
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-primary" id="progress-bar" style="width: 25%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <small class="text-light">Setup Started</small>
+                            <small class="text-light">AI Configuration</small>
+                            <small class="text-light">Testing</small>
+                            <small class="text-light">Complete</small>
+                        </div>
+                    </div>
+                    
+                    <div id="onboarding-step" class="onboarding-step">
+                        <!-- Step 1: Account Setup -->
+                        <div class="step-content" id="step-1">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <h3 class="text-white mb-4">Account Configuration</h3>
+                                    <form id="account-form">
+                                        <div class="mb-3">
+                                            <label class="form-label text-white">Business Name</label>
+                                            <input type="text" class="form-control form-control-lg" name="business_name" required>
+                                            <small class="text-light">What should we call your business?</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label text-white">Industry Focus</label>
+                                            <select class="form-select form-select-lg" name="industry" required>
+                                                <option value="">Select your industry</option>
+                                                <option value="technology">Technology</option>
+                                                <option value="healthcare">Healthcare</option>
+                                                <option value="finance">Finance</option>
+                                                <option value="retail">Retail</option>
+                                                <option value="manufacturing">Manufacturing</option>
+                                                <option value="services">Services</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label text-white">Team Size</label>
+                                            <select class="form-select form-select-lg" name="team_size" required>
+                                                <option value="">Select team size</option>
+                                                <option value="1-5">1-5 people</option>
+                                                <option value="6-20">6-20 people</option>
+                                                <option value="21-100">21-100 people</option>
+                                                <option value="100+">100+ people</option>
+                                            </select>
+                                        </div>
+                                        <div class="d-grid">
+                                            <button type="submit" class="btn btn-primary btn-lg">
+                                                <i class="fas fa-arrow-right me-2"></i>Continue Setup
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="setup-preview bg-dark bg-opacity-50 rounded p-4">
+                                        <h5 class="text-white mb-3">{{ niche.icon }} Your {{ niche.title }} Package</h5>
+                                        <div class="package-details">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span class="text-light">Plan:</span>
+                                                <span class="text-white fw-bold">{{ plan.title() if plan else 'Professional' }}</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span class="text-light">Monthly Cost:</span>
+                                                <span class="text-white fw-bold">${{ niche.pricing.professional.price }}/month</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between mb-3">
+                                                <span class="text-light">Setup Time:</span>
+                                                <span class="text-success fw-bold">< 5 minutes</span>
+                                            </div>
+                                            
+                                            <h6 class="text-white mb-2">Included Features:</h6>
+                                            <ul class="list-unstyled">
+                                                {% for feature in niche.features %}
+                                                <li class="text-light mb-1">
+                                                    <i class="fas fa-check me-2 text-success"></i>{{ feature }}
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2: AI Configuration -->
+                        <div class="step-content" id="step-2" style="display: none;">
+                            <div class="text-center">
+                                <h3 class="text-white mb-4">AI System Configuration</h3>
+                                <div class="ai-config-animation mb-4">
+                                    <div class="feature-icon mx-auto mb-3">
+                                        <i class="fas fa-brain"></i>
+                                    </div>
+                                    <div class="config-status">
+                                        <div class="status-item mb-3">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <div class="spinner-border spinner-border-sm text-primary me-3" style="display: none;"></div>
+                                                <i class="fas fa-check text-success me-3" style="display: none;"></i>
+                                                <span class="text-light">Initializing AI modules...</span>
+                                            </div>
+                                        </div>
+                                        <div class="status-item mb-3">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <div class="spinner-border spinner-border-sm text-primary me-3" style="display: none;"></div>
+                                                <i class="fas fa-check text-success me-3" style="display: none;"></i>
+                                                <span class="text-light">Configuring automation workflows...</span>
+                                            </div>
+                                        </div>
+                                        <div class="status-item mb-3">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <div class="spinner-border spinner-border-sm text-primary me-3" style="display: none;"></div>
+                                                <i class="fas fa-check text-success me-3" style="display: none;"></i>
+                                                <span class="text-light">Setting up monitoring systems...</span>
+                                            </div>
+                                        </div>
+                                        <div class="status-item mb-3">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <div class="spinner-border spinner-border-sm text-primary me-3" style="display: none;"></div>
+                                                <i class="fas fa-check text-success me-3" style="display: none;"></i>
+                                                <span class="text-light">Optimizing performance...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="configuration-progress">
+                                    <div class="progress mb-3" style="height: 12px;">
+                                        <div class="progress-bar bg-gradient progress-bar-animated" 
+                                             id="config-progress" style="width: 0%"></div>
+                                    </div>
+                                    <p class="text-light">AI configuration in progress...</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3: Testing -->
+                        <div class="step-content" id="step-3" style="display: none;">
+                            <div class="text-center">
+                                <h3 class="text-white mb-4">Testing Your System</h3>
+                                <p class="text-light mb-5">Let's run a quick test to ensure everything is working perfectly</p>
+                                
+                                <div class="test-results row g-4">
+                                    <div class="col-md-4">
+                                        <div class="test-card bg-dark bg-opacity-50 rounded p-4">
+                                            <i class="fas fa-robot fa-2x text-primary mb-3"></i>
+                                            <h5 class="text-white mb-2">AI Bot Test</h5>
+                                            <div class="test-status">
+                                                <div class="spinner-border text-primary mb-2" style="display: none;"></div>
+                                                <i class="fas fa-check-circle text-success fa-2x" style="display: none;"></i>
+                                                <p class="text-light small mb-0">Response time: 0.3s</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="test-card bg-dark bg-opacity-50 rounded p-4">
+                                            <i class="fas fa-cogs fa-2x text-warning mb-3"></i>
+                                            <h5 class="text-white mb-2">Automation Test</h5>
+                                            <div class="test-status">
+                                                <div class="spinner-border text-warning mb-2" style="display: none;"></div>
+                                                <i class="fas fa-check-circle text-success fa-2x" style="display: none;"></i>
+                                                <p class="text-light small mb-0">All workflows active</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="test-card bg-dark bg-opacity-50 rounded p-4">
+                                            <i class="fas fa-chart-line fa-2x text-success mb-3"></i>
+                                            <h5 class="text-white mb-2">Analytics Test</h5>
+                                            <div class="test-status">
+                                                <div class="spinner-border text-success mb-2" style="display: none;"></div>
+                                                <i class="fas fa-check-circle text-success fa-2x" style="display: none;"></i>
+                                                <p class="text-light small mb-0">Tracking enabled</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-5">
+                                    <button class="btn btn-primary btn-lg" id="run-tests" disabled>
+                                        <i class="fas fa-play me-2"></i>Run System Tests
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 4: Complete -->
+                        <div class="step-content" id="step-4" style="display: none;">
+                            <div class="text-center">
+                                <div class="completion-animation mb-4">
+                                    <div class="display-1 mb-3">🚀</div>
+                                    <h2 class="text-white mb-4">Congratulations!</h2>
+                                    <p class="lead text-white-50 mb-5">
+                                        Your {{ niche.title }} AI system is now fully operational and ready to transform your business.
+                                    </p>
+                                </div>
+                                
+                                <div class="success-metrics row g-4 mb-5">
+                                    <div class="col-md-3">
+                                        <div class="metric-card bg-success bg-opacity-25 rounded p-3">
+                                            <h3 class="gradient-text">✓</h3>
+                                            <h6 class="text-white">AI Configured</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="metric-card bg-primary bg-opacity-25 rounded p-3">
+                                            <h3 class="gradient-text">47</h3>
+                                            <h6 class="text-white">Automations Ready</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="metric-card bg-warning bg-opacity-25 rounded p-3">
+                                            <h3 class="gradient-text">24/7</h3>
+                                            <h6 class="text-white">Monitoring Active</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="metric-card bg-info bg-opacity-25 rounded p-3">
+                                            <h3 class="gradient-text">100%</h3>
+                                            <h6 class="text-white">System Health</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="next-steps">
+                                    <h4 class="text-white mb-4">What's Next?</h4>
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <a href="/dashboard" class="btn btn-primary w-100 btn-lg">
+                                                <i class="fas fa-tachometer-alt me-2"></i>Open Dashboard
+                                            </a>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <a href="/training" class="btn btn-outline-primary w-100 btn-lg">
+                                                <i class="fas fa-graduation-cap me-2"></i>View Training
+                                            </a>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <a href="/support" class="btn btn-outline-primary w-100 btn-lg">
+                                                <i class="fas fa-headset me-2"></i>Get Support
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-5 pt-4 border-top border-secondary">
+                                    <h5 class="text-white mb-3">Your Account Details</h5>
+                                    <div class="account-info text-light">
+                                        <p><strong>Email:</strong> {{ email or 'user@example.com' }}</p>
+                                        <p><strong>Plan:</strong> {{ plan.title() if plan else 'Professional' }}</p>
+                                        <p><strong>Next Billing:</strong> {{ (datetime.now() + timedelta(days=30)).strftime('%B %d, %Y') }}</p>
+                                        <p><strong>Support Level:</strong> Priority Support Included</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentStep = 1;
+const totalSteps = 4;
+
+// Account form submission
+document.getElementById('account-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    nextStep();
+});
+
+function nextStep() {
+    if (currentStep < totalSteps) {
+        // Hide current step
+        document.getElementById(`step-${currentStep}`).style.display = 'none';
+        
+        // Show next step
+        currentStep++;
+        document.getElementById(`step-${currentStep}`).style.display = 'block';
+        
+        // Update progress bar
+        const progress = (currentStep / totalSteps) * 100;
+        document.getElementById('progress-bar').style.width = progress + '%';
+        
+        // Handle step-specific logic
+        if (currentStep === 2) {
+            startAIConfiguration();
+        } else if (currentStep === 3) {
+            setTimeout(() => {
+                document.getElementById('run-tests').disabled = false;
+            }, 3000);
+        }
+    }
+}
+
+function startAIConfiguration() {
+    const statusItems = document.querySelectorAll('.status-item');
+    const configProgress = document.getElementById('config-progress');
+    let progress = 0;
+    let currentItem = 0;
+    
+    const interval = setInterval(() => {
+        if (currentItem < statusItems.length) {
+            const item = statusItems[currentItem];
+            const spinner = item.querySelector('.spinner-border');
+            const check = item.querySelector('.fa-check');
+            
+            // Show spinner
+            spinner.style.display = 'inline-block';
+            
+            setTimeout(() => {
+                // Hide spinner, show check
+                spinner.style.display = 'none';
+                check.style.display = 'inline-block';
+                
+                currentItem++;
+                progress += 25;
+                configProgress.style.width = progress + '%';
+                
+                if (currentItem >= statusItems.length) {
+                    setTimeout(() => {
+                        nextStep();
+                    }, 1000);
+                }
+            }, 2000);
+        }
+    }, 500);
+}
+
+// Run tests function
+document.getElementById('run-tests').addEventListener('click', function() {
+    const testCards = document.querySelectorAll('.test-card');
+    
+    testCards.forEach((card, index) => {
+        setTimeout(() => {
+            const spinner = card.querySelector('.spinner-border');
+            const check = card.querySelector('.fa-check-circle');
+            
+            spinner.style.display = 'block';
+            
+            setTimeout(() => {
+                spinner.style.display = 'none';
+                check.style.display = 'block';
+                
+                if (index === testCards.length - 1) {
+                    setTimeout(() => {
+                        nextStep();
+                    }, 1500);
+                }
+            }, 2000);
+        }, index * 500);
+    });
+});
+
+// Auto-start the configuration process
+if (currentStep === 1) {
+    // Auto-fill some demo data for testing
+    setTimeout(() => {
+        const form = document.getElementById('account-form');
+        if (form) {
+            form.business_name.value = 'Demo Business';
+            form.industry.value = 'technology';
+            form.team_size.value = '6-20';
+        }
+    }, 1000);
+}
+</script>
+{% endblock %}

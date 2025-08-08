@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
-from models import db, BotConfig, Plugin
+from models import db, BotConfig
 import json
 import os
+from datetime import datetime, timedelta
 
 landing_pages_bp = Blueprint('landing_pages', __name__)
 
@@ -164,31 +165,31 @@ def api_demo(niche_id):
                 "details": "Found 5 automation opportunities that could save 15 hours/week",
                 "suggestions": ["Automate email responses", "Schedule social media posts", "Generate reports automatically"]
             },
-            "create_bot": {
+            "create_automation": {
                 "result": "✅ Bot Created Successfully",
                 "details": "Your custom AI bot is ready with advanced natural language processing",
                 "next_steps": ["Configure workflows", "Set up triggers", "Deploy to production"]
             }
         },
         "financial_legal": {
-            "asset_analysis": {
+            "analyze": {
                 "result": "⚖️ Asset Protection Plan Generated",
                 "details": "Identified 3 key strategies to protect $500K+ in assets",
                 "recommendations": ["LLC Structure", "Asset Trusts", "Offshore Accounts"]
             },
-            "tax_optimization": {
+            "generate": {
                 "result": "💰 Tax Savings Identified",
                 "details": "Potential annual savings: $25,000 through strategic optimization",
                 "strategies": ["Business deductions", "Investment structures", "Retirement planning"]
             }
         },
         "content_media": {
-            "content_generate": {
+            "generate": {
                 "result": "🎬 Viral Content Created",
                 "details": "Generated 10 high-engagement posts with trending hashtags",
                 "content": ["Video script ready", "Social media posts", "Blog article outline"]
             },
-            "brand_analysis": {
+            "analyze": {
                 "result": "🎨 Brand Strategy Complete",
                 "details": "Custom brand identity with color palette and messaging guide",
                 "deliverables": ["Logo concepts", "Brand guidelines", "Content calendar"]
@@ -246,7 +247,7 @@ def signup(niche_id, plan):
         return jsonify({
             'success': True,
             'message': 'Signup successful! Check your email for next steps.',
-            'redirect_url': f'/onboarding/{niche_id}?plan={plan}&email={email}'
+            'redirect_url': f'/landing/onboarding/{niche_id}?plan={plan}&email={email}'
         })
     except Exception as e:
         return jsonify({'error': 'Signup failed, please try again'}), 500

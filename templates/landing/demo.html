@@ -1,0 +1,478 @@
+{% extends "landing/base.html" %}
+
+{% block title %}{{ niche.title }} Demo - OMNI Empire{% endblock %}
+
+{% block primary_color %}{{ niche.primary_color }}{% endblock %}
+{% block secondary_color %}{{ niche.secondary_color }}{% endblock %}
+
+{% block content %}
+<!-- Demo Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center min-vh-100 align-items-center">
+            <div class="col-lg-10">
+                <div class="text-center mb-5">
+                    <div class="display-1 mb-3">{{ niche.icon }}</div>
+                    <h1 class="display-4 fw-bold text-white mb-4">{{ niche.title }} Interactive Demo</h1>
+                    <p class="lead text-white-50 mb-5">
+                        Experience the full power of AI-driven {{ niche.category.lower() }} automation. 
+                        Click buttons, interact with features, and see real results.
+                    </p>
+                </div>
+                
+                <!-- Interactive Demo Interface -->
+                <div class="demo-container">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="demo-screen bg-dark rounded-lg p-4 mb-4" style="min-height: 500px;">
+                                <div class="demo-header d-flex align-items-center justify-content-between mb-4">
+                                    <h4 class="text-white mb-0">{{ niche.title }} AI Dashboard</h4>
+                                    <div class="demo-status">
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>Live Demo Active
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div id="demo-content" class="demo-content">
+                                    <div class="welcome-screen text-center py-5">
+                                        <div class="feature-icon mb-4">
+                                            <i class="fas fa-robot"></i>
+                                        </div>
+                                        <h5 class="text-white mb-3">AI System Ready</h5>
+                                        <p class="text-light mb-4">
+                                            Your {{ niche.title }} AI is initialized and ready to demonstrate advanced automation capabilities.
+                                        </p>
+                                        <div class="pulse">
+                                            <button class="btn btn-primary btn-lg" id="start-demo">
+                                                <i class="fas fa-play me-2"></i>Start Interactive Demo
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-4">
+                            <div class="demo-controls bg-secondary bg-opacity-25 rounded p-4">
+                                <h5 class="text-white mb-4">Demo Controls</h5>
+                                
+                                <div class="control-section mb-4">
+                                    <h6 class="text-white mb-3">Core Features</h6>
+                                    <div class="d-grid gap-2">
+                                        {% for feature in niche.features %}
+                                        <button class="btn btn-outline-primary btn-sm demo-feature" 
+                                                data-feature="{{ feature.lower().replace(' ', '_') }}">
+                                            <i class="fas fa-{% if loop.index == 1 %}brain{% elif loop.index == 2 %}cogs{% elif loop.index == 3 %}chart-line{% else %}shield-alt{% endif %} me-2"></i>{{ feature }}
+                                        </button>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                
+                                <div class="control-section mb-4">
+                                    <h6 class="text-white mb-3">Quick Actions</h6>
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-primary btn-sm demo-action" data-action="analyze">
+                                            <i class="fas fa-search me-2"></i>Run Analysis
+                                        </button>
+                                        <button class="btn btn-primary btn-sm demo-action" data-action="generate">
+                                            <i class="fas fa-magic me-2"></i>Generate Results
+                                        </button>
+                                        <button class="btn btn-primary btn-sm demo-action" data-action="optimize">
+                                            <i class="fas fa-rocket me-2"></i>Optimize Performance
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="stats-section">
+                                    <h6 class="text-white mb-3">Live Stats</h6>
+                                    <div class="stat-item d-flex justify-content-between mb-2">
+                                        <span class="text-light">Demo Sessions:</span>
+                                        <span class="gradient-text fw-bold" id="demo-sessions">1,247</span>
+                                    </div>
+                                    <div class="stat-item d-flex justify-content-between mb-2">
+                                        <span class="text-light">Success Rate:</span>
+                                        <span class="gradient-text fw-bold">97.8%</span>
+                                    </div>
+                                    <div class="stat-item d-flex justify-content-between mb-2">
+                                        <span class="text-light">Avg. ROI:</span>
+                                        <span class="gradient-text fw-bold">340%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Results Panel -->
+                    <div id="demo-results" class="demo-results mt-4" style="display: none;">
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="result-card bg-dark border border-success rounded p-3">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        <h6 class="text-white mb-0">Analysis Complete</h6>
+                                    </div>
+                                    <p class="text-light small mb-0">Found 12 optimization opportunities</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="result-card bg-dark border border-primary rounded p-3">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-cog text-primary me-2"></i>
+                                        <h6 class="text-white mb-0">Automation Ready</h6>
+                                    </div>
+                                    <p class="text-light small mb-0">3 workflows can be automated today</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="result-card bg-dark border border-warning rounded p-3">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-chart-line text-warning me-2"></i>
+                                        <h6 class="text-white mb-0">ROI Projection</h6>
+                                    </div>
+                                    <p class="text-light small mb-0">$4,200 monthly savings identified</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="demo-actions text-center mt-5">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <a href="{{ url_for('landing_pages.niche_landing', niche_id=niche_id) }}" 
+                                   class="btn btn-outline-primary w-100">
+                                    <i class="fas fa-arrow-left me-2"></i>Back to Details
+                                </a>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-primary w-100 signup-btn" 
+                                        data-plan="professional" 
+                                        data-price="{{ niche.pricing.professional.price }}">
+                                    <i class="fas fa-rocket me-2"></i>Get Full Version
+                                </button>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success w-100" id="schedule-consultation">
+                                    <i class="fas fa-calendar me-2"></i>Schedule Call
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const nicheId = '{{ niche_id }}';
+let demoActive = false;
+let demoStep = 0;
+
+// Start demo
+document.getElementById('start-demo').addEventListener('click', function() {
+    demoActive = true;
+    startDemoSequence();
+});
+
+// Demo feature buttons
+document.querySelectorAll('.demo-feature').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const feature = this.dataset.feature;
+        showFeatureDemo(feature);
+    });
+});
+
+// Demo action buttons
+document.querySelectorAll('.demo-action').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const action = this.dataset.action;
+        runDemoAction(action);
+    });
+});
+
+function startDemoSequence() {
+    const demoContent = document.getElementById('demo-content');
+    
+    demoContent.innerHTML = `
+        <div class="demo-sequence">
+            <div class="demo-step active mb-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="step-indicator bg-primary rounded-circle me-3 d-flex align-items-center justify-content-center" 
+                         style="width: 40px; height: 40px;">
+                        <span class="text-white fw-bold">1</span>
+                    </div>
+                    <h5 class="text-white mb-0">Initializing {{ niche.title }} AI System</h5>
+                </div>
+                <div class="progress mb-3">
+                    <div class="progress-bar bg-primary progress-bar-animated" 
+                         role="progressbar" style="width: 0%"></div>
+                </div>
+                <p class="text-light mb-0">Loading advanced AI modules and preparing demonstration environment...</p>
+            </div>
+        </div>
+    `;
+    
+    // Animate progress bar
+    const progressBar = demoContent.querySelector('.progress-bar');
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += 10;
+        progressBar.style.width = progress + '%';
+        
+        if (progress >= 100) {
+            clearInterval(interval);
+            setTimeout(() => showMainInterface(), 1000);
+        }
+    }, 200);
+}
+
+function showMainInterface() {
+    const demoContent = document.getElementById('demo-content');
+    
+    demoContent.innerHTML = `
+        <div class="main-interface">
+            <div class="interface-tabs mb-4">
+                <div class="btn-group w-100" role="group">
+                    <button class="btn btn-primary active" data-tab="dashboard">Dashboard</button>
+                    <button class="btn btn-outline-primary" data-tab="analytics">Analytics</button>
+                    <button class="btn btn-outline-primary" data-tab="automation">Automation</button>
+                    <button class="btn btn-outline-primary" data-tab="results">Results</button>
+                </div>
+            </div>
+            
+            <div id="dashboard-tab" class="tab-content active">
+                <div class="dashboard-grid">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="metric-card bg-secondary bg-opacity-25 rounded p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-white mb-1">Active Processes</h6>
+                                        <h3 class="gradient-text mb-0">47</h3>
+                                    </div>
+                                    <i class="fas fa-cog fa-2x text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="metric-card bg-secondary bg-opacity-25 rounded p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-white mb-1">Efficiency Gain</h6>
+                                        <h3 class="gradient-text mb-0">87%</h3>
+                                    </div>
+                                    <i class="fas fa-chart-line fa-2x text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="metric-card bg-secondary bg-opacity-25 rounded p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-white mb-1">Cost Savings</h6>
+                                        <h3 class="gradient-text mb-0">$12.4K</h3>
+                                    </div>
+                                    <i class="fas fa-dollar-sign fa-2x text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="metric-card bg-secondary bg-opacity-25 rounded p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-white mb-1">Time Saved</h6>
+                                        <h3 class="gradient-text mb-0">156h</h3>
+                                    </div>
+                                    <i class="fas fa-clock fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="analytics-tab" class="tab-content">
+                <div class="analytics-view text-center py-4">
+                    <i class="fas fa-chart-bar fa-3x text-primary mb-3"></i>
+                    <h5 class="text-white mb-3">Advanced Analytics Module</h5>
+                    <p class="text-light">Real-time performance tracking, predictive insights, and automated reporting.</p>
+                </div>
+            </div>
+            
+            <div id="automation-tab" class="tab-content">
+                <div class="automation-view text-center py-4">
+                    <i class="fas fa-robot fa-3x text-success mb-3"></i>
+                    <h5 class="text-white mb-3">Automation Engine</h5>
+                    <p class="text-light">Intelligent workflow automation with machine learning optimization.</p>
+                </div>
+            </div>
+            
+            <div id="results-tab" class="tab-content">
+                <div class="results-view text-center py-4">
+                    <i class="fas fa-trophy fa-3x text-warning mb-3"></i>
+                    <h5 class="text-white mb-3">Performance Results</h5>
+                    <p class="text-light">Comprehensive reporting and ROI analysis for all automated processes.</p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Add tab switching functionality
+    document.querySelectorAll('[data-tab]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const tabId = this.dataset.tab + '-tab';
+            
+            // Update active states
+            document.querySelectorAll('[data-tab]').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            
+            this.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
+    
+    // Show results panel
+    document.getElementById('demo-results').style.display = 'block';
+    
+    // Animate demo sessions counter
+    animateCounter();
+}
+
+function showFeatureDemo(feature) {
+    const demoContent = document.getElementById('demo-content');
+    const featureMessages = {
+        'custom_ai_bot_development': 'Deploying custom AI bot with natural language processing and advanced automation capabilities...',
+        'workflow_automation': 'Analyzing current workflows and implementing intelligent automation sequences...',
+        'data_analysis_insights': 'Processing data streams and generating actionable business insights...',
+        '24/7_intelligent_monitoring': 'Activating continuous monitoring system with real-time alert capabilities...'
+    };
+    
+    const message = featureMessages[feature] || `Demonstrating ${feature.replace(/_/g, ' ')} capabilities...`;
+    
+    demoContent.innerHTML = `
+        <div class="feature-demo text-center py-5">
+            <div class="spinner-border text-primary mb-4" style="width: 4rem; height: 4rem;"></div>
+            <h5 class="text-white mb-3">{{ niche.icon }} AI Processing</h5>
+            <p class="text-light">${message}</p>
+        </div>
+    `;
+    
+    setTimeout(() => {
+        demoContent.innerHTML = `
+            <div class="feature-result text-center py-5">
+                <div class="feature-icon mb-4">
+                    <i class="fas fa-check-circle text-success"></i>
+                </div>
+                <h5 class="text-white mb-3">Feature Demo Complete</h5>
+                <p class="text-light mb-4">${feature.replace(/_/g, ' ')} has been successfully demonstrated with 97% accuracy.</p>
+                <button class="btn btn-primary" onclick="showMainInterface()">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </button>
+            </div>
+        `;
+    }, 3000);
+}
+
+async function runDemoAction(action) {
+    const demoContent = document.getElementById('demo-content');
+    
+    // Show loading state
+    demoContent.innerHTML = `
+        <div class="action-processing text-center py-5">
+            <div class="spinner-border text-primary mb-4" style="width: 4rem; height: 4rem;"></div>
+            <h5 class="text-white mb-3">AI ${action.charAt(0).toUpperCase() + action.slice(1)} in Progress</h5>
+            <p class="text-light">Processing your request using advanced machine learning algorithms...</p>
+        </div>
+    `;
+    
+    try {
+        const response = await fetch(`/api/demo/${nicheId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: action })
+        });
+        
+        const result = await response.json();
+        
+        setTimeout(() => {
+            demoContent.innerHTML = `
+                <div class="action-result py-4">
+                    <div class="alert alert-success border-0 mb-4">
+                        <h5><i class="fas fa-check-circle me-2"></i>${result.result}</h5>
+                        <p class="mb-0">${result.details}</p>
+                    </div>
+                    
+                    ${result.recommendations ? `
+                        <div class="recommendations mb-4">
+                            <h6 class="text-white mb-3">AI Recommendations:</h6>
+                            <div class="list-group list-group-flush">
+                                ${result.recommendations.map(rec => `
+                                    <div class="list-group-item bg-secondary bg-opacity-25 border-secondary text-light">
+                                        <i class="fas fa-lightbulb me-2 text-warning"></i>${rec}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="text-center">
+                        <button class="btn btn-primary me-3" onclick="showMainInterface()">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                        </button>
+                        <button class="btn btn-success signup-btn" 
+                                data-plan="professional" 
+                                data-price="{{ niche.pricing.professional.price }}">
+                            <i class="fas fa-rocket me-2"></i>Get Full Access
+                        </button>
+                    </div>
+                </div>
+            `;
+        }, 2500);
+        
+    } catch (error) {
+        setTimeout(() => {
+            demoContent.innerHTML = `
+                <div class="action-error text-center py-5">
+                    <div class="feature-icon mb-4">
+                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                    </div>
+                    <h5 class="text-white mb-3">Demo Temporarily Unavailable</h5>
+                    <p class="text-light mb-4">The demo system is experiencing high traffic. Please try again or schedule a personal demonstration.</p>
+                    <button class="btn btn-primary" onclick="showMainInterface()">
+                        <i class="fas fa-redo me-2"></i>Try Again
+                    </button>
+                </div>
+            `;
+        }, 2000);
+    }
+}
+
+function animateCounter() {
+    const counter = document.getElementById('demo-sessions');
+    if (!counter) return;
+    
+    let count = 1247;
+    setInterval(() => {
+        count += Math.floor(Math.random() * 3);
+        counter.textContent = count.toLocaleString();
+    }, 5000);
+}
+
+// Schedule consultation
+document.getElementById('schedule-consultation').addEventListener('click', function() {
+    alert('Consultation scheduling feature coming soon! For now, please contact us directly.');
+});
+
+// Signup handling (reuse from niche.html)
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('signup-btn')) {
+        // Redirect to main niche page for signup
+        window.location.href = `{{ url_for('landing_pages.niche_landing', niche_id=niche_id) }}#pricing`;
+    }
+});
+</script>
+{% endblock %}
