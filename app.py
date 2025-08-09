@@ -58,6 +58,10 @@ app.register_blueprint(content_ai_bp)
 from routes.main_navigation import main_nav_bp
 app.register_blueprint(main_nav_bp)
 
+# Register payment earnings blueprint
+from routes.payment_earnings_routes import payment_earnings_bp
+app.register_blueprint(payment_earnings_bp)
+
 with app.app_context():
     # Import models to ensure tables are created
     import models
