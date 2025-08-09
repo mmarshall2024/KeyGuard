@@ -86,6 +86,10 @@ app.register_blueprint(campaign_performance_bp)
 from routes.lead_generation_bot import lead_generation_bp
 app.register_blueprint(lead_generation_bp)
 
+# Register automation engine blueprint
+from routes.automation_engine import automation_engine_bp
+app.register_blueprint(automation_engine_bp)
+
 # Register automation blueprint
 from routes.automation_routes import automation_bp
 app.register_blueprint(automation_bp)

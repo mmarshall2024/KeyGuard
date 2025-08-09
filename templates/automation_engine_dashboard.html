@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automation Engine - OMNI Empire</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .automation-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2980b9 100%);
+            color: white;
+            padding: 60px 0;
+        }
+        
+        .system-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 15px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 4px solid #2c3e50;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .system-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+        }
+        
+        .system-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.1), transparent);
+            border-radius: 0 0 0 100px;
+        }
+        
+        .automation-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .status-active { background: #d4edda; color: #155724; }
+        .status-optimizing { background: #fff3cd; color: #856404; }
+        .status-monitoring { background: #d1ecf1; color: #0c5460; }
+        
+        .metric-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .revenue-stream {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .revenue-stream:hover {
+            border-color: #2c3e50;
+            transform: translateY(-3px);
+        }
+        
+        .automation-trigger {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            margin: 8px;
+        }
+        .automation-trigger:hover {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            transform: scale(1.05);
+            color: white;
+        }
+        
+        .progress-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient(#2c3e50 0deg, #2c3e50 var(--progress), #ecf0f1 var(--progress));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .progress-circle::before {
+            content: '';
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: white;
+            position: absolute;
+        }
+        
+        .progress-text {
+            position: relative;
+            z-index: 1;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .automation-flow {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .flow-step {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #2c3e50;
+            position: relative;
+        }
+        
+        .flow-step::after {
+            content: '\f061';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #2c3e50;
+            font-size: 1.2rem;
+        }
+        
+        .flow-step:last-child::after {
+            content: '\f00c';
+            color: #27ae60;
+        }
+        
+        .real-time-monitor {
+            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .automation-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(44, 62, 80, 0.9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            z-index: 1000;
+        }
+        
+        .pulse-automation {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #27ae60;
+            margin-right: 8px;
+            animation: pulse-auto 2s infinite;
+        }
+        
+        @keyframes pulse-auto {
+            0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(39, 174, 96, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+        }
+        
+        .monetization-overview {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .revenue-bar {
+            height: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .revenue-progress {
+            height: 100%;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+        
+        .trigger-controls {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .efficiency-meter {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .efficiency-gauge {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(#e74c3c 0deg, #f39c12 72deg, #f1c40f 144deg, #2ecc71 216deg, #27ae60 288deg, #2c3e50 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+        
+        .efficiency-gauge::before {
+            content: '';
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: white;
+            position: absolute;
+        }
+        
+        .efficiency-value {
+            position: relative;
+            z-index: 1;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <!-- Automation Status Indicator -->
+    <div class="automation-indicator">
+        <span class="pulse-automation"></span>
+        Full Automation Active
+    </div>
+
+    <!-- Automation Header -->
+    <section class="automation-header text-center">
+        <div class="container">
+            <h1 class="display-3 fw-bold mb-3">
+                <i class="fas fa-cogs me-3"></i>Automation Engine
+            </h1>
+            <p class="lead mb-4">Self-Triggering • Fully Monetized • Complete Empire Automation</p>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="h4" id="totalAutomations">0</div>
+                    <small>Automations Active</small>
+                </div>
+                <div class="col-md-3">
+                    <div class="h4" id="revenueAutomated">$0</div>
+                    <small>Revenue Automated</small>
+                </div>
+                <div class="col-md-3">
+                    <div class="h4" id="efficiencyGain">0%</div>
+                    <small>Efficiency Improvement</small>
+                </div>
+                <div class="col-md-3">
+                    <div class="h4" id="timeSaved">0h</div>
+                    <small>Time Saved</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container-fluid py-4">
+        <!-- Automation Controls -->
+        <div class="trigger-controls">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h5><i class="fas fa-rocket me-2"></i>Manual Automation Triggers</h5>
+                    <p class="mb-3">Instantly trigger specific automation systems for immediate results</p>
+                    <button class="automation-trigger" onclick="triggerAutomation('revenue_maximizer')">
+                        <i class="fas fa-dollar-sign me-2"></i>Revenue Maximizer
+                    </button>
+                    <button class="automation-trigger" onclick="triggerAutomation('lead_converter')">
+                        <i class="fas fa-users me-2"></i>Lead Converter
+                    </button>
+                    <button class="automation-trigger" onclick="triggerAutomation('retention_optimizer')">
+                        <i class="fas fa-heart me-2"></i>Retention Optimizer
+                    </button>
+                    <button class="automation-trigger" onclick="triggerAutomation('market_analyzer')">
+                        <i class="fas fa-chart-bar me-2"></i>Market Analyzer
+                    </button>
+                    <button class="automation-trigger" onclick="triggerAutomation('performance_enhancer')">
+                        <i class="fas fa-tachometer-alt me-2"></i>Performance Enhancer
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <div class="efficiency-meter">
+                        <div class="efficiency-gauge">
+                            <div class="efficiency-value" id="overallEfficiency">95%</div>
+                        </div>
+                        <h6>Automation Efficiency</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Automation Systems Status -->
+        <div class="row">
+            <div class="col-12">
+                <h5 class="mb-4"><i class="fas fa-microchip me-2"></i>Automation Systems Status</h5>
+            </div>
+            <div id="automationSystems" class="row">
+                <div class="col-12 text-center py-4">Loading automation systems...</div>
+            </div>
+        </div>
+
+        <!-- Monetization Streams and Real-Time Monitor -->
+        <div class="row">
+            <!-- Monetization Streams -->
+            <div class="col-lg-8">
+                <div class="monetization-overview">
+                    <h5 class="mb-4"><i class="fas fa-money-bill-wave me-2"></i>Monetization Streams Performance</h5>
+                    <div id="monetizationStreams">
+                        <div class="text-center py-4">Loading monetization data...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Real-Time Automation Monitor -->
+            <div class="col-lg-4">
+                <div class="real-time-monitor">
+                    <h5 class="mb-4"><i class="fas fa-satellite-dish me-2"></i>Real-Time Monitor</h5>
+                    <div class="text-center">
+                        <div class="h3" id="automationsTriggered">0</div>
+                        <p class="mb-3">Automations Triggered</p>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <div class="h5" id="successRate">0%</div>
+                            <small>Success Rate</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="h5" id="costSavings">$0</div>
+                            <small>Cost Savings</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Automation Flow Visualization -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="automation-flow">
+                    <h5 class="mb-4"><i class="fas fa-sitemap me-2"></i>Automation Flow</h5>
+                    <div class="flow-step">
+                        <h6>1. Opportunity Detection</h6>
+                        <p class="mb-0">AI continuously scans for revenue opportunities, customer behavior patterns, and market changes</p>
+                    </div>
+                    <div class="flow-step">
+                        <h6>2. Automated Analysis</h6>
+                        <p class="mb-0">Systems analyze data, calculate potential impact, and determine optimal automation strategies</p>
+                    </div>
+                    <div class="flow-step">
+                        <h6>3. Action Execution</h6>
+                        <p class="mb-0">Automated systems execute campaigns, optimizations, and revenue-generating actions</p>
+                    </div>
+                    <div class="flow-step">
+                        <h6>4. Performance Optimization</h6>
+                        <p class="mb-0">Results are measured, analyzed, and used to improve future automation performance</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Self-Triggering Systems -->
+            <div class="col-lg-6">
+                <div class="automation-flow">
+                    <h5 class="mb-4"><i class="fas fa-sync-alt me-2"></i>Self-Triggering Systems</h5>
+                    <div id="selfTriggeringSystems">
+                        <div class="text-center py-4">Loading self-triggering data...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let automationData = {};
+        let refreshInterval;
+        
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAutomationData();
+            startAutoRefresh();
+        });
+        
+        // Load automation data
+        async function loadAutomationData() {
+            try {
+                const response = await fetch('/api/automation-data');
+                automationData = await response.json();
+                
+                updateOverviewMetrics();
+                updateAutomationSystems();
+                updateMonetizationStreams();
+                updateSelfTriggeringSystems();
+                updateRealTimeMonitor();
+                
+            } catch (error) {
+                console.error('Error loading automation data:', error);
+                showNotification('Error loading automation data', 'error');
+            }
+        }
+        
+        // Update overview metrics
+        function updateOverviewMetrics() {
+            const metrics = automationData.automation_metrics || {};
+            const revenue = automationData.revenue_summary || {};
+            
+            document.getElementById('totalAutomations').textContent = 
+                Object.keys(automationData.automation_systems || {}).length;
+            
+            document.getElementById('revenueAutomated').textContent = 
+                '$' + Math.round(metrics.revenue_automated || 0).toLocaleString();
+            
+            document.getElementById('efficiencyGain').textContent = 
+                Math.round(metrics.efficiency_improvement || 0) + '%';
+            
+            document.getElementById('timeSaved').textContent = 
+                Math.round(metrics.time_saved_hours || 0) + 'h';
+            
+            document.getElementById('overallEfficiency').textContent = 
+                Math.round(metrics.automation_success_rate || 95) + '%';
+        }
+        
+        // Update automation systems
+        function updateAutomationSystems() {
+            const container = document.getElementById('automationSystems');
+            const systems = automationData.automation_systems || {};
+            
+            if (Object.keys(systems).length === 0) {
+                container.innerHTML = '<div class="col-12 text-center py-4">No automation systems configured</div>';
+                return;
+            }
+            
+            const html = Object.entries(systems).map(([systemName, systemData]) => {
+                const statusClass = systemData.status === 'active' ? 'status-active' : 
+                                  systemData.status === 'optimizing' ? 'status-optimizing' : 'status-monitoring';
+                
+                const icon = getSystemIcon(systemName);
+                
+                return `
+                    <div class="col-lg-4 col-md-6">
+                        <div class="system-card">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <i class="${icon} fa-2x text-primary mb-2"></i>
+                                    <h6 class="text-capitalize">${systemName.replace('_', ' ')}</h6>
+                                </div>
+                                <span class="automation-status ${statusClass}">${systemData.status}</span>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="metric-value">${systemData.automation_count || systemData.leads_processed || systemData.customers_retained || systemData.content_created || systemData.pricing_changes || systemData.affiliates_managed || 0}</div>
+                                    <small class="text-muted">Actions Taken</small>
+                                </div>
+                                <div class="col-6">
+                                    <div class="metric-value">$${Math.round(systemData.revenue_generated || systemData.revenue_optimization || 0).toLocaleString()}</div>
+                                    <small class="text-muted">Revenue Impact</small>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <h6>Triggers:</h6>
+                                <div class="d-flex flex-wrap">
+                                    ${systemData.triggers.slice(0, 2).map(trigger => 
+                                        `<span class="badge bg-light text-dark me-1 mb-1">${trigger.replace('_', ' ')}</span>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = html;
+        }
+        
+        // Update monetization streams
+        function updateMonetizationStreams() {
+            const container = document.getElementById('monetizationStreams');
+            const streams = automationData.monetization_streams || {};
+            
+            if (Object.keys(streams).length === 0) {
+                container.innerHTML = '<div class="text-center py-4">No monetization streams configured</div>';
+                return;
+            }
+            
+            const html = Object.entries(streams).map(([streamName, streamData]) => {
+                const progress = (streamData.current_revenue / streamData.revenue_potential) * 100;
+                const progressStyle = `width: ${Math.min(100, progress)}%`;
+                
+                return `
+                    <div class="revenue-stream">
+                        <div class="row align-items-center">
+                            <div class="col-md-4">
+                                <h6 class="text-capitalize mb-1">${streamName.replace('_', ' ')}</h6>
+                                <small class="text-muted">Automation: ${streamData.automation_level}</small>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="revenue-bar">
+                                    <div class="revenue-progress" style="${progressStyle}"></div>
+                                </div>
+                                <small class="text-muted">${Math.round(progress)}% of potential</small>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="h6 mb-1">$${Math.round(streamData.current_revenue).toLocaleString()}</div>
+                                <small class="text-muted">/ $${Math.round(streamData.revenue_potential).toLocaleString()}</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = html;
+        }
+        
+        // Update self-triggering systems
+        function updateSelfTriggeringSystems() {
+            const container = document.getElementById('selfTriggeringSystems');
+            const systems = automationData.self_triggering_systems || {};
+            
+            if (Object.keys(systems).length === 0) {
+                container.innerHTML = '<div class="text-center py-4">No self-triggering systems configured</div>';
+                return;
+            }
+            
+            const html = Object.entries(systems).map(([systemName, systemData]) => {
+                const frequency = systemData.trigger_frequency;
+                const frequencyText = frequency < 60 ? `${frequency}s` : 
+                                    frequency < 3600 ? `${Math.round(frequency/60)}m` : 
+                                    `${Math.round(frequency/3600)}h`;
+                
+                const lastTriggered = systemData.last_triggered ? 
+                    new Date(systemData.last_triggered).toLocaleTimeString() : 'Never';
+                
+                const effectiveness = Math.round(systemData.effectiveness * 100);
+                
+                return `
+                    <div class="flow-step">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h6 class="text-capitalize mb-1">${systemName.replace('_', ' ')}</h6>
+                                <small class="text-muted">Triggers every ${frequencyText}</small><br>
+                                <small class="text-muted">Last: ${lastTriggered}</small>
+                            </div>
+                            <div class="col-4 text-end">
+                                <div class="progress-circle" style="--progress: ${effectiveness * 3.6}deg">
+                                    <div class="progress-text">${effectiveness}%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = html;
+        }
+        
+        // Update real-time monitor
+        function updateRealTimeMonitor() {
+            const metrics = automationData.automation_metrics || {};
+            
+            document.getElementById('automationsTriggered').textContent = 
+                metrics.total_automations_triggered || 0;
+            
+            document.getElementById('successRate').textContent = 
+                Math.round(metrics.automation_success_rate || 95) + '%';
+            
+            document.getElementById('costSavings').textContent = 
+                '$' + Math.round(metrics.cost_savings || 0).toLocaleString();
+        }
+        
+        // Helper functions
+        function getSystemIcon(systemName) {
+            const icons = {
+                'revenue_generation': 'fas fa-dollar-sign',
+                'lead_nurturing': 'fas fa-users',
+                'customer_retention': 'fas fa-heart',
+                'content_marketing': 'fas fa-bullhorn',
+                'pricing_optimization': 'fas fa-chart-line',
+                'affiliate_management': 'fas fa-handshake'
+            };
+            return icons[systemName] || 'fas fa-cog';
+        }
+        
+        // Trigger automation manually
+        async function triggerAutomation(systemName) {
+            try {
+                showNotification(`Triggering ${systemName.replace('_', ' ')}...`, 'info');
+                
+                const response = await fetch('/api/trigger-automation', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({system: systemName})
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showNotification(`${systemName.replace('_', ' ').toUpperCase()} automation triggered successfully!`, 'success');
+                    
+                    // Show result details
+                    const automationResult = result.result;
+                    if (automationResult.revenue_impact) {
+                        showNotification(`Revenue impact: $${Math.round(automationResult.revenue_impact).toLocaleString()}`, 'success');
+                    }
+                    
+                    loadAutomationData(); // Refresh data
+                } else {
+                    showNotification('Automation trigger failed', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Automation trigger error:', error);
+                showNotification('Automation trigger failed', 'error');
+            }
+        }
+        
+        // Auto-refresh
+        function startAutoRefresh() {
+            refreshInterval = setInterval(() => {
+                loadAutomationData();
+            }, 30000); // Refresh every 30 seconds
+        }
+        
+        // Show notification
+        function showNotification(message, type) {
+            const alertClass = type === 'success' ? 'alert-success' : 
+                             type === 'error' ? 'alert-danger' : 'alert-info';
+            
+            const notification = document.createElement('div');
+            notification.className = `alert ${alertClass} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 70px; right: 20px; z-index: 9999; max-width: 400px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 5000);
+        }
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        });
+    </script>
+</body>
+</html>
