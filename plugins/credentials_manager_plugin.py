@@ -296,8 +296,8 @@ Ready to proceed? Send your {config["name"]} credentials using Method 1 above.
 **Usage:** `/add_credentials [platform] [field] [value]`
 
 **Examples:**
-• `/add_credentials stripe secret_key sk_test_your_key_here`
-• `/add_credentials openai api_key sk-your-openai-key`
+• `/add_credentials stripe secret_key sk_test_[YOUR_STRIPE_KEY]`
+• `/add_credentials openai api_key [YOUR_OPENAI_API_KEY]`
 • `/add_credentials email smtp_server smtp.gmail.com`
 
 **Available Platforms:** stripe, openai, telegram, email, social_media, payment_processors, analytics, database
@@ -935,15 +935,15 @@ webhook_secret: whsec_your_webhook_secret
 Send it in this format:
 ```
 openai:
-api_key: sk-your-openai-api-key-here
+api_key: [YOUR_OPENAI_API_KEY]
 ```
 
 **Optional: Organization ID**
 If you have an organization:
 ```
 openai:
-api_key: sk-your-openai-api-key-here
-organization: org-your-organization-id
+api_key: [YOUR_OPENAI_API_KEY]
+organization: [YOUR_ORG_ID]
 ```
 
 **Security:** Your API key is automatically encrypted and never stored in plain text.
