@@ -62,6 +62,10 @@ app.register_blueprint(affiliate_bot_bp)
 from routes.setup_checklist_bot import setup_checklist_bp
 app.register_blueprint(setup_checklist_bp)
 
+# Register product catalog blueprint
+from routes.product_catalog import product_catalog_bp
+app.register_blueprint(product_catalog_bp)
+
 # Register automation blueprint
 from routes.automation_routes import automation_bp
 app.register_blueprint(automation_bp)
