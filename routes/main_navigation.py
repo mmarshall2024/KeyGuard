@@ -27,7 +27,7 @@ def home():
                 'social_reach': '45,678',
                 'campaigns': '6 active'
             },
-            'url': '/automation-dashboard'
+            'url': '/automation-engine'
         },
         'ai_content_engine': {
             'name': 'AI Content Engine',
@@ -38,7 +38,7 @@ def home():
                 'avg_performance': '87/100',
                 'platforms': '4 integrated'
             },
-            'url': '/content-ai'
+            'url': '/content-ai-dashboard'
         },
         'payment_systems': {
             'name': 'Payment Processing',
@@ -49,7 +49,7 @@ def home():
                 'success_rate': '99.7%',
                 'processing_time': '<3 sec'
             },
-            'url': '/payment-dashboard'
+            'url': '/payment-methods'
         }
     }
     
