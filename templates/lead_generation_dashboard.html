@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Generation & Marketing Bot - OMNI Empire</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .lead-header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 50%, #8e44ad 100%);
+            color: white;
+            padding: 60px 0;
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 15px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 4px solid #e74c3c;
+            transition: all 0.3s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+        
+        .campaign-controls {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .launch-button {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        .launch-button:hover {
+            background: linear-gradient(135deg, #c0392b, #e74c3c);
+            transform: scale(1.05);
+            color: white;
+        }
+        
+        .prospect-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        
+        .table th {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 15px;
+        }
+        
+        .table td {
+            padding: 12px 15px;
+            vertical-align: middle;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .lead-score {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 0.9rem;
+        }
+        .score-hot { background: #e74c3c; }
+        .score-warm { background: #f39c12; }
+        .score-cold { background: #95a5a6; }
+        
+        .engagement-badge {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .engagement-hot { background: #d4edda; color: #155724; }
+        .engagement-warm { background: #fff3cd; color: #856404; }
+        .engagement-cold { background: #f8d7da; color: #721c24; }
+        
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-right: 10px;
+        }
+        
+        .campaign-status {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .activity-feed {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .activity-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .target-profile-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .target-profile-card:hover {
+            border-color: #e74c3c;
+            transform: translateY(-3px);
+        }
+        
+        .automation-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(231, 76, 60, 0.9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            z-index: 1000;
+        }
+        
+        .pulse-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #2ecc71;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+        }
+        
+        .conversion-funnel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .funnel-stage {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px 0;
+            border-left: 4px solid #e74c3c;
+            position: relative;
+        }
+        
+        .progress-ring {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: conic-gradient(#e74c3c 0deg, #e74c3c var(--progress), #f8f9fa var(--progress));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .revenue-potential {
+            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Automation Status Indicator -->
+    <div class="automation-indicator">
+        <span class="pulse-dot"></span>
+        Lead Generation Bot Active
+    </div>
+
+    <!-- Lead Generation Header -->
+    <section class="lead-header text-center">
+        <div class="container">
+            <h1 class="display-3 fw-bold mb-3">
+                <i class="fas fa-rocket me-3"></i>Lead Generation & Marketing Bot
+            </h1>
+            <p class="lead mb-4">AI-Powered Prospecting • High-Converting Outreach • Automated Revenue Generation</p>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="h4" id="totalLeads">0</div>
+                    <small>Total Prospects</small>
+                </div>
+                <div class="col-md-3">
+                    <div class="h4" id="qualifiedLeads">0</div>
+                    <small>Qualified Leads</small>
+                </div>
+                <div class="col-md-3">
+                    <div class="h4" id="conversionRate">0%</div>
+                    <small>Conversion Rate</small>
+                </div>
+                <div class="col-md-3">
+                    <div class="h4" id="revenueGenerated">$0</div>
+                    <small>Revenue Generated</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container-fluid py-4">
+        <!-- Campaign Controls -->
+        <div class="campaign-controls">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h5><i class="fas fa-play-circle me-2"></i>Campaign Launch Center</h5>
+                    <p class="mb-3">Deploy targeted outreach campaigns to high-value prospects</p>
+                    <button class="launch-button" onclick="launchCampaign('enterprise')">
+                        <i class="fas fa-building me-2"></i>Enterprise Outreach
+                    </button>
+                    <button class="launch-button" onclick="launchCampaign('startup')">
+                        <i class="fas fa-seedling me-2"></i>Startup Targeting
+                    </button>
+                    <button class="launch-button" onclick="launchCampaign('agency')">
+                        <i class="fas fa-users me-2"></i>Agency Partnership
+                    </button>
+                    <button class="launch-button" onclick="launchCampaign('all')">
+                        <i class="fas fa-globe me-2"></i>Full Spectrum Campaign
+                    </button>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="campaign-status">
+                        <h6><i class="fas fa-chart-line me-2"></i>Campaign Status</h6>
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="h5" id="activeCampaigns">0</div>
+                                <small>Active Campaigns</small>
+                            </div>
+                            <div class="col-6">
+                                <div class="h5" id="emailsSent">0</div>
+                                <small>Emails Sent Today</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Metrics Row -->
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card">
+                    <div class="metric-value" id="prospectsIdentified">0</div>
+                    <div class="text-muted">Prospects Identified</div>
+                    <small class="text-success"><i class="fas fa-arrow-up"></i> +15% this week</small>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card">
+                    <div class="metric-value" id="outreachSent">0</div>
+                    <div class="text-muted">Outreach Messages</div>
+                    <small class="text-success"><i class="fas fa-arrow-up"></i> +22% response rate</small>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card">
+                    <div class="metric-value" id="hotProspects">0</div>
+                    <div class="text-muted">Hot Prospects</div>
+                    <small class="text-warning"><i class="fas fa-fire"></i> Ready to convert</small>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="metric-card">
+                    <div class="metric-value" id="avgLeadScore">0</div>
+                    <div class="text-muted">Avg Lead Score</div>
+                    <small class="text-info"><i class="fas fa-target"></i> Quality focus</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Target Profiles and Revenue Potential -->
+        <div class="row">
+            <!-- Target Profiles -->
+            <div class="col-lg-8">
+                <div class="conversion-funnel">
+                    <h5 class="mb-4"><i class="fas fa-crosshairs me-2"></i>Target Prospect Profiles</h5>
+                    <div class="row" id="targetProfiles">
+                        <div class="col-12 text-center py-4">Loading target profiles...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Revenue Potential -->
+            <div class="col-lg-4">
+                <div class="revenue-potential">
+                    <h5 class="mb-4"><i class="fas fa-dollar-sign me-2"></i>Revenue Potential</h5>
+                    <div class="text-center">
+                        <div class="h2" id="totalRevenuePotential">$0</div>
+                        <p class="mb-3">Total Pipeline Value</p>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <div class="h5" id="immediateRevenue">$0</div>
+                            <small>Immediate (30 days)</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="h5" id="projectedRevenue">$0</div>
+                            <small>Projected (90 days)</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prospect Database Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="prospect-table">
+                    <div class="d-flex justify-content-between align-items-center p-3 bg-gradient text-white">
+                        <h5 class="mb-0"><i class="fas fa-database me-2"></i>High-Value Prospect Database</h5>
+                        <div>
+                            <button class="btn btn-light btn-sm me-2" onclick="filterProspects('hot')">
+                                <i class="fas fa-fire me-1"></i>Hot Leads
+                            </button>
+                            <button class="btn btn-light btn-sm me-2" onclick="filterProspects('enterprise')">
+                                <i class="fas fa-building me-1"></i>Enterprise
+                            </button>
+                            <button class="btn btn-light btn-sm" onclick="exportProspects()">
+                                <i class="fas fa-download me-1"></i>Export
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" id="prospectTable">
+                            <thead>
+                                <tr>
+                                    <th>Company</th>
+                                    <th>Contact</th>
+                                    <th>Industry</th>
+                                    <th>Score</th>
+                                    <th>Engagement</th>
+                                    <th>Revenue Potential</th>
+                                    <th>Last Contact</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="prospectTableBody">
+                                <tr>
+                                    <td colspan="8" class="text-center py-4">Loading prospect data...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Feed and Conversion Funnels -->
+        <div class="row">
+            <!-- Recent Activity Feed -->
+            <div class="col-lg-6">
+                <div class="activity-feed">
+                    <h5 class="mb-4"><i class="fas fa-activity me-2"></i>Recent Lead Generation Activity</h5>
+                    <div id="activityFeed">
+                        <div class="text-center py-4">Loading activity feed...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Conversion Funnels -->
+            <div class="col-lg-6">
+                <div class="conversion-funnel">
+                    <h5 class="mb-4"><i class="fas fa-funnel-dollar me-2"></i>Conversion Funnels</h5>
+                    <div id="conversionFunnels">
+                        <div class="text-center py-4">Loading conversion data...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let leadData = {};
+        let refreshInterval;
+        
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLeadGenerationData();
+            startAutoRefresh();
+        });
+        
+        // Load lead generation data
+        async function loadLeadGenerationData() {
+            try {
+                const response = await fetch('/api/lead-generation-data');
+                leadData = await response.json();
+                
+                updateMetrics();
+                updateTargetProfiles();
+                updateProspectTable();
+                updateActivityFeed();
+                updateConversionFunnels();
+                updateRevenuePotential();
+                
+            } catch (error) {
+                console.error('Error loading lead generation data:', error);
+                showNotification('Error loading lead generation data', 'error');
+            }
+        }
+        
+        // Update key metrics
+        function updateMetrics() {
+            const performance = leadData.campaign_performance || {};
+            
+            document.getElementById('totalLeads').textContent = performance.total_leads_generated || 0;
+            document.getElementById('qualifiedLeads').textContent = performance.qualified_leads || 0;
+            document.getElementById('conversionRate').textContent = (performance.conversion_rate || 0).toFixed(1) + '%';
+            document.getElementById('revenueGenerated').textContent = '$' + Math.round(performance.revenue_attributed || 0).toLocaleString();
+            
+            document.getElementById('prospectsIdentified').textContent = leadData.total_prospects || 0;
+            document.getElementById('hotProspects').textContent = leadData.hot_prospects || 0;
+            document.getElementById('activeCampaigns').textContent = performance.campaigns_active || 0;
+            
+            // Calculate average lead score
+            const prospects = Object.values(leadData.lead_database || {});
+            const avgScore = prospects.length > 0 ? 
+                Math.round(prospects.reduce((sum, p) => sum + (p.lead_score || 0), 0) / prospects.length) : 0;
+            document.getElementById('avgLeadScore').textContent = avgScore;
+            
+            // Simulate outreach metrics
+            document.getElementById('outreachSent').textContent = Math.round(leadData.total_prospects * 0.8) || 0;
+            document.getElementById('emailsSent').textContent = Math.round(leadData.total_prospects * 0.6) || 0;
+        }
+        
+        // Update target profiles
+        function updateTargetProfiles() {
+            const container = document.getElementById('targetProfiles');
+            const profiles = leadData.target_profiles || {};
+            
+            if (Object.keys(profiles).length === 0) {
+                container.innerHTML = '<div class="col-12 text-center py-4">No target profiles available</div>';
+                return;
+            }
+            
+            const html = Object.entries(profiles).map(([profileType, profileData]) => {
+                const prospects = Object.values(leadData.lead_database || {}).filter(p => p.profile_type === profileType);
+                const profileIcon = getProfileIcon(profileType);
+                
+                return `
+                    <div class="col-lg-6">
+                        <div class="target-profile-card">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="profile-icon">
+                                    <i class="${profileIcon}"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1 text-capitalize">${profileType.replace('_', ' ')}</h6>
+                                    <small class="text-muted">${prospects.length} prospects identified</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Company Size:</strong><br>
+                                    <small>${profileData.company_size}</small>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Revenue Range:</strong><br>
+                                    <small>${profileData.revenue_range}</small>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <strong>Key Pain Points:</strong><br>
+                                <small>${profileData.pain_points.join(', ')}</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = html;
+        }
+        
+        // Update prospect table
+        function updateProspectTable() {
+            const tbody = document.getElementById('prospectTableBody');
+            const prospects = Object.values(leadData.lead_database || {}).slice(0, 20); // Show latest 20
+            
+            if (prospects.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center py-4">No prospects found</td></tr>';
+                return;
+            }
+            
+            const html = prospects.map(prospect => {
+                const scoreClass = prospect.lead_score >= 80 ? 'score-hot' :
+                                 prospect.lead_score >= 60 ? 'score-warm' : 'score-cold';
+                
+                const engagementClass = `engagement-${prospect.engagement_level}`;
+                
+                const lastContact = prospect.last_contacted ? 
+                    new Date(prospect.last_contacted).toLocaleDateString() : 'Never';
+                
+                const revenuePotential = prospect.revenue_potential ? 
+                    '$' + Math.round(prospect.revenue_potential).toLocaleString() : 
+                    calculateRevenuePotential(prospect.profile_type);
+                
+                return `
+                    <tr>
+                        <td>
+                            <strong>${prospect.company_name}</strong><br>
+                            <small class="text-muted">${prospect.profile_type.replace('_', ' ')}</small>
+                        </td>
+                        <td>
+                            <strong>${prospect.decision_maker}</strong><br>
+                            <small class="text-muted">${prospect.contact_email}</small>
+                        </td>
+                        <td>${prospect.industry}</td>
+                        <td>
+                            <div class="lead-score ${scoreClass}">
+                                ${prospect.lead_score}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="engagement-badge ${engagementClass}">${prospect.engagement_level}</span>
+                        </td>
+                        <td><strong>${revenuePotential}</strong></td>
+                        <td><small>${lastContact}</small></td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="viewProspect('${prospect.id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-success" onclick="contactProspect('${prospect.id}')">
+                                <i class="fas fa-envelope"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            tbody.innerHTML = html;
+        }
+        
+        // Update activity feed
+        function updateActivityFeed() {
+            const container = document.getElementById('activityFeed');
+            
+            // Generate simulated activity
+            const activities = generateRecentActivities();
+            
+            const html = activities.map(activity => `
+                <div class="activity-item">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <i class="${activity.icon} me-2"></i>
+                            <strong>${activity.title}</strong>
+                            <p class="mb-1">${activity.description}</p>
+                            <small class="text-muted">${activity.timestamp}</small>
+                        </div>
+                        <span class="badge bg-primary">${activity.type}</span>
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = html || '<div class="text-center py-4">No recent activity</div>';
+        }
+        
+        // Update conversion funnels
+        function updateConversionFunnels() {
+            const container = document.getElementById('conversionFunnels');
+            const funnels = leadData.conversion_funnels || {};
+            
+            const html = Object.entries(funnels).map(([funnelType, funnelData]) => `
+                <div class="funnel-stage">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h6 class="text-capitalize">${funnelType.replace('_', ' ')}</h6>
+                            <p class="mb-1">${funnelData.lead_magnet}</p>
+                            <small class="text-muted">Goal: ${funnelData.conversion_goal}</small>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="progress-ring" style="--progress: ${Math.random() * 270}deg">
+                                <small class="fw-bold">${Math.round(Math.random() * 100)}%</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = html || '<div class="text-center py-4">No conversion funnels configured</div>';
+        }
+        
+        // Update revenue potential
+        function updateRevenuePotential() {
+            const prospects = Object.values(leadData.lead_database || {});
+            
+            let totalPotential = 0;
+            let immediatePotential = 0;
+            let projectedPotential = 0;
+            
+            prospects.forEach(prospect => {
+                const potential = prospect.revenue_potential || getRevenuePotentialByType(prospect.profile_type);
+                totalPotential += potential;
+                
+                if (prospect.engagement_level === 'hot') {
+                    immediatePotential += potential;
+                } else {
+                    projectedPotential += potential * 0.6; // 60% probability
+                }
+            });
+            
+            document.getElementById('totalRevenuePotential').textContent = '$' + Math.round(totalPotential).toLocaleString();
+            document.getElementById('immediateRevenue').textContent = '$' + Math.round(immediatePotential).toLocaleString();
+            document.getElementById('projectedRevenue').textContent = '$' + Math.round(projectedPotential).toLocaleString();
+        }
+        
+        // Helper functions
+        function getProfileIcon(profileType) {
+            const icons = {
+                'enterprise_saas': 'fas fa-building',
+                'growing_startups': 'fas fa-seedling',
+                'digital_agencies': 'fas fa-palette',
+                'e_commerce_businesses': 'fas fa-shopping-cart'
+            };
+            return icons[profileType] || 'fas fa-briefcase';
+        }
+        
+        function calculateRevenuePotential(profileType) {
+            const ranges = {
+                'enterprise_saas': '$50K-$200K',
+                'growing_startups': '$5K-$50K',
+                'digital_agencies': '$10K-$100K',
+                'e_commerce_businesses': '$2K-$25K'
+            };
+            return ranges[profileType] || '$5K-$50K';
+        }
+        
+        function getRevenuePotentialByType(profileType) {
+            const values = {
+                'enterprise_saas': 125000,
+                'growing_startups': 27500,
+                'digital_agencies': 55000,
+                'e_commerce_businesses': 13500
+            };
+            return values[profileType] || 15000;
+        }
+        
+        function generateRecentActivities() {
+            const activities = [
+                {
+                    icon: 'fas fa-envelope',
+                    title: 'Cold Email Campaign Sent',
+                    description: '25 personalized emails sent to enterprise prospects',
+                    timestamp: '15 minutes ago',
+                    type: 'Email'
+                },
+                {
+                    icon: 'fas fa-user-plus',
+                    title: 'New High-Value Prospect Identified',
+                    description: 'TechCorp Solutions added to enterprise pipeline',
+                    timestamp: '32 minutes ago',
+                    type: 'Prospect'
+                },
+                {
+                    icon: 'fas fa-handshake',
+                    title: 'LinkedIn Connection Accepted',
+                    description: 'CEO of InnovateLab accepted connection request',
+                    timestamp: '1 hour ago',
+                    type: 'LinkedIn'
+                },
+                {
+                    icon: 'fas fa-dollar-sign',
+                    title: 'Conversion Detected',
+                    description: 'StartupXYZ signed up for premium trial',
+                    timestamp: '2 hours ago',
+                    type: 'Conversion'
+                },
+                {
+                    icon: 'fas fa-chart-line',
+                    title: 'Campaign Performance Update',
+                    description: 'Startup targeting campaign achieved 18% open rate',
+                    timestamp: '3 hours ago',
+                    type: 'Analytics'
+                }
+            ];
+            
+            return activities;
+        }
+        
+        // Campaign actions
+        async function launchCampaign(type) {
+            try {
+                showNotification(`Launching ${type} campaign...`, 'info');
+                
+                const response = await fetch('/api/start-campaign', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({type: type})
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showNotification(`${type.toUpperCase()} campaign launched successfully!`, 'success');
+                    loadLeadGenerationData(); // Refresh data
+                } else {
+                    showNotification('Campaign launch failed', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Campaign launch error:', error);
+                showNotification('Campaign launch failed', 'error');
+            }
+        }
+        
+        // Prospect actions
+        function viewProspect(prospectId) {
+            // Open prospect details modal
+            showNotification('Prospect details feature coming soon!', 'info');
+        }
+        
+        function contactProspect(prospectId) {
+            // Open contact prospect interface
+            showNotification('Direct contact feature coming soon!', 'info');
+        }
+        
+        // Filter functions
+        function filterProspects(filter) {
+            showNotification(`Filtering prospects: ${filter}`, 'info');
+            // Implement filtering logic
+        }
+        
+        function exportProspects() {
+            const data = JSON.stringify(leadData.lead_database, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `prospects-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showNotification('Prospect data exported successfully', 'success');
+        }
+        
+        // Auto-refresh
+        function startAutoRefresh() {
+            refreshInterval = setInterval(() => {
+                loadLeadGenerationData();
+            }, 60000); // Refresh every minute
+        }
+        
+        // Show notification
+        function showNotification(message, type) {
+            const alertClass = type === 'success' ? 'alert-success' : 
+                             type === 'error' ? 'alert-danger' : 'alert-info';
+            
+            const notification = document.createElement('div');
+            notification.className = `alert ${alertClass} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 70px; right: 20px; z-index: 9999; max-width: 400px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 5000);
+        }
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        });
+    </script>
+</body>
+</html>

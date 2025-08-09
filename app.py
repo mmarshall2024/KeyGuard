@@ -82,6 +82,10 @@ app.register_blueprint(chat_support_bp)
 from routes.campaign_performance_dashboard import campaign_performance_bp
 app.register_blueprint(campaign_performance_bp)
 
+# Register lead generation bot blueprint
+from routes.lead_generation_bot import lead_generation_bp
+app.register_blueprint(lead_generation_bp)
+
 # Register automation blueprint
 from routes.automation_routes import automation_bp
 app.register_blueprint(automation_bp)

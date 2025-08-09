@@ -28,4 +28,5 @@ dependencies = [
     "aiohttp>=3.12.15",
     "beautifulsoup4>=4.13.4",
     "anthropic>=0.62.0",
+    "sendgrid>=6.12.4",
 ]
