@@ -54,7 +54,7 @@ def empire_landing():
         }
     ]
     
-    return render_template('landing/empire.html', 
+    return render_template('landing/branded_empire.html', 
                          stats=stats, 
                          products=featured_products)
 

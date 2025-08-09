@@ -4821,5 +4821,188 @@
       }
     },
     "system_score": 76.8
+  },
+  {
+    "timestamp": "2025-08-09T00:23:10.137529",
+    "observations": {
+      "performance": {
+        "cpu_usage": 18.3,
+        "memory_usage": 48.0,
+        "memory_available": 32.63404083251953,
+        "disk_usage": 63.6,
+        "disk_free": 17.105804443359375,
+        "performance_score": 60.8,
+        "status": "degraded"
+      },
+      "security": {
+        "failed_login_attempts": 0,
+        "suspicious_requests": 0,
+        "security_score": 95,
+        "threat_level": "low",
+        "last_scan": "2025-08-09T00:23:11.138362",
+        "suspicious_processes": [],
+        "process_anomalies": 0
+      },
+      "user_activity": {
+        "active_sessions": 1,
+        "requests_per_minute": 0.5,
+        "unique_users_24h": 1,
+        "avg_session_duration": "15m",
+        "activity_score": 75,
+        "peak_hours": [
+          "10:00-12:00",
+          "14:00-16:00"
+        ],
+        "status": "normal"
+      },
+      "system_health": {
+        "uptime_hours": 8.33,
+        "active_connections": 17,
+        "load_average": [
+          6.58740234375,
+          7.044921875,
+          6.33154296875
+        ],
+        "health_score": 90.7,
+        "system_status": "healthy"
+      },
+      "resource_usage": {
+        "network_bytes_sent": 3982590,
+        "network_bytes_recv": 39541474,
+        "disk_read_bytes": 75513744896,
+        "disk_write_bytes": 122770743296,
+        "resource_efficiency": 85,
+        "status": "optimal"
+      },
+      "anomaly_detection": {
+        "anomalies_detected": [],
+        "anomaly_count": 0,
+        "anomaly_score": 0,
+        "threat_level": "low"
+      }
+    },
+    "system_score": 80.4
+  },
+  {
+    "timestamp": "2025-08-09T00:24:21.001038",
+    "observations": {
+      "performance": {
+        "cpu_usage": 50.8,
+        "memory_usage": 48.0,
+        "memory_available": 32.68125915527344,
+        "disk_usage": 63.6,
+        "disk_free": 17.105121612548828,
+        "performance_score": 47.8,
+        "status": "degraded"
+      },
+      "security": {
+        "failed_login_attempts": 0,
+        "suspicious_requests": 0,
+        "security_score": 95,
+        "threat_level": "low",
+        "last_scan": "2025-08-09T00:24:22.001973",
+        "suspicious_processes": [],
+        "process_anomalies": 0
+      },
+      "user_activity": {
+        "active_sessions": 1,
+        "requests_per_minute": 0.5,
+        "unique_users_24h": 1,
+        "avg_session_duration": "15m",
+        "activity_score": 75,
+        "peak_hours": [
+          "10:00-12:00",
+          "14:00-16:00"
+        ],
+        "status": "normal"
+      },
+      "system_health": {
+        "uptime_hours": 8.35,
+        "active_connections": 17,
+        "load_average": [
+          5.1943359375,
+          6.501953125,
+          6.19140625
+        ],
+        "health_score": 90.7,
+        "system_status": "healthy"
+      },
+      "resource_usage": {
+        "network_bytes_sent": 6704415,
+        "network_bytes_recv": 42255557,
+        "disk_read_bytes": 75521923584,
+        "disk_write_bytes": 123363966976,
+        "resource_efficiency": 85,
+        "status": "optimal"
+      },
+      "anomaly_detection": {
+        "anomalies_detected": [],
+        "anomaly_count": 0,
+        "anomaly_score": 0,
+        "threat_level": "low"
+      }
+    },
+    "system_score": 77.1
+  },
+  {
+    "timestamp": "2025-08-09T00:24:34.190938",
+    "observations": {
+      "performance": {
+        "cpu_usage": 38.3,
+        "memory_usage": 48.0,
+        "memory_available": 32.6630744934082,
+        "disk_usage": 63.6,
+        "disk_free": 17.10500717163086,
+        "performance_score": 52.8,
+        "status": "degraded"
+      },
+      "security": {
+        "failed_login_attempts": 0,
+        "suspicious_requests": 0,
+        "security_score": 95,
+        "threat_level": "low",
+        "last_scan": "2025-08-09T00:24:35.192494",
+        "suspicious_processes": [],
+        "process_anomalies": 0
+      },
+      "user_activity": {
+        "active_sessions": 1,
+        "requests_per_minute": 0.5,
+        "unique_users_24h": 1,
+        "avg_session_duration": "15m",
+        "activity_score": 75,
+        "peak_hours": [
+          "10:00-12:00",
+          "14:00-16:00"
+        ],
+        "status": "normal"
+      },
+      "system_health": {
+        "uptime_hours": 8.35,
+        "active_connections": 29,
+        "load_average": [
+          4.5537109375,
+          6.29638671875,
+          6.12890625
+        ],
+        "health_score": 84.7,
+        "system_status": "healthy"
+      },
+      "resource_usage": {
+        "network_bytes_sent": 8134051,
+        "network_bytes_recv": 43668440,
+        "disk_read_bytes": 75522067968,
+        "disk_write_bytes": 123548471296,
+        "resource_efficiency": 85,
+        "status": "optimal"
+      },
+      "anomaly_detection": {
+        "anomalies_detected": [],
+        "anomaly_count": 0,
+        "anomaly_score": 0,
+        "threat_level": "low"
+      }
+    },
+    "system_score": 76.9
   }
 ]

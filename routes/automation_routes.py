@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 
 @automation_bp.route('/automation-dashboard')
 def automation_dashboard():
-    """Complete automation control dashboard"""
-    return render_template('automation/dashboard.html')
+    """Complete automation control dashboard with OMNI branding"""
+    return render_template('automation/branded_dashboard.html')
 
 @automation_bp.route('/launch-automation', methods=['POST'])
 def launch_automation():

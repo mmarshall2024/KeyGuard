@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNI™ Intelligent Core - Build Your Revenue Empire</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --omni-green: #7CFF00;
+            --omni-dark: #0B1426;
+            --omni-cyan: #00FFDD;
+            --omni-gradient: linear-gradient(135deg, #0B1426 0%, #1E3A8A 50%, #7CFF00 100%);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--omni-dark);
+            color: white;
+        }
+        
+        .hero-section {
+            background: var(--omni-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%2300FFDD" stroke-width="0.5" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .omni-logo {
+            max-width: 500px;
+            height: auto;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 0 20px rgba(124, 255, 0, 0.3));
+            animation: pulse 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulse {
+            from { filter: drop-shadow(0 0 20px rgba(124, 255, 0, 0.3)); }
+            to { filter: drop-shadow(0 0 30px rgba(124, 255, 0, 0.5)); }
+        }
+        
+        .revenue-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(124, 255, 0, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .revenue-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(124, 255, 0, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .revenue-card:hover::before {
+            left: 100%;
+        }
+        
+        .revenue-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--omni-green);
+            box-shadow: 0 20px 40px rgba(124, 255, 0, 0.1);
+        }
+        
+        .price-tag {
+            background: var(--omni-green);
+            color: var(--omni-dark);
+            font-weight: bold;
+            font-size: 2rem;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 1rem 0;
+        }
+        
+        .original-price {
+            text-decoration: line-through;
+            color: #ff6b6b;
+            font-size: 1.2rem;
+            margin-right: 1rem;
+        }
+        
+        .flash-sale {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: bold;
+            animation: flashSale 1s ease-in-out infinite alternate;
+        }
+        
+        @keyframes flashSale {
+            from { background: linear-gradient(45deg, #ff6b6b, #ff8e8e); }
+            to { background: linear-gradient(45deg, #ff8e8e, #ffb3b3); }
+        }
+        
+        .cta-button {
+            background: var(--omni-green);
+            color: var(--omni-dark);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            transform: translate(-50%, -50%);
+        }
+        
+        .cta-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(124, 255, 0, 0.3);
+        }
+        
+        .social-proof {
+            background: rgba(0, 255, 221, 0.1);
+            border-left: 4px solid var(--omni-cyan);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .feature-item {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--omni-green);
+            margin-bottom: 1rem;
+        }
+        
+        .countdown {
+            background: rgba(255, 107, 107, 0.1);
+            border: 2px solid #ff6b6b;
+            border-radius: 15px;
+            padding: 1rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .countdown-timer {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-10">
+                    <img src="{{ url_for('static', filename='images/omni_logo.png') }}" alt="OMNI™ Intelligent Core" class="omni-logo">
+                    <h1 class="display-2 fw-bold mb-4">Build Your Revenue Empire</h1>
+                    <p class="lead fs-3 mb-5">Complete AI-Powered Business Automation System</p>
+                    
+                    <!-- Flash Sale Alert -->
+                    <div class="flash-sale mb-4">
+                        <i class="fas fa-fire me-2"></i>FLASH SALE: 50% OFF - 24 HOURS ONLY
+                    </div>
+                    
+                    <!-- Social Proof -->
+                    <div class="social-proof">
+                        <h4><i class="fas fa-chart-line text-success me-2"></i>$289,675+ Revenue Generated</h4>
+                        <p class="mb-0">1,247+ Successful Entrepreneurs • 94.2% Success Rate</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Revenue Products -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center display-3 fw-bold mb-5">Choose Your Empire Package</h2>
+            
+            <!-- Countdown Timer -->
+            <div class="countdown">
+                <h5><i class="fas fa-clock me-2"></i>Flash Sale Ends In:</h5>
+                <div class="countdown-timer" id="countdown">23:47:32</div>
+            </div>
+            
+            <div class="row">
+                <!-- OMNI Bot Premium -->
+                <div class="col-lg-4 mb-4">
+                    <div class="revenue-card h-100">
+                        <div class="text-center">
+                            <h3><i class="fas fa-robot text-primary me-2"></i>OMNI Bot Premium</h3>
+                            <p class="text-muted">Perfect for beginners</p>
+                            
+                            <div class="price-section">
+                                <span class="original-price">$297.00</span>
+                                <div class="price-tag">$148.50</div>
+                                <small class="text-success">Save $148.50</small>
+                            </div>
+                            
+                            <ul class="list-unstyled text-start mt-4">
+                                <li><i class="fas fa-check text-success me-2"></i>Complete AI automation setup</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Revenue generation in 24 hours</li>
+                                <li><i class="fas fa-check text-success me-2"></i>$5,000+ monthly potential</li>
+                                <li><i class="fas fa-check text-success me-2"></i>24/7 priority support</li>
+                                <li><i class="fas fa-check text-success me-2"></i>ROI tracking dashboard</li>
+                            </ul>
+                            
+                            <a href="/payment-dashboard?product=omni-bot-premium&price=148.50" class="cta-button">
+                                <span style="position: relative; z-index: 1;">Choose Payment Method</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AI Revenue Accelerator -->
+                <div class="col-lg-4 mb-4">
+                    <div class="revenue-card h-100" style="border-color: var(--omni-green); transform: scale(1.05);">
+                        <div class="text-center">
+                            <div class="badge bg-success mb-3">MOST POPULAR</div>
+                            <h3><i class="fas fa-rocket text-warning me-2"></i>AI Revenue Accelerator</h3>
+                            <p class="text-muted">Advanced automation</p>
+                            
+                            <div class="price-section">
+                                <span class="original-price">$497.00</span>
+                                <div class="price-tag">$248.50</div>
+                                <small class="text-success">Save $248.50</small>
+                            </div>
+                            
+                            <ul class="list-unstyled text-start mt-4">
+                                <li><i class="fas fa-check text-success me-2"></i>AI-powered revenue optimization</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Customer acquisition automation</li>
+                                <li><i class="fas fa-check text-success me-2"></i>ROI in 48 hours</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Advanced analytics dashboard</li>
+                                <li><i class="fas fa-check text-success me-2"></i>A/B testing automation</li>
+                            </ul>
+                            
+                            <a href="/payment-dashboard?product=ai-revenue-accelerator&price=248.50" class="cta-button">
+                                <span style="position: relative; z-index: 1;">Choose Payment Method</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Marshall Empire Access -->
+                <div class="col-lg-4 mb-4">
+                    <div class="revenue-card h-100">
+                        <div class="text-center">
+                            <h3><i class="fas fa-crown text-warning me-2"></i>Complete Empire</h3>
+                            <p class="text-muted">Full business empire</p>
+                            
+                            <div class="price-section">
+                                <span class="original-price">$997.00</span>
+                                <div class="price-tag">$498.50</div>
+                                <small class="text-success">Save $498.50</small>
+                            </div>
+                            
+                            <ul class="list-unstyled text-start mt-4">
+                                <li><i class="fas fa-check text-success me-2"></i>18 business modules included</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Multiple revenue streams</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Complete empire management</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Advanced automation engine</li>
+                                <li><i class="fas fa-check text-success me-2"></i>White-label ready</li>
+                            </ul>
+                            
+                            <a href="/payment-dashboard?product=marshall-empire&price=498.50" class="cta-button">
+                                <span style="position: relative; z-index: 1;">Choose Payment Method</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Enterprise Package -->
+            <div class="row justify-content-center mt-5">
+                <div class="col-lg-8">
+                    <div class="revenue-card">
+                        <div class="text-center">
+                            <h3><i class="fas fa-building text-info me-2"></i>Enterprise Empire Package</h3>
+                            <p class="lead">Complete enterprise-level automation with custom development</p>
+                            
+                            <div class="price-section">
+                                <div class="price-tag" style="font-size: 2.5rem;">$1,997</div>
+                                <small class="text-muted d-block">One-time investment</small>
+                            </div>
+                            
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled text-start">
+                                        <li><i class="fas fa-check text-success me-2"></i>Custom development included</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Priority support and training</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>White-label rights</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled text-start">
+                                        <li><i class="fas fa-check text-success me-2"></i>Dedicated success manager</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Custom integrations</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Revenue guarantee</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <a href="/payment-dashboard?product=enterprise-package&price=1997" class="cta-button btn-lg">
+                                <span style="position: relative; z-index: 1;">Choose Payment Method</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-5 bg-dark">
+        <div class="container">
+            <h2 class="text-center display-4 fw-bold mb-5">Complete Automation Features</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-magnet"></i>
+                    </div>
+                    <h4>Lead Magnets</h4>
+                    <p>3 automated lead magnets generating 89 leads daily</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                    <h4>Social Automation</h4>
+                    <p>13 posts daily across 4 platforms, 45,678 reach</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h4>Retargeting</h4>
+                    <p>3 campaigns with 4.2% conversion rate</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h4>Email Sequences</h4>
+                    <p>7-day nurture generating $49K weekly</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4>Funnel Optimization</h4>
+                    <p>A/B testing with +23% conversion lifts</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h4>Content Scraping</h4>
+                    <p>8 sources monitored for trending content</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Guarantee Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="display-4 fw-bold mb-4">30-Day Money-Back Guarantee</h2>
+                    <p class="lead mb-4">We're so confident in the OMNI Empire system that we offer a complete 30-day money-back guarantee. No questions asked.</p>
+                    
+                    <div class="social-proof">
+                        <h4><i class="fas fa-shield-alt text-success me-2"></i>100% Risk-Free Investment</h4>
+                        <p class="mb-0">94.2% customer satisfaction • Instant refund processing • Keep all bonuses</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Countdown timer
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(0, 0, 0, 0);
+            const timeLeft = tomorrow.getTime() - now;
+            
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            
+            document.getElementById('countdown').innerHTML = 
+                String(hours).padStart(2, '0') + ':' + 
+                String(minutes).padStart(2, '0') + ':' + 
+                String(seconds).padStart(2, '0');
+        }
+        
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
