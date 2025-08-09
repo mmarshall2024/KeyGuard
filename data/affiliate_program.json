@@ -1,0 +1,7 @@
+{
+  "commission_rate": 30,
+  "cookie_duration": 60,
+  "minimum_payout": 100,
+  "payment_schedule": "weekly",
+  "tracking_links": []
+}
