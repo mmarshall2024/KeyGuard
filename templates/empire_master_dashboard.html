@@ -299,23 +299,44 @@
             container.innerHTML = '';
             
             businessLines.forEach(business => {
-                const statusClass = business.status === 'active' ? 'status-active' : 'status-expanding';
+                const statusClasses = {
+                    'active': 'status-active',
+                    'expanding': 'status-expanding',
+                    'scaling': 'status-expanding',
+                    'unicorn': 'status-active',
+                    'viral': 'status-expanding',
+                    'producing': 'status-active',
+                    'automated': 'status-active',
+                    'designing': 'status-expanding',
+                    'blockchain': 'status-active',
+                    'dominating': 'status-active',
+                    'commanding': 'status-active',
+                    'deploying': 'status-expanding'
+                };
+                
+                const statusClass = statusClasses[business.status] || 'status-active';
+                const growthIcon = business.growth > 200 ? '🚀' : business.growth > 100 ? '↗️' : '📈';
+                
                 const card = `
                     <div class="business-card">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
                                 <h6 class="fw-bold">${business.name}</h6>
-                                <p class="text-muted mb-2">${business.customers} customers</p>
+                                <p class="text-muted mb-1">${business.description || 'Business operations and revenue generation'}</p>
+                                <p class="text-muted mb-2">${business.customers.toLocaleString()} customers | ${business.category || 'Business'}</p>
                                 <div class="small">
                                     <strong>Revenue:</strong> $${business.revenue.toLocaleString()}<br>
-                                    <strong>Growth:</strong> <span class="text-success">+${business.growth}%</span>
+                                    <strong>Growth:</strong> <span class="text-success">${growthIcon} +${business.growth}%</span>
                                 </div>
                             </div>
-                            <span class="${statusClass}">${business.status}</span>
+                            <span class="${statusClass}">${business.status.toUpperCase()}</span>
                         </div>
                         <div class="mt-3">
-                            <button class="btn btn-sm btn-outline-primary" onclick="launchCampaign('${business.name}')">
-                                Launch Campaign
+                            <button class="btn btn-sm btn-primary me-2" onclick="window.open('${business.url}', '_blank')">
+                                <i class="fas fa-external-link-alt"></i> Access
+                            </button>
+                            <button class="btn btn-sm btn-success" onclick="launchCampaign('${business.name}')">
+                                <i class="fas fa-rocket"></i> Campaign
                             </button>
                         </div>
                     </div>

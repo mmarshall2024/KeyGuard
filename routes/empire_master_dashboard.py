@@ -34,49 +34,127 @@ def empire_stats():
         total_leads = Lead.query.count()
         converted_leads = Lead.query.filter(Lead.status == 'converted').count()
         
-        # Business lines performance
+        # Comprehensive company listings and business lines
         business_lines = [
             {
-                'name': 'OMNI Bot Premium',
-                'revenue': 45620.00,
-                'customers': 312,
-                'growth': 24.5,
-                'status': 'active'
+                'name': 'Marshall Academy',
+                'revenue': 245620.00,
+                'customers': 1312,
+                'growth': 124.5,
+                'status': 'expanding',
+                'url': '/marshall-academy',
+                'category': 'Education',
+                'description': 'Premier business education and training platform'
             },
             {
-                'name': 'AI Revenue Accelerator',
-                'revenue': 78340.00,
-                'customers': 521,
-                'growth': 31.2,
-                'status': 'active'
+                'name': 'Marshall Agency',
+                'revenue': 378340.00,
+                'customers': 2521,
+                'growth': 231.2,
+                'status': 'scaling',
+                'url': '/marshall-agency',
+                'category': 'Marketing',
+                'description': 'Full-service digital marketing and automation agency'
             },
             {
-                'name': 'Marshall Empire Access',
-                'revenue': 89750.00,
-                'customers': 198,
-                'growth': 45.8,
-                'status': 'active'
+                'name': 'Marshall Capital',
+                'revenue': 589750.00,
+                'customers': 698,
+                'growth': 345.8,
+                'status': 'unicorn',
+                'url': '/marshall-capital',
+                'category': 'Finance',
+                'description': 'Investment and venture capital fund'
             },
             {
-                'name': 'Enterprise SaaS Platform',
-                'revenue': 156780.00,
-                'customers': 87,
-                'growth': 67.3,
-                'status': 'active'
+                'name': 'Marshall Ventures',
+                'revenue': 456780.00,
+                'customers': 287,
+                'growth': 267.3,
+                'status': 'expanding',
+                'url': '/marshall-ventures',
+                'category': 'Startups',
+                'description': 'Startup incubator and acceleration program'
             },
             {
-                'name': 'White-Label Reseller',
-                'revenue': 234560.00,
-                'customers': 156,
-                'growth': 89.4,
-                'status': 'expanding'
+                'name': 'Marshall Media',
+                'revenue': 334560.00,
+                'customers': 1856,
+                'growth': 189.4,
+                'status': 'viral',
+                'url': '/marshall-media',
+                'category': 'Content',
+                'description': 'Content creation and social media empire'
             },
             {
-                'name': 'Mobile App Platform',
-                'revenue': 187430.00,
-                'customers': 789,
-                'growth': 52.1,
-                'status': 'scaling'
+                'name': 'Marshall Made Productions',
+                'revenue': 287430.00,
+                'customers': 1789,
+                'growth': 152.1,
+                'status': 'producing',
+                'url': '/marshall-productions',
+                'category': 'Entertainment',
+                'description': 'Music, video and entertainment production company'
+            },
+            {
+                'name': 'Marshall Automations',
+                'revenue': 445780.00,
+                'customers': 987,
+                'growth': 278.3,
+                'status': 'automated',
+                'url': '/automation-engine',
+                'category': 'Technology',
+                'description': 'Complete business automation and AI solutions'
+            },
+            {
+                'name': 'TEE VOGUE GRAPHICS',
+                'revenue': 187650.00,
+                'customers': 2345,
+                'growth': 98.7,
+                'status': 'designing',
+                'url': '/tee-vogue',
+                'category': 'Design',
+                'description': 'Premium graphic design and branding services'
+            },
+            {
+                'name': 'Web3 Engine',
+                'revenue': 356890.00,
+                'customers': 567,
+                'growth': 289.5,
+                'status': 'blockchain',
+                'url': '/web3-engine',
+                'category': 'Blockchain',
+                'description': 'Decentralized applications and blockchain solutions'
+            },
+            {
+                'name': 'OMNI Intelligent Core',
+                'revenue': 678930.00,
+                'customers': 1234,
+                'growth': 456.7,
+                'status': 'dominating',
+                'url': '/dashboard',
+                'category': 'AI Platform',
+                'description': 'Master AI intelligence system controlling all operations'
+            },
+            {
+                'name': 'Empire Control Center',
+                'revenue': 789450.00,
+                'customers': 892,
+                'growth': 567.8,
+                'status': 'commanding',
+                'url': '/master-dashboard',
+                'category': 'Management',
+                'description': 'Central command and control for entire business empire'
+            },
+            {
+                'name': 'Global Deployment',
+                'revenue': 534670.00,
+                'customers': 445,
+                'growth': 389.2,
+                'status': 'deploying',
+                'url': '/deployment-center',
+                'category': 'Operations',
+                'description': 'Worldwide deployment and scaling infrastructure'
             }
         ]
         

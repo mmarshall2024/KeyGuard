@@ -199,3 +199,44 @@ def health():
     monitor = HealthMonitor()
     status = monitor.get_system_status()
     return status, 200 if status['healthy'] else 503
+
+# Company access routes for empire dashboard navigation
+@app.route('/marshall-academy')
+def marshall_academy():
+    return redirect('/')
+
+@app.route('/marshall-agency')
+def marshall_agency():
+    return redirect('/automation-engine')
+
+@app.route('/marshall-capital')
+def marshall_capital():
+    return redirect('/revenue-landing')
+
+@app.route('/marshall-ventures')
+def marshall_ventures():
+    return redirect('/campaign-launcher')
+
+@app.route('/marshall-media')
+def marshall_media():
+    return redirect('/content-ai-dashboard')
+
+@app.route('/marshall-productions')
+def marshall_productions():
+    return redirect('/empire-website-info')
+
+@app.route('/tee-vogue')
+def tee_vogue():
+    return redirect('/products')
+
+@app.route('/web3-engine')
+def web3_engine():
+    return redirect('/payment-methods')
+
+@app.route('/deployment-center')
+def deployment_center():
+    return redirect('/deployment-dashboard')
+
+# Register admin control blueprint
+from routes.admin_control import admin_control_bp
+app.register_blueprint(admin_control_bp)
