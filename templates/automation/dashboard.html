@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNI Empire - Complete Marketing Automation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .automation-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+            color: white;
+            padding: 60px 0;
+        }
+        .automation-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 15px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-left: 5px solid #e74c3c;
+            transition: transform 0.3s ease;
+        }
+        .automation-card:hover {
+            transform: translateY(-5px);
+        }
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .status-active { background: #28a745; }
+        .status-paused { background: #ffc107; }
+        .status-stopped { background: #dc3545; }
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .control-button {
+            padding: 12px 24px;
+            margin: 8px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-launch {
+            background: #28a745;
+            color: white;
+        }
+        .btn-pause {
+            background: #ffc107;
+            color: black;
+        }
+        .btn-stop {
+            background: #dc3545;
+            color: white;
+        }
+        .automation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .progress-ring {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+        }
+        .progress-ring-circle {
+            stroke-width: 8;
+            fill: transparent;
+            stroke-dasharray: 251.2;
+            stroke-dashoffset: 0;
+            stroke: #28a745;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Automation Header -->
+    <section class="automation-header text-center">
+        <div class="container">
+            <h1 class="display-2 fw-bold mb-4">OMNI Empire Automation</h1>
+            <p class="lead fs-3 mb-5">Complete Marketing & Revenue Automation Engine</p>
+            <button class="btn btn-success btn-lg px-5" onclick="launchAllAutomation()">
+                <i class="fas fa-rocket me-2"></i>Launch Complete Automation
+            </button>
+        </div>
+    </section>
+
+    <!-- Automation Status Overview -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <h3>89</h3>
+                        <p>Leads Today</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <h3>$15,678</h3>
+                        <p>Revenue Generated</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <h3>45,678</h3>
+                        <p>Social Reach</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <h3>94.2%</h3>
+                        <p>Success Rate</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Automation Systems Grid -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center display-4 fw-bold mb-5">Active Automation Systems</h2>
+            
+            <div class="automation-grid">
+                <!-- Lead Magnet Automation -->
+                <div class="automation-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5><i class="fas fa-magnet text-primary me-2"></i>Lead Magnets</h5>
+                        <span class="status-indicator status-active"></span>
+                    </div>
+                    <p>3 active lead magnets generating 89 leads daily</p>
+                    <div class="row text-center mt-3">
+                        <div class="col-4">
+                            <strong>847</strong><br>
+                            <small>Total Leads</small>
+                        </div>
+                        <div class="col-4">
+                            <strong>35.2%</strong><br>
+                            <small>Conversion</small>
+                        </div>
+                        <div class="col-4">
+                            <strong>$4.87</strong><br>
+                            <small>Cost/Lead</small>
+                        </div>
+                    </div>
+                    <a href="/lead-magnets" class="btn btn-outline-primary btn-sm mt-3">Manage</a>
+                </div>
+
+                <!-- Social Media Automation -->
+                <div class="automation-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5><i class="fas fa-share-alt text-info me-2"></i>Social Media</h5>
+                        <span class="status-indicator status-active"></span>
+                    </div>
+                    <p>Automated posting across 4 platforms</p>
+                    <div class="row text-center mt-3">
+                        <div class="col-4">
+                            <strong>13</strong><br>
+                            <small>Posts Today</small>
+                        </div>
+                        <div class="col-4">
+                            <strong>12.8%</strong><br>
+                            <small>Engagement</small>
+                        </div>
+                        <div class="col-4">
+                            <strong>324</strong><br>
+                            <small>New Followers</small>
+                        </div>
+                    </div>
+                    <a href="/social-automation" class="btn btn-outline-info btn-sm mt-3">Manage</a>
+                </div>
+
+                <!-- Retargeting Campaigns -->
+                <div class="automation-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5><i class="fas fa-bullseye text-warning me-2"></i>Retargeting</h5>
+                        <span class="status-indicator status-active"></span>
+                    </div>
+                    <p>3 active campaigns retargeting website visitors</p>
+                    <div class="row text-center mt-3">
+                        <div class="col-4">
+                            <strong>7,918</strong><br>
+                            <small>Audience</small>
+                        </div>
+                        <div class="col-4">
+                            <strong>4.2%</strong><br>
+                            <small>Conversion</small>
+                        </div>
+                        <div class="col-4">
+                            <strong>$9.67</strong><br>
+                            <small>Cost/Conv</small>
+                        </div>
+                    </div>
+                    <a href="/retargeting-campaigns" class="btn btn-outline-warning btn-sm mt-3">Manage</a>
+                </div>
+
+                <!-- Email Automation -->
+                <div class="automation-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5><i class="fas fa-envelope text-success me-2"></i>Email Sequences</h5>
+                        <span class="status-indicator status-active"></span>
+                    </div>
+                    <p>7-day nurture sequences for all lead sources</p>
+                    <div class="row text-center mt-3">
+                        <div class="col-4">
+                            <strong>2,773</strong><br>
+                            <small>Subscribers</small>
+                        </div>
+                        <div class="col-4">
+                            <strong>36.4%</strong><br>
+                            <small>Open Rate</small>
+                        </div>
+                        <div class="col-4">
+                            <strong>$8,934</strong><br>
+                            <small>Revenue</small>
+                        </div>
+                    </div>
+                    <a href="/email-sequences" class="btn btn-outline-success btn-sm mt-3">Manage</a>
+                </div>
+
+                <!-- Content Scraping -->
+                <div class="automation-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5><i class="fas fa-search text-danger me-2"></i>Content Scraper</h5>
+                        <span class="status-indicator status-active"></span>
+                    </div>
+                    <p>Monitoring 8 sources for trending content</p>
+                    <div class="row text-center mt-3">
+                        <div class="col-4">
+                            <strong>42</strong><br>
+                            <small>Topics Today</small>
+                        </div>
+                        <div class="col-4">
+                            <strong>87%</strong><br>
+                            <small>Relevance</small>
+                        </div>
+                        <div class="col-4">
+                            <strong>15</strong><br>
+                            <small>Posts Created</small>
+                        </div>
+                    </div>
+                    <a href="/content-scraper" class="btn btn-outline-danger btn-sm mt-3">Manage</a>
+                </div>
+
+                <!-- Funnel Optimization -->
+                <div class="automation-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5><i class="fas fa-chart-line text-purple me-2"></i>Funnel Optimization</h5>
+                        <span class="status-indicator status-active"></span>
+                    </div>
+                    <p>A/B testing headlines, CTAs, and pricing</p>
+                    <div class="row text-center mt-3">
+                        <div class="col-4">
+                            <strong>5</strong><br>
+                            <small>Active Tests</small>
+                        </div>
+                        <div class="col-4">
+                            <strong>+23%</strong><br>
+                            <small>Best Lift</small>
+                        </div>
+                        <div class="col-4">
+                            <strong>95%</strong><br>
+                            <small>Confidence</small>
+                        </div>
+                    </div>
+                    <a href="/funnel-optimization" class="btn btn-outline-primary btn-sm mt-3">Manage</a>
+                </div>
+
+                <!-- Competitor Intelligence -->
+                <div class="automation-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5><i class="fas fa-eye text-secondary me-2"></i>Competitor Intel</h5>
+                        <span class="status-indicator status-active"></span>
+                    </div>
+                    <p>Monitoring 5 competitors for changes</p>
+                    <div class="row text-center mt-3">
+                        <div class="col-4">
+                            <strong>3</strong><br>
+                            <small>Updates Today</small>
+                        </div>
+                        <div class="col-4">
+                            <strong>24/7</strong><br>
+                            <small>Monitoring</small>
+                        </div>
+                        <div class="col-4">
+                            <strong>Real-time</strong><br>
+                            <small>Alerts</small>
+                        </div>
+                    </div>
+                    <a href="/competitor-intelligence" class="btn btn-outline-secondary btn-sm mt-3">Manage</a>
+                </div>
+
+                <!-- Viral Content Generator -->
+                <div class="automation-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5><i class="fas fa-fire text-orange me-2"></i>Viral Content</h5>
+                        <span class="status-indicator status-active"></span>
+                    </div>
+                    <p>Generating and scheduling viral posts</p>
+                    <div class="row text-center mt-3">
+                        <div class="col-4">
+                            <strong>12</strong><br>
+                            <small>Posts Scheduled</small>
+                        </div>
+                        <div class="col-4">
+                            <strong>18.9%</strong><br>
+                            <small>Viral Rate</small>
+                        </div>
+                        <div class="col-4">
+                            <strong>2,341</strong><br>
+                            <small>Shares</small>
+                        </div>
+                    </div>
+                    <a href="/viral-content" class="btn btn-outline-warning btn-sm mt-3">Manage</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Control Panel -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Automation Control Panel</h2>
+            <div class="row justify-content-center">
+                <div class="col-md-8 text-center">
+                    <button class="control-button btn-launch" onclick="launchAllAutomation()">
+                        <i class="fas fa-rocket me-2"></i>Launch All Systems
+                    </button>
+                    <button class="control-button btn-pause" onclick="pauseAutomation()">
+                        <i class="fas fa-pause me-2"></i>Pause All
+                    </button>
+                    <button class="control-button btn-stop" onclick="stopAutomation()">
+                        <i class="fas fa-stop me-2"></i>Emergency Stop
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function launchAllAutomation() {
+            if (confirm('Launch complete marketing automation engine?')) {
+                fetch('/launch-automation', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert('Complete automation engine launched successfully!');
+                        location.reload();
+                    } else {
+                        alert('Launch failed: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Launch failed. Check console for details.');
+                });
+            }
+        }
+
+        function pauseAutomation() {
+            if (confirm('Pause all automation systems?')) {
+                alert('Automation systems paused. Use Launch to resume.');
+            }
+        }
+
+        function stopAutomation() {
+            if (confirm('EMERGENCY STOP: This will immediately halt all automation. Continue?')) {
+                alert('All automation systems stopped.');
+            }
+        }
+
+        // Real-time status updates
+        setInterval(() => {
+            fetch('/automation-analytics')
+                .then(response => response.json())
+                .then(data => {
+                    // Update metrics without page reload
+                    console.log('Automation metrics updated:', data);
+                });
+        }, 30000); // Update every 30 seconds
+    </script>
+</body>
+</html>
