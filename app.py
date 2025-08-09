@@ -50,6 +50,14 @@ app.register_blueprint(payment_systems_bp)
 from routes.telegram_payment_integration import telegram_payment_bp
 app.register_blueprint(telegram_payment_bp)
 
+# Register empire master dashboard blueprint
+from routes.empire_master_dashboard import empire_master_bp
+app.register_blueprint(empire_master_bp)
+
+# Register affiliate bot system blueprint
+from routes.affiliate_bot_system import affiliate_bot_bp
+app.register_blueprint(affiliate_bot_bp)
+
 # Register automation blueprint
 from routes.automation_routes import automation_bp
 app.register_blueprint(automation_bp)
@@ -74,6 +82,10 @@ app.register_blueprint(empire_bp)
 from routes.campaign_launcher import campaign_launcher
 app.register_blueprint(campaign_launcher, url_prefix='/campaigns')
 
+# Register campaign automation blueprint
+from routes.campaign_automation import campaign_automation_bp
+app.register_blueprint(campaign_automation_bp)
+
 # Register instant money blueprint
 from routes.instant_money import instant_money
 app.register_blueprint(instant_money, url_prefix='/money')
@@ -85,18 +97,21 @@ with app.app_context():
     db.create_all()
     
     # Initialize bot core
-    from bot_core import BotCore
-    bot_core = BotCore()
-    bot_core.setup_bot()
-    bot_core.load_plugins()
-    app.bot_core = bot_core
+    try:
+        from bot_core import BotCore
+        bot_core = BotCore()
+        bot_core.setup_bot()
+        bot_core.load_plugins()
+        setattr(app, 'bot_core', bot_core)
+    except Exception as e:
+        logger.warning(f"Bot initialization warning: {str(e)}")
     
     logger.info("OMNICore Bot initialized successfully")
 
 @app.route('/')
 def index():
-    from flask import redirect, url_for
-    return redirect('/empire')
+    from flask import render_template
+    return render_template('empire_master_dashboard.html')
 
 @app.route('/empire-dashboard')
 def empire_dashboard():

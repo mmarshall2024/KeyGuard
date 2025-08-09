@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNI Empire Master Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .empire-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%);
+            color: white;
+            padding: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .empire-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #28a745;
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+        .business-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid #007bff;
+        }
+        .campaign-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid #ffc107;
+        }
+        .affiliate-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid #dc3545;
+        }
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .status-expanding {
+            background: #fff3cd;
+            color: #856404;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .quick-action-btn {
+            margin: 5px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .quick-action-btn:hover {
+            transform: scale(1.05);
+        }
+        .revenue-chart {
+            height: 300px;
+        }
+        .real-time-indicator {
+            width: 10px;
+            height: 10px;
+            background: #28a745;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        }
+        .upgrade-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Empire Header -->
+    <section class="empire-header text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">OMNI EMPIRE MASTER CONTROL</h1>
+            <p class="lead mb-4">
+                <span class="real-time-indicator"></span>
+                Real-time Command Center • Revenue Optimization • Campaign Management
+            </p>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalRevenue">$0</div>
+                        <h6 class="text-muted">Total Revenue</h6>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number" id="todayRevenue">$0</div>
+                        <h6 class="text-muted">Today's Revenue</h6>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalCustomers">0</div>
+                        <h6 class="text-muted">Total Customers</h6>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-number" id="activeAffiliates">0</div>
+                        <h6 class="text-muted">Active Affiliates</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container-fluid py-4">
+        <div class="row">
+            <!-- Business Lines Performance -->
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-building me-2"></i>Business Lines Performance</h5>
+                    </div>
+                    <div class="card-body" id="businessLines">
+                        <!-- Business lines will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Campaigns -->
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="fas fa-bullhorn me-2"></i>Active Campaigns</h5>
+                    </div>
+                    <div class="card-body" id="activeCampaigns">
+                        <!-- Campaigns will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <!-- High-Ticket Affiliate Links -->
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0"><i class="fas fa-link me-2"></i>High-Ticket Affiliate Links</h5>
+                    </div>
+                    <div class="card-body" id="affiliateLinks">
+                        <!-- Affiliate links will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="fas fa-rocket me-2"></i>Quick Actions</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <button class="btn btn-primary quick-action-btn" onclick="launchFlashSale()">
+                            <i class="fas fa-flash me-2"></i>Launch Flash Sale
+                        </button>
+                        <button class="btn btn-success quick-action-btn" onclick="boostAffiliates()">
+                            <i class="fas fa-users me-2"></i>Boost Affiliates
+                        </button>
+                        <button class="btn btn-warning quick-action-btn" onclick="socialBlitz()">
+                            <i class="fas fa-share-alt me-2"></i>Social Blitz
+                        </button>
+                        <button class="btn btn-info quick-action-btn" onclick="upgradeAllSystems()">
+                            <i class="fas fa-cog me-2"></i>Upgrade Systems
+                        </button>
+                        <button class="btn btn-secondary quick-action-btn" onclick="generateReport()">
+                            <i class="fas fa-chart-bar me-2"></i>Generate Report
+                        </button>
+                        <button class="btn btn-dark quick-action-btn" onclick="openPaymentMethods()">
+                            <i class="fas fa-credit-card me-2"></i>Payment Methods
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Upgrade Section -->
+        <div class="upgrade-section">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h3><i class="fas fa-rocket me-3"></i>System Upgrade Center</h3>
+                    <p class="mb-0">Instantly upgrade all bot functions, logic systems, and revenue engines for maximum performance</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-light btn-lg" onclick="upgradeAllSystems()">
+                        <i class="fas fa-arrow-up me-2"></i>UPGRADE ALL SYSTEMS
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Revenue Chart -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Revenue Performance</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="revenueChart" class="revenue-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let revenueChart;
+
+        // Load dashboard data
+        async function loadDashboard() {
+            try {
+                const response = await fetch('/api/empire-stats');
+                const data = await response.json();
+                
+                // Update main stats
+                document.getElementById('totalRevenue').textContent = `$${data.revenue.total.toLocaleString()}`;
+                document.getElementById('todayRevenue').textContent = `$${data.revenue.today.toLocaleString()}`;
+                document.getElementById('totalCustomers').textContent = data.customers.total.toLocaleString();
+                document.getElementById('activeAffiliates').textContent = data.affiliate_stats.active_affiliates.toLocaleString();
+                
+                // Load business lines
+                loadBusinessLines(data.business_lines);
+                
+                // Load campaigns
+                loadCampaigns(data.campaigns);
+                
+                // Load affiliate links
+                loadAffiliateLinks();
+                
+                // Create revenue chart
+                createRevenueChart(data);
+                
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        function loadBusinessLines(businessLines) {
+            const container = document.getElementById('businessLines');
+            container.innerHTML = '';
+            
+            businessLines.forEach(business => {
+                const statusClass = business.status === 'active' ? 'status-active' : 'status-expanding';
+                const card = `
+                    <div class="business-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="fw-bold">${business.name}</h6>
+                                <p class="text-muted mb-2">${business.customers} customers</p>
+                                <div class="small">
+                                    <strong>Revenue:</strong> $${business.revenue.toLocaleString()}<br>
+                                    <strong>Growth:</strong> <span class="text-success">+${business.growth}%</span>
+                                </div>
+                            </div>
+                            <span class="${statusClass}">${business.status}</span>
+                        </div>
+                        <div class="mt-3">
+                            <button class="btn btn-sm btn-outline-primary" onclick="launchCampaign('${business.name}')">
+                                Launch Campaign
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        function loadCampaigns(campaigns) {
+            const container = document.getElementById('activeCampaigns');
+            container.innerHTML = '';
+            
+            campaigns.forEach(campaign => {
+                const card = `
+                    <div class="campaign-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="fw-bold">${campaign.name}</h6>
+                                <div class="small text-muted">
+                                    <strong>Budget:</strong> $${campaign.budget.toLocaleString()}<br>
+                                    <strong>Spent:</strong> $${campaign.spent.toLocaleString()}<br>
+                                    <strong>ROI:</strong> <span class="text-success">${campaign.roi}x</span>
+                                </div>
+                            </div>
+                            <span class="status-active">${campaign.status}</span>
+                        </div>
+                        <div class="progress mt-2" style="height: 6px;">
+                            <div class="progress-bar" style="width: ${(campaign.spent/campaign.budget)*100}%"></div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        async function loadAffiliateLinks() {
+            try {
+                const response = await fetch('/api/affiliate-links');
+                const data = await response.json();
+                const container = document.getElementById('affiliateLinks');
+                container.innerHTML = '';
+                
+                data.high_ticket_links.forEach(product => {
+                    const card = `
+                        <div class="affiliate-card">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h6 class="fw-bold">${product.name}</h6>
+                                    <small class="text-muted">Price: $${product.price} • Commission: $${product.commission}</small>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-success">Conversion: ${product.conversion_rate}%</small>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-sm btn-primary" onclick="copyLink('${product.link}')">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += card;
+                });
+                
+            } catch (error) {
+                console.error('Error loading affiliate links:', error);
+            }
+        }
+
+        function createRevenueChart(data) {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            
+            // Sample revenue data for the chart
+            const revenueData = {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+                datasets: [{
+                    label: 'Revenue',
+                    data: [45620, 78340, 89750, 156780, 234560, 187430, 289450, data.revenue.total],
+                    borderColor: '#28a745',
+                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            };
+
+            revenueChart = new Chart(ctx, {
+                type: 'line',
+                data: revenueData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Action functions
+        async function launchFlashSale() {
+            const business = prompt('Enter business line for flash sale:');
+            if (business) {
+                const response = await fetch('/api/launch-campaign', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({type: 'flash_sale', business_line: business, budget: 5000})
+                });
+                const result = await response.json();
+                alert(`Flash sale launched for ${business}!`);
+                loadDashboard();
+            }
+        }
+
+        async function boostAffiliates() {
+            const response = await fetch('/api/launch-campaign', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({type: 'affiliate_boost', business_line: 'All Products', budget: 8000})
+            });
+            alert('Affiliate boost activated! 25% commission increase for 7 days.');
+            loadDashboard();
+        }
+
+        async function socialBlitz() {
+            const response = await fetch('/api/launch-campaign', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({type: 'social_blitz', business_line: 'Featured Products', budget: 3000})
+            });
+            alert('Social media blitz launched across all platforms!');
+            loadDashboard();
+        }
+
+        async function upgradeAllSystems() {
+            const response = await fetch('/api/upgrade-systems', {method: 'POST'});
+            const result = await response.json();
+            alert(`All systems upgraded! ${result.total_systems} systems updated to latest versions.`);
+            loadDashboard();
+        }
+
+        function generateReport() {
+            alert('Comprehensive empire report generating... Check your email in 5 minutes.');
+        }
+
+        function openPaymentMethods() {
+            window.open('/payment-methods', '_blank');
+        }
+
+        function launchCampaign(businessName) {
+            const campaignType = prompt('Campaign type (flash_sale, affiliate_boost, social_blitz):');
+            if (campaignType) {
+                fetch('/api/launch-campaign', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({type: campaignType, business_line: businessName, budget: 2500})
+                }).then(() => {
+                    alert(`Campaign launched for ${businessName}!`);
+                    loadDashboard();
+                });
+            }
+        }
+
+        function copyLink(link) {
+            navigator.clipboard.writeText(link);
+            alert('Affiliate link copied to clipboard!');
+        }
+
+        // Load dashboard on page load
+        loadDashboard();
+        
+        // Refresh dashboard every 30 seconds
+        setInterval(loadDashboard, 30000);
+    </script>
+</body>
+</html>

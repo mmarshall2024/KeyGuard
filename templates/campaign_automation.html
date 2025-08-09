@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Automation - OMNI Empire</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .campaign-header {
+            background: linear-gradient(135deg, #6f42c1 0%, #007bff 50%, #28a745 100%);
+            color: white;
+            padding: 50px 0;
+        }
+        .campaign-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 15px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #6f42c1;
+            transition: transform 0.3s ease;
+        }
+        .campaign-card:hover {
+            transform: translateY(-5px);
+        }
+        .mega-campaign-section {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        .template-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid #17a2b8;
+        }
+        .performance-excellent {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .performance-outstanding {
+            color: #007bff;
+            font-weight: bold;
+        }
+        .automation-btn {
+            margin: 10px 5px;
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .automation-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- Campaign Header -->
+    <section class="campaign-header text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">CAMPAIGN AUTOMATION CENTER</h1>
+            <p class="lead mb-4">Multi-Business Campaign Management • Automated Optimization • Revenue Scaling</p>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <h3 id="totalCampaigns">0</h3>
+                        <small>Total Campaigns</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <h3 id="totalBudget">$0</h3>
+                        <small>Total Budget</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <h3 id="totalRevenue">$0</h3>
+                        <small>Revenue Generated</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <h3 id="averageROI">0x</h3>
+                        <small>Average ROI</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container-fluid py-4">
+        <!-- Mega Campaign Launch -->
+        <div class="mega-campaign-section">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h3><i class="fas fa-rocket me-3"></i>Launch Mega Campaign</h3>
+                    <p class="mb-0">Deploy empire-wide campaigns across all business lines simultaneously</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="dropdown">
+                        <button class="btn btn-light btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-fire me-2"></i>MEGA LAUNCH
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="launchMegaCampaign('empire_wide_flash')">Empire-Wide Flash Sale</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="launchMegaCampaign('affiliate_super_boost')">Affiliate Army Boost</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="launchMegaCampaign('enterprise_domination')">Enterprise Domination</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="launchMegaCampaign('viral_content_storm')">Viral Content Storm</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Active Campaigns -->
+            <div class="col-lg-8">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Active Campaigns</h5>
+                    </div>
+                    <div class="card-body" id="activeCampaigns">
+                        <!-- Campaigns will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Campaign Optimization -->
+            <div class="col-lg-4">
+                <div class="card h-100">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="fas fa-magic me-2"></i>AI Optimization</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6>Automated Optimizations</h6>
+                        <button class="btn btn-warning automation-btn w-100 mb-2" onclick="optimizeCampaigns('performance')">
+                            <i class="fas fa-chart-bar me-2"></i>Performance Optimization
+                        </button>
+                        <button class="btn btn-info automation-btn w-100 mb-2" onclick="optimizeCampaigns('audience')">
+                            <i class="fas fa-users me-2"></i>Audience Optimization
+                        </button>
+                        <button class="btn btn-secondary automation-btn w-100 mb-2" onclick="optimizeCampaigns('creative')">
+                            <i class="fas fa-paint-brush me-2"></i>Creative Optimization
+                        </button>
+                        <button class="btn btn-dark automation-btn w-100 mb-2" onclick="optimizeCampaigns('budget')">
+                            <i class="fas fa-dollar-sign me-2"></i>Budget Optimization
+                        </button>
+
+                        <hr>
+                        <h6>Quick Actions</h6>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary" onclick="window.open('/affiliate-bot-system', '_blank')">
+                                <i class="fas fa-robot me-2"></i>Affiliate Bots
+                            </button>
+                            <button class="btn btn-outline-success" onclick="window.open('/payment-methods', '_blank')">
+                                <i class="fas fa-credit-card me-2"></i>Payment Systems
+                            </button>
+                            <button class="btn btn-outline-info" onclick="window.open('/master-dashboard', '_blank')">
+                                <i class="fas fa-tachometer-alt me-2"></i>Master Dashboard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaign Templates -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-template me-2"></i>Campaign Templates</h5>
+                    </div>
+                    <div class="card-body" id="campaignTemplates">
+                        <!-- Templates will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Analytics -->
+        <div class="row mt-4">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Campaign ROI Distribution</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="roiChart" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0"><i class="fas fa-money-bill-trend-up me-2"></i>Revenue by Business Line</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="revenueChart" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let roiChart, revenueChart;
+
+        // Load campaign automation data
+        async function loadCampaignAutomation() {
+            try {
+                const response = await fetch('/api/active-campaigns');
+                const data = await response.json();
+                
+                // Update summary metrics
+                document.getElementById('totalCampaigns').textContent = data.summary.total_campaigns;
+                document.getElementById('totalBudget').textContent = `$${data.summary.total_budget.toLocaleString()}`;
+                document.getElementById('totalRevenue').textContent = `$${data.summary.total_revenue.toLocaleString()}`;
+                document.getElementById('averageROI').textContent = `${data.summary.average_roi}x`;
+                
+                // Load active campaigns
+                loadActiveCampaigns(data.campaigns);
+                
+                // Load templates
+                loadCampaignTemplates();
+                
+                // Create charts
+                createROIChart(data.campaigns);
+                createRevenueChart(data.campaigns);
+                
+            } catch (error) {
+                console.error('Error loading campaign automation:', error);
+            }
+        }
+
+        function loadActiveCampaigns(campaigns) {
+            const container = document.getElementById('activeCampaigns');
+            container.innerHTML = '';
+            
+            campaigns.forEach(campaign => {
+                const progressPercent = (campaign.spent / campaign.budget) * 100;
+                const performanceClass = campaign.performance === 'outstanding' ? 'performance-outstanding' : 
+                                       campaign.performance === 'excellent' ? 'performance-excellent' : '';
+                
+                const card = `
+                    <div class="campaign-card">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h6 class="fw-bold">${campaign.name}</h6>
+                                <small class="text-muted">${campaign.business_line} • ${campaign.type}</small>
+                            </div>
+                            <span class="badge bg-success">${campaign.status}</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-2">
+                                    <strong>Budget:</strong> $${campaign.budget.toLocaleString()} 
+                                    <span class="text-muted">(${progressPercent.toFixed(1)}% used)</span>
+                                </div>
+                                <div class="progress mb-2" style="height: 6px;">
+                                    <div class="progress-bar" style="width: ${progressPercent}%"></div>
+                                </div>
+                                <div class="small">
+                                    <strong>Platforms:</strong> ${campaign.platforms.join(', ')}<br>
+                                    <strong>Performance:</strong> <span class="${performanceClass}">${campaign.performance}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <strong>${campaign.conversions}</strong>
+                                        <br><small class="text-muted">Sales</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <strong>$${campaign.revenue_generated.toLocaleString()}</strong>
+                                        <br><small class="text-muted">Revenue</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <strong>${campaign.roi}x</strong>
+                                        <br><small class="text-muted">ROI</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        async function loadCampaignTemplates() {
+            try {
+                const response = await fetch('/api/campaign-templates');
+                const data = await response.json();
+                const container = document.getElementById('campaignTemplates');
+                container.innerHTML = '';
+                
+                data.templates.forEach(template => {
+                    const card = `
+                        <div class="template-card">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <h6 class="fw-bold">${template.name}</h6>
+                                    <small class="text-muted">${template.type} • ${template.duration}</small>
+                                </div>
+                                <div class="col-md-3">
+                                    <small>
+                                        <strong>Budget:</strong> $${template.budget_range[0].toLocaleString()} - $${template.budget_range[1].toLocaleString()}<br>
+                                        <strong>Expected ROI:</strong> ${template.expected_roi}
+                                    </small>
+                                </div>
+                                <div class="col-md-3">
+                                    <small class="text-muted">${template.best_for}</small>
+                                </div>
+                                <div class="col-md-2 text-end">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="launchTemplate('${template.template_id}')">
+                                        <i class="fas fa-rocket"></i> Launch
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += card;
+                });
+            } catch (error) {
+                console.error('Error loading templates:', error);
+            }
+        }
+
+        function createROIChart(campaigns) {
+            const ctx = document.getElementById('roiChart').getContext('2d');
+            
+            const campaignNames = campaigns.map(c => c.name.split(' ').slice(0, 2).join(' '));
+            const roiData = campaigns.map(c => c.roi);
+            
+            roiChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: campaignNames,
+                    datasets: [{
+                        data: roiData,
+                        backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function createRevenueChart(campaigns) {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            
+            const businessLines = [...new Set(campaigns.map(c => c.business_line))];
+            const revenueByLine = businessLines.map(line => 
+                campaigns.filter(c => c.business_line === line)
+                        .reduce((sum, c) => sum + c.revenue_generated, 0)
+            );
+            
+            revenueChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: businessLines,
+                    datasets: [{
+                        label: 'Revenue Generated',
+                        data: revenueByLine,
+                        backgroundColor: '#28a745',
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Action functions
+        async function launchMegaCampaign(type) {
+            const budget = prompt('Enter budget for mega campaign:', '25000');
+            if (budget) {
+                const response = await fetch('/api/launch-mega-campaign', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        type: type,
+                        budget: parseInt(budget),
+                        duration: 14
+                    })
+                });
+                const result = await response.json();
+                alert(`Mega campaign launched!\n${result.campaign.name}\nExpected Revenue: $${result.campaign.expected_revenue.toLocaleString()}\nExpected ROI: ${result.campaign.expected_roi}x`);
+                loadCampaignAutomation();
+            }
+        }
+
+        async function optimizeCampaigns(type) {
+            const response = await fetch('/api/optimize-campaigns', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({type: type})
+            });
+            const result = await response.json();
+            alert(`${result.optimization_details.name} completed!\nExpected improvement: ${result.optimization_details.expected_improvement}\nImplementation time: ${result.optimization_details.implementation_time}`);
+        }
+
+        function launchTemplate(templateId) {
+            const budget = prompt('Enter campaign budget:', '5000');
+            if (budget) {
+                alert(`Campaign template ${templateId} launched with $${budget} budget!`);
+                loadCampaignAutomation();
+            }
+        }
+
+        // Load system on page load
+        loadCampaignAutomation();
+        
+        // Refresh data every 30 seconds
+        setInterval(loadCampaignAutomation, 30000);
+    </script>
+</body>
+</html>

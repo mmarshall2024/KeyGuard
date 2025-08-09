@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affiliate Bot System - OMNI Empire</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .affiliate-header {
+            background: linear-gradient(135deg, #dc3545 0%, #fd7e14 50%, #ffc107 100%);
+            color: white;
+            padding: 50px 0;
+        }
+        .bot-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 15px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #dc3545;
+            transition: transform 0.3s ease;
+        }
+        .bot-card:hover {
+            transform: translateY(-5px);
+        }
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+            padding: 5px 12px;
+            border-radius: 25px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .commission-highlight {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid #28a745;
+        }
+        .deploy-section {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        .performance-metric {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            margin: 10px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        .metric-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #dc3545;
+        }
+        .boost-btn {
+            margin: 10px 5px;
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .boost-btn:hover {
+            transform: scale(1.05);
+        }
+        .real-time-indicator {
+            width: 10px;
+            height: 10px;
+            background: #28a745;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Affiliate Header -->
+    <section class="affiliate-header text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">AFFILIATE BOT COMMAND CENTER</h1>
+            <p class="lead mb-4">
+                <span class="real-time-indicator"></span>
+                High-Ticket Link Distribution • Automated Revenue Generation • Performance Optimization
+            </p>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="performance-metric">
+                        <div class="metric-number" id="totalBots">0</div>
+                        <h6 class="text-muted">Active Bots</h6>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="performance-metric">
+                        <div class="metric-number" id="totalLinks">0</div>
+                        <h6 class="text-muted">Links Shared</h6>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="performance-metric">
+                        <div class="metric-number" id="totalClicks">0</div>
+                        <h6 class="text-muted">Total Clicks</h6>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="performance-metric">
+                        <div class="metric-number" id="totalCommissions">$0</div>
+                        <h6 class="text-muted">Commissions</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container-fluid py-4">
+        <div class="row">
+            <!-- Active Affiliate Bots -->
+            <div class="col-lg-8">
+                <div class="card h-100">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0"><i class="fas fa-robot me-2"></i>Active Affiliate Bots</h5>
+                    </div>
+                    <div class="card-body" id="affiliateBots">
+                        <!-- Bots will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Deploy -->
+            <div class="col-lg-4">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-rocket me-2"></i>Quick Deploy</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="deploy-section">
+                            <h6>Deploy New Affiliate Bot</h6>
+                            <select class="form-select mb-3" id="botTypeSelect">
+                                <option value="social_media">Social Media Blaster</option>
+                                <option value="email_campaign">Email Campaign Bot</option>
+                                <option value="forum_promoter">Forum Promoter</option>
+                                <option value="video_content">Video Content Bot</option>
+                            </select>
+                            <button class="btn btn-light w-100 mb-3" onclick="deployNewBot()">
+                                <i class="fas fa-plus me-2"></i>Deploy Bot
+                            </button>
+                        </div>
+                        
+                        <h6 class="mt-4">Performance Boosters</h6>
+                        <button class="btn btn-warning boost-btn" onclick="boostCommissions()">
+                            <i class="fas fa-dollar-sign me-2"></i>Boost Commissions
+                        </button>
+                        <button class="btn btn-success boost-btn" onclick="boostTraffic()">
+                            <i class="fas fa-chart-line me-2"></i>Boost Traffic
+                        </button>
+                        <button class="btn btn-info boost-btn" onclick="optimizeConversions()">
+                            <i class="fas fa-target me-2"></i>Optimize Conversions
+                        </button>
+                        <button class="btn btn-secondary boost-btn" onclick="premiumTargeting()">
+                            <i class="fas fa-bullseye me-2"></i>Premium Targeting
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- High-Ticket Products -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="fas fa-gem me-2"></i>High-Ticket Products Being Promoted</h5>
+                    </div>
+                    <div class="card-body" id="promotedProducts">
+                        <!-- Products will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Analytics -->
+        <div class="row mt-4">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Conversion Performance</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="conversionChart" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="fas fa-money-bill-wave me-2"></i>Commission Earnings</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="commissionChart" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Link Generator -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0"><i class="fas fa-link me-2"></i>Instant Link Generator</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="form-label">Select Products:</label>
+                                <select class="form-select" id="productSelector" multiple>
+                                    <option value="OMNI-PREMIUM">OMNI Bot Premium ($297)</option>
+                                    <option value="AI-ACCELERATOR">AI Revenue Accelerator ($497)</option>
+                                    <option value="MARSHALL-EMPIRE">Marshall Empire Access ($997)</option>
+                                    <option value="ENTERPRISE-SAAS">Enterprise SaaS Platform ($1,997)</option>
+                                    <option value="COMPLETE-SUITE">Complete Business Suite ($2,997)</option>
+                                    <option value="WHITE-LABEL">White-Label Reseller ($4,997)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Affiliate ID:</label>
+                                <input type="text" class="form-control" id="affiliateId" value="12345">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Campaign Tag:</label>
+                                <input type="text" class="form-control" id="campaignTag" value="high-ticket">
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button class="btn btn-primary w-100" onclick="generateLinks()">
+                                    <i class="fas fa-magic me-2"></i>Generate
+                                </button>
+                            </div>
+                        </div>
+                        <div id="generatedLinks" class="mt-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let conversionChart, commissionChart;
+
+        // Load affiliate bot system data
+        async function loadAffiliateBotSystem() {
+            try {
+                const response = await fetch('/api/affiliate-bot-status');
+                const data = await response.json();
+                
+                // Update summary metrics
+                document.getElementById('totalBots').textContent = data.summary.active_bots;
+                document.getElementById('totalLinks').textContent = data.summary.total_links_shared.toLocaleString();
+                document.getElementById('totalClicks').textContent = data.summary.total_clicks.toLocaleString();
+                document.getElementById('totalCommissions').textContent = `$${data.summary.total_commissions.toLocaleString()}`;
+                
+                // Load bot performance
+                loadBotPerformance(data.bot_performance);
+                
+                // Load promoted products
+                loadPromotedProducts(data.promoted_products);
+                
+                // Create charts
+                createConversionChart(data);
+                createCommissionChart(data);
+                
+            } catch (error) {
+                console.error('Error loading affiliate bot system:', error);
+            }
+        }
+
+        function loadBotPerformance(bots) {
+            const container = document.getElementById('affiliateBots');
+            container.innerHTML = '';
+            
+            bots.forEach(bot => {
+                const card = `
+                    <div class="bot-card">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h6 class="fw-bold">${bot.name}</h6>
+                                <small class="text-muted">${bot.bot_id} • ${bot.last_activity}</small>
+                            </div>
+                            <span class="status-active">${bot.status}</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="commission-highlight">
+                                    <strong>$${bot.commissions_earned.toLocaleString()}</strong>
+                                    <br><small>Commissions</small>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="row text-center">
+                                    <div class="col-3">
+                                        <strong>${bot.links_shared.toLocaleString()}</strong>
+                                        <br><small class="text-muted">Links</small>
+                                    </div>
+                                    <div class="col-3">
+                                        <strong>${bot.clicks_generated.toLocaleString()}</strong>
+                                        <br><small class="text-muted">Clicks</small>
+                                    </div>
+                                    <div class="col-3">
+                                        <strong>${bot.conversions}</strong>
+                                        <br><small class="text-muted">Sales</small>
+                                    </div>
+                                    <div class="col-3">
+                                        <strong>${bot.conversion_rate}%</strong>
+                                        <br><small class="text-muted">Rate</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        function loadPromotedProducts(products) {
+            const container = document.getElementById('promotedProducts');
+            container.innerHTML = '';
+            
+            products.forEach(product => {
+                const card = `
+                    <div class="product-card">
+                        <div class="row align-items-center">
+                            <div class="col-md-4">
+                                <h6 class="fw-bold">${product.name}</h6>
+                                <small class="text-muted">Price: $${product.price} • Commission: $${product.commission_amount}</small>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <strong>${product.current_promotions}</strong>
+                                    <br><small class="text-muted">Active Promotions</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <strong>${product.daily_sales}</strong>
+                                    <br><small class="text-muted">Daily Sales</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <button class="btn btn-sm btn-outline-primary" onclick="copyProductLink('${product.link}')">
+                                    <i class="fas fa-copy"></i> Copy Link
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        function createConversionChart(data) {
+            const ctx = document.getElementById('conversionChart').getContext('2d');
+            
+            conversionChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Converted', 'Clicked', 'Remaining'],
+                    datasets: [{
+                        data: [
+                            data.summary.total_conversions,
+                            data.summary.total_clicks - data.summary.total_conversions,
+                            data.summary.total_links_shared - data.summary.total_clicks
+                        ],
+                        backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function createCommissionChart(data) {
+            const ctx = document.getElementById('commissionChart').getContext('2d');
+            
+            const botCommissions = data.bot_performance.map(bot => bot.commissions_earned);
+            const botNames = data.bot_performance.map(bot => bot.name);
+            
+            commissionChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: botNames,
+                    datasets: [{
+                        label: 'Commissions Earned',
+                        data: botCommissions,
+                        backgroundColor: '#dc3545',
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Action functions
+        async function deployNewBot() {
+            const botType = document.getElementById('botTypeSelect').value;
+            
+            const response = await fetch('/api/deploy-affiliate-bot', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    bot_type: botType,
+                    platforms: ['social_media', 'email', 'forums'],
+                    products: ['OMNI-PREMIUM', 'AI-ACCELERATOR', 'MARSHALL-EMPIRE']
+                })
+            });
+            
+            const result = await response.json();
+            alert(`New affiliate bot deployed! Bot ID: ${result.deployment.bot_id}\nEstimated daily earnings: $${result.deployment.estimated_daily_earnings}`);
+            loadAffiliateBotSystem();
+        }
+
+        async function boostCommissions() {
+            const response = await fetch('/api/boost-affiliate-performance', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({boost_type: 'commission_boost', duration: 24})
+            });
+            const result = await response.json();
+            alert(`Commission boost activated! 25% increase for 24 hours.\nEstimated additional revenue: $${result.estimated_additional_revenue}`);
+        }
+
+        async function boostTraffic() {
+            const response = await fetch('/api/boost-affiliate-performance', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({boost_type: 'traffic_boost', duration: 24})
+            });
+            const result = await response.json();
+            alert(`Traffic boost activated! 3x posting frequency for 24 hours.\nEstimated additional revenue: $${result.estimated_additional_revenue}`);
+        }
+
+        async function optimizeConversions() {
+            const response = await fetch('/api/boost-affiliate-performance', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({boost_type: 'conversion_boost', duration: 24})
+            });
+            const result = await response.json();
+            alert(`Conversion optimization activated! A/B tested landing pages for 24 hours.\nEstimated additional revenue: $${result.estimated_additional_revenue}`);
+        }
+
+        async function premiumTargeting() {
+            const response = await fetch('/api/boost-affiliate-performance', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({boost_type: 'premium_targeting', duration: 24})
+            });
+            const result = await response.json();
+            alert(`Premium targeting activated! High-intent audience focus for 24 hours.\nEstimated additional revenue: $${result.estimated_additional_revenue}`);
+        }
+
+        async function generateLinks() {
+            const productIds = Array.from(document.getElementById('productSelector').selectedOptions).map(o => o.value);
+            const affiliateId = document.getElementById('affiliateId').value;
+            const campaignTag = document.getElementById('campaignTag').value;
+            
+            if (productIds.length === 0) {
+                alert('Please select at least one product');
+                return;
+            }
+            
+            const response = await fetch('/api/generate-affiliate-links', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    product_ids: productIds,
+                    affiliate_id: affiliateId,
+                    campaign_tag: campaignTag
+                })
+            });
+            
+            const result = await response.json();
+            
+            const container = document.getElementById('generatedLinks');
+            container.innerHTML = '<h6 class="mt-3">Generated Affiliate Links:</h6>';
+            
+            result.affiliate_links.forEach(link => {
+                const linkCard = `
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <h6>${link.product_id}</h6>
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="${link.tracking_link}" readonly>
+                                <button class="btn btn-outline-primary" onclick="copyToClipboard('${link.tracking_link}')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <small class="text-muted">Short link: ${link.short_link}</small>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += linkCard;
+            });
+            
+            alert(`Generated ${result.links_generated} affiliate links!\nTotal potential commission: $${result.total_potential_commission}`);
+        }
+
+        function copyProductLink(link) {
+            navigator.clipboard.writeText(link);
+            alert('Product link copied to clipboard!');
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            alert('Link copied to clipboard!');
+        }
+
+        // Load system on page load
+        loadAffiliateBotSystem();
+        
+        // Refresh data every 60 seconds
+        setInterval(loadAffiliateBotSystem, 60000);
+    </script>
+</body>
+</html>
