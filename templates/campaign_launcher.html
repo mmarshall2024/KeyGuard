@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEGA Campaign Launcher - OMNI Empire</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .launcher-header {
+            background: linear-gradient(135deg, #e74c3c 0%, #f39c12 50%, #2ecc71 100%);
+            color: white;
+            padding: 60px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .launcher-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 5L95 95H5z" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            animation: rocket-boost 3s ease-in-out infinite;
+        }
+        @keyframes rocket-boost {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-20px) scale(1.1); }
+        }
+        
+        .campaign-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border: 3px solid transparent;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .campaign-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+        
+        .mega-campaign {
+            border-color: #e74c3c;
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.05), rgba(241, 196, 15, 0.05));
+        }
+        .flash-campaign {
+            border-color: #f39c12;
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.05), rgba(230, 126, 34, 0.05));
+        }
+        .affiliate-campaign {
+            border-color: #9b59b6;
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.05), rgba(142, 68, 173, 0.05));
+        }
+        .product-campaign {
+            border-color: #3498db;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(41, 128, 185, 0.05));
+        }
+        
+        .launch-button {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border: none;
+            color: white;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.3);
+            width: 100%;
+            margin: 15px 0;
+        }
+        .launch-button:hover {
+            background: linear-gradient(135deg, #c0392b, #e74c3c);
+            transform: scale(1.05);
+            color: white;
+            box-shadow: 0 12px 35px rgba(231, 76, 60, 0.4);
+        }
+        
+        .performance-card {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 15px 0;
+        }
+        
+        .metric-display {
+            text-align: center;
+            padding: 20px;
+        }
+        .metric-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .metric-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .campaign-status {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .status-active {
+            background: #2ecc71;
+            color: white;
+        }
+        .status-preparing {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .urgency-pulse {
+            animation: urgency-pulse 2s infinite;
+        }
+        @keyframes urgency-pulse {
+            0% { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+            50% { background: linear-gradient(135deg, #c0392b, #e74c3c); }
+            100% { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        }
+        
+        .campaign-preview {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .rocket-icon {
+            font-size: 3rem;
+            color: #e74c3c;
+            margin-bottom: 20px;
+            animation: rocket-boost 2s ease-in-out infinite;
+        }
+        
+        .countdown-timer {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #e74c3c;
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .performance-chart {
+            height: 200px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Campaign Launcher Header -->
+    <section class="launcher-header text-center">
+        <div class="container">
+            <div class="rocket-icon">🚀</div>
+            <h1 class="display-3 fw-bold mb-3">MEGA CAMPAIGN LAUNCHER</h1>
+            <p class="lead mb-4">Deploy Empire-Wide Sales Campaigns • Maximum Revenue Generation • Instant Launch</p>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="metric-display">
+                        <div class="metric-number" id="totalRevenue">$0</div>
+                        <div class="metric-label">Total Revenue</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-display">
+                        <div class="metric-number" id="totalConversions">0</div>
+                        <div class="metric-label">Conversions</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-display">
+                        <div class="metric-number" id="activeCampaigns">0</div>
+                        <div class="metric-label">Active Campaigns</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-display">
+                        <div class="metric-number" id="campaignsLaunched">0</div>
+                        <div class="metric-label">Total Launched</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container-fluid py-5">
+        <!-- Quick Launch Section -->
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h2 class="mb-4">🔥 INSTANT MEGA CAMPAIGN LAUNCH 🔥</h2>
+                <button class="btn launch-button urgency-pulse" onclick="launchMegaCampaign('MEGA_EMPIRE_SALE')" style="max-width: 500px;">
+                    <i class="fas fa-rocket me-3"></i>LAUNCH MEGA EMPIRE SALE NOW
+                </button>
+                <div class="countdown-timer" id="urgencyTimer">
+                    ⚡ MAXIMUM URGENCY - LAUNCH IMMEDIATELY ⚡
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaign Options -->
+        <div class="row">
+            <!-- Mega Empire Sale -->
+            <div class="col-lg-6">
+                <div class="campaign-card mega-campaign">
+                    <div class="campaign-status status-preparing">READY TO LAUNCH</div>
+                    <h3 class="fw-bold text-danger">🔥 MEGA EMPIRE SALE</h3>
+                    <div class="campaign-preview">
+                        <strong>MEGA EMPIRE SALE - 72 HOUR BLITZ</strong><br>
+                        <em>40% OFF EVERYTHING - BIGGEST SALE EVER!</em>
+                        <div class="mt-2">
+                            <span class="badge bg-danger me-2">72 Hours</span>
+                            <span class="badge bg-success me-2">$500K Target</span>
+                            <span class="badge bg-info">1,000 Conversions</span>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <strong>Duration:</strong> 72 hours<br>
+                            <strong>Discount:</strong> 40% off all products<br>
+                            <strong>Channels:</strong> All channels
+                        </div>
+                        <div class="col-6">
+                            <strong>Target Revenue:</strong> $500,000<br>
+                            <strong>Ad Budget:</strong> $25,000<br>
+                            <strong>Expected ROI:</strong> 20x
+                        </div>
+                    </div>
+                    <button class="launch-button" onclick="launchMegaCampaign('MEGA_EMPIRE_SALE')">
+                        <i class="fas fa-fire me-2"></i>LAUNCH MEGA SALE
+                    </button>
+                </div>
+            </div>
+
+            <!-- Flash Revenue Boost -->
+            <div class="col-lg-6">
+                <div class="campaign-card flash-campaign">
+                    <div class="campaign-status status-preparing">READY TO LAUNCH</div>
+                    <h3 class="fw-bold text-warning">⚡ FLASH REVENUE BOOST</h3>
+                    <div class="campaign-preview">
+                        <strong>FLASH REVENUE BOOSTER - 24 HOUR SPRINT</strong><br>
+                        <em>50% OFF TOP PRODUCTS - LIGHTNING FAST!</em>
+                        <div class="mt-2">
+                            <span class="badge bg-warning me-2">24 Hours</span>
+                            <span class="badge bg-success me-2">$300K Target</span>
+                            <span class="badge bg-info">600 Conversions</span>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <strong>Duration:</strong> 24 hours<br>
+                            <strong>Discount:</strong> 50% off top sellers<br>
+                            <strong>Urgency:</strong> Maximum
+                        </div>
+                        <div class="col-6">
+                            <strong>Target Revenue:</strong> $300,000<br>
+                            <strong>Ad Budget:</strong> $15,000<br>
+                            <strong>Expected ROI:</strong> 20x
+                        </div>
+                    </div>
+                    <button class="launch-button" onclick="launchMegaCampaign('FLASH_REVENUE_BOOST')">
+                        <i class="fas fa-bolt me-2"></i>LAUNCH FLASH SALE
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Affiliate Explosion -->
+            <div class="col-lg-6">
+                <div class="campaign-card affiliate-campaign">
+                    <div class="campaign-status status-preparing">READY TO LAUNCH</div>
+                    <h3 class="fw-bold text-primary">💰 AFFILIATE EXPLOSION</h3>
+                    <div class="campaign-preview">
+                        <strong>AFFILIATE COMMISSION EXPLOSION</strong><br>
+                        <em>DOUBLE COMMISSIONS FOR 7 DAYS!</em>
+                        <div class="mt-2">
+                            <span class="badge bg-primary me-2">7 Days</span>
+                            <span class="badge bg-success me-2">$400K Target</span>
+                            <span class="badge bg-info">2x Commissions</span>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <strong>Duration:</strong> 7 days<br>
+                            <strong>Commission:</strong> 2x rates<br>
+                            <strong>Focus:</strong> High-value products
+                        </div>
+                        <div class="col-6">
+                            <strong>Target Revenue:</strong> $400,000<br>
+                            <strong>Ad Budget:</strong> $20,000<br>
+                            <strong>Affiliate Boost:</strong> 100%
+                        </div>
+                    </div>
+                    <button class="launch-button" onclick="launchMegaCampaign('AFFILIATE_EXPLOSION')">
+                        <i class="fas fa-users me-2"></i>LAUNCH AFFILIATE BOOST
+                    </button>
+                </div>
+            </div>
+
+            <!-- Product Launch Blitz -->
+            <div class="col-lg-6">
+                <div class="campaign-card product-campaign">
+                    <div class="campaign-status status-preparing">READY TO LAUNCH</div>
+                    <h3 class="fw-bold text-info">🚀 PRODUCT LAUNCH BLITZ</h3>
+                    <div class="campaign-preview">
+                        <strong>NEW PRODUCT LAUNCH BLITZ</strong><br>
+                        <em>35% EARLY BIRD DISCOUNT ON NEW RELEASES!</em>
+                        <div class="mt-2">
+                            <span class="badge bg-info me-2">4 Days</span>
+                            <span class="badge bg-success me-2">$250K Target</span>
+                            <span class="badge bg-warning">Early Access</span>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <strong>Duration:</strong> 4 days<br>
+                            <strong>Discount:</strong> 35% early bird<br>
+                            <strong>Products:</strong> New releases
+                        </div>
+                        <div class="col-6">
+                            <strong>Target Revenue:</strong> $250,000<br>
+                            <strong>Ad Budget:</strong> $18,000<br>
+                            <strong>Expected ROI:</strong> 14x
+                        </div>
+                    </div>
+                    <button class="launch-button" onclick="launchMegaCampaign('PRODUCT_LAUNCH_BLITZ')">
+                        <i class="fas fa-rocket me-2"></i>LAUNCH PRODUCT BLITZ
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Campaigns Performance -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="performance-card">
+                    <h3><i class="fas fa-chart-line me-3"></i>Active Campaign Performance</h3>
+                    <div id="activeCampaignsContainer">
+                        <p class="text-center text-muted">No active campaigns. Launch a mega campaign to see real-time performance!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let campaignData = {};
+        let performanceInterval;
+
+        // Launch mega campaign
+        async function launchMegaCampaign(campaignType) {
+            try {
+                showNotification(`Launching ${campaignType}...`, 'info');
+                
+                const response = await fetch('/api/launch-mega-campaign', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({type: campaignType})
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showMegaCampaignModal(result.campaign_data);
+                    showNotification(`🚀 MEGA CAMPAIGN LAUNCHED: ${result.campaign_data.config.name}`, 'success');
+                    
+                    // Start performance monitoring
+                    startPerformanceMonitoring();
+                    
+                    // Update dashboard
+                    loadCampaignPerformance();
+                    
+                } else {
+                    showNotification(`Campaign launch failed: ${result.message}`, 'error');
+                }
+                
+            } catch (error) {
+                console.error('Campaign launch error:', error);
+                showNotification('Campaign launch failed', 'error');
+            }
+        }
+
+        function showMegaCampaignModal(campaignData) {
+            const config = campaignData.config;
+            const modal = document.createElement('div');
+            modal.className = 'modal fade';
+            modal.innerHTML = `
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title">🚀 MEGA CAMPAIGN LAUNCHED!</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-center mb-4">
+                                <h2 class="text-danger">${config.headline}</h2>
+                                <p class="lead">${config.description}</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 text-center">
+                                    <div class="metric-display">
+                                        <div class="metric-number text-success">$${config.estimated_revenue.toLocaleString()}</div>
+                                        <div class="metric-label">Target Revenue</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <div class="metric-display">
+                                        <div class="metric-number text-primary">${config.target_conversions.toLocaleString()}</div>
+                                        <div class="metric-label">Target Conversions</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <div class="metric-display">
+                                        <div class="metric-number text-warning">${config.duration_hours}h</div>
+                                        <div class="metric-label">Campaign Duration</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-6">
+                                    <h6>Campaign Details:</h6>
+                                    <ul>
+                                        <li><strong>Campaign ID:</strong> ${campaignData.campaign_id}</li>
+                                        <li><strong>Launch Time:</strong> ${new Date(campaignData.launch_time).toLocaleString()}</li>
+                                        <li><strong>End Time:</strong> ${new Date(campaignData.end_time).toLocaleString()}</li>
+                                        <li><strong>Urgency Level:</strong> ${config.urgency_level}</li>
+                                        <li><strong>Products Included:</strong> ${campaignData.products_included.length} products</li>
+                                    </ul>
+                                </div>
+                                <div class="col-6">
+                                    <h6>Activated Channels:</h6>
+                                    <div class="d-flex flex-wrap">
+                                        ${config.channels.map(channel => 
+                                            `<span class="badge bg-success me-2 mb-2">${channel}</span>`
+                                        ).join('')}
+                                    </div>
+                                    <h6 class="mt-3">Marketing Copy Variants:</h6>
+                                    <ul>
+                                        ${config.copy_variants.map(copy => `<li><em>"${copy}"</em></li>`).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="viewCampaignPerformance('${campaignData.campaign_id}')">View Performance</button>
+                            <button type="button" class="btn btn-warning" onclick="stopCampaign('${campaignData.campaign_id}')">Stop Campaign</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            const bootstrapModal = new bootstrap.Modal(modal);
+            bootstrapModal.show();
+            
+            modal.addEventListener('hidden.bs.modal', () => {
+                document.body.removeChild(modal);
+            });
+        }
+
+        // Load campaign performance
+        async function loadCampaignPerformance() {
+            try {
+                const response = await fetch('/api/campaign-performance');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    updateDashboard(data);
+                    displayActiveCampaigns(data.active_campaigns);
+                }
+                
+            } catch (error) {
+                console.error('Error loading campaign performance:', error);
+            }
+        }
+
+        function updateDashboard(data) {
+            document.getElementById('totalRevenue').textContent = `$${Math.round(data.campaign_metrics.total_revenue_generated).toLocaleString()}`;
+            document.getElementById('totalConversions').textContent = data.campaign_metrics.total_conversions.toLocaleString();
+            document.getElementById('activeCampaigns').textContent = data.campaign_metrics.active_campaigns_count;
+            document.getElementById('campaignsLaunched').textContent = data.campaign_metrics.campaigns_launched;
+        }
+
+        function displayActiveCampaigns(activeCampaigns) {
+            const container = document.getElementById('activeCampaignsContainer');
+            
+            if (Object.keys(activeCampaigns).length === 0) {
+                container.innerHTML = '<p class="text-center text-muted">No active campaigns. Launch a mega campaign to see real-time performance!</p>';
+                return;
+            }
+            
+            const campaignsHTML = Object.values(activeCampaigns).map(campaign => {
+                const config = campaign.config;
+                const metrics = campaign.metrics;
+                const hoursRunning = Math.floor((new Date() - new Date(campaign.launch_time)) / (1000 * 60 * 60));
+                const timeRemaining = Math.max(0, config.duration_hours - hoursRunning);
+                
+                return `
+                    <div class="row mb-4 p-3 bg-dark rounded">
+                        <div class="col-md-6">
+                            <h5 class="text-warning">${config.name}</h5>
+                            <p>${config.headline}</p>
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Revenue:</strong> $${Math.round(metrics.revenue_generated).toLocaleString()}<br>
+                                    <strong>Conversions:</strong> ${metrics.conversions}<br>
+                                    <strong>ROI:</strong> ${metrics.roi}x
+                                </div>
+                                <div class="col-6">
+                                    <strong>CTR:</strong> ${metrics.ctr}%<br>
+                                    <strong>Conv Rate:</strong> ${metrics.conversion_rate}%<br>
+                                    <strong>Time Left:</strong> ${timeRemaining}h
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Revenue Progress:</span>
+                                <span>${Math.round((metrics.revenue_generated / config.estimated_revenue) * 100)}%</span>
+                            </div>
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-success" style="width: ${Math.min(100, (metrics.revenue_generated / config.estimated_revenue) * 100)}%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Conversion Progress:</span>
+                                <span>${Math.round((metrics.conversions / config.target_conversions) * 100)}%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar bg-primary" style="width: ${Math.min(100, (metrics.conversions / config.target_conversions) * 100)}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = campaignsHTML;
+        }
+
+        function startPerformanceMonitoring() {
+            if (performanceInterval) clearInterval(performanceInterval);
+            
+            performanceInterval = setInterval(() => {
+                loadCampaignPerformance();
+            }, 30000); // Update every 30 seconds
+        }
+
+        async function stopCampaign(campaignId) {
+            try {
+                const response = await fetch(`/api/stop-campaign/${campaignId}`, {method: 'POST'});
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showNotification(`Campaign ${campaignId} stopped`, 'info');
+                    loadCampaignPerformance();
+                }
+            } catch (error) {
+                console.error('Error stopping campaign:', error);
+                showNotification('Error stopping campaign', 'error');
+            }
+        }
+
+        function viewCampaignPerformance(campaignId) {
+            // Close current modal and load performance
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                const bsModal = bootstrap.Modal.getInstance(modal);
+                if (bsModal) bsModal.hide();
+            });
+            
+            // Scroll to performance section
+            document.getElementById('activeCampaignsContainer').scrollIntoView({behavior: 'smooth'});
+        }
+
+        function showNotification(message, type) {
+            const alertClass = type === 'success' ? 'alert-success' : 
+                             type === 'error' ? 'alert-danger' : 'alert-info';
+            
+            const notification = document.createElement('div');
+            notification.className = `alert ${alertClass} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 400px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 5000);
+        }
+
+        // Urgency timer effect
+        function updateUrgencyTimer() {
+            const timer = document.getElementById('urgencyTimer');
+            const messages = [
+                '⚡ MAXIMUM URGENCY - LAUNCH IMMEDIATELY ⚡',
+                '🔥 REVENUE OPPORTUNITY WAITING - LAUNCH NOW 🔥',
+                '💰 MASSIVE SALES POTENTIAL - ACTIVATE CAMPAIGN 💰',
+                '🚀 EMPIRE EXPANSION READY - LAUNCH MEGA SALE 🚀'
+            ];
+            
+            let index = 0;
+            setInterval(() => {
+                timer.textContent = messages[index];
+                index = (index + 1) % messages.length;
+            }, 3000);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCampaignPerformance();
+            updateUrgencyTimer();
+        });
+    </script>
+</body>
+</html>

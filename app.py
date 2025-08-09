@@ -70,6 +70,10 @@ app.register_blueprint(product_catalog_bp)
 from routes.empire_audit_bot import empire_audit_bp
 app.register_blueprint(empire_audit_bp)
 
+# Register campaign launcher blueprint
+from routes.campaign_launcher import campaign_launcher_bp
+app.register_blueprint(campaign_launcher_bp)
+
 # Register automation blueprint
 from routes.automation_routes import automation_bp
 app.register_blueprint(automation_bp)
@@ -90,9 +94,7 @@ app.register_blueprint(payment_earnings_bp)
 from routes.empire_routes import empire_bp
 app.register_blueprint(empire_bp)
 
-# Register campaign launcher blueprint
-from routes.campaign_launcher import campaign_launcher
-app.register_blueprint(campaign_launcher, url_prefix='/campaigns')
+# Auto-start campaign launcher if needed
 
 # Register campaign automation blueprint
 from routes.campaign_automation import campaign_automation_bp
