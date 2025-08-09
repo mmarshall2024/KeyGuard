@@ -42,7 +42,9 @@ app.register_blueprint(bot_bp)
 app.register_blueprint(revenue_landing_bp)
 app.register_blueprint(analytics_bp, url_prefix='/analytics')
 app.register_blueprint(revenue_bp)
-# Landing pages blueprint already registered in routes - skip duplicate registration
+# Register payment systems blueprint
+from routes.payment_systems import payment_systems_bp
+app.register_blueprint(payment_systems_bp)
 
 with app.app_context():
     # Import models to ensure tables are created
@@ -68,6 +70,12 @@ def index():
 def empire_dashboard():
     """Complete empire overview dashboard"""
     return render_template('empire_dashboard.html')
+
+@app.route('/payments')
+def payments_redirect():
+    """Redirect to payment systems dashboard"""
+    from flask import redirect
+    return redirect('/payment-dashboard')
 
 @app.route('/health')
 def health():

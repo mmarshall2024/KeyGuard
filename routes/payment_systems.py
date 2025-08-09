@@ -4,8 +4,6 @@ import os
 import json
 import logging
 from datetime import datetime
-from app import db
-from models_business import Customer, Revenue, Product
 
 payment_systems_bp = Blueprint('payment_systems', __name__)
 logger = logging.getLogger(__name__)
@@ -66,7 +64,10 @@ def payment_success():
         try:
             session = stripe.checkout.Session.retrieve(session_id)
             
-            # Record revenue
+            # Record revenue (import models within function to avoid circular imports)
+            from app import db
+            from models_business import Revenue
+            
             revenue = Revenue(
                 amount=session.amount_total / 100,  # Convert from cents
                 currency='USD',
@@ -254,6 +255,9 @@ def stripe_webhook():
             session = event['data']['object']
             
             # Record successful payment
+            from app import db
+            from models_business import Revenue
+            
             revenue = Revenue(
                 amount=session['amount_total'] / 100,
                 currency='USD',
@@ -277,6 +281,9 @@ def stripe_webhook():
 def payment_analytics():
     """Payment systems analytics"""
     try:
+        from app import db
+        from models_business import Revenue
+        
         # Get payment statistics
         total_revenue = db.session.query(db.func.sum(Revenue.amount)).scalar() or 0
         payment_count = Revenue.query.count()
