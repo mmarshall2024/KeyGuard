@@ -66,6 +66,10 @@ app.register_blueprint(setup_checklist_bp)
 from routes.product_catalog import product_catalog_bp
 app.register_blueprint(product_catalog_bp)
 
+# Register empire audit bot blueprint
+from routes.empire_audit_bot import empire_audit_bp
+app.register_blueprint(empire_audit_bp)
+
 # Register automation blueprint
 from routes.automation_routes import automation_bp
 app.register_blueprint(automation_bp)
@@ -120,6 +124,18 @@ with app.app_context():
 def index():
     from flask import render_template
     return render_template('empire_master_dashboard.html')
+
+# Auto-start audit monitoring on app startup
+def initialize_audit_monitoring():
+    try:
+        from routes.empire_audit_bot import audit_bot
+        audit_bot.start_monitoring()
+        logger.info("Auto-started Empire Audit Bot monitoring")
+    except Exception as e:
+        logger.warning(f"Could not auto-start audit monitoring: {str(e)}")
+
+# Initialize audit monitoring after app setup
+initialize_audit_monitoring()
 
 @app.route('/empire-dashboard')
 def empire_dashboard():

@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empire Audit Bot - Real-Time Monitoring</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .audit-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 50%, #e74c3c 100%);
+            color: white;
+            padding: 50px 0;
+            position: relative;
+        }
+        .status-indicator {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+            animation: pulse 2s infinite;
+        }
+        .status-active { background: #28a745; }
+        .status-warning { background: #ffc107; }
+        .status-error { background: #dc3545; }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 15px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #3498db;
+            transition: transform 0.3s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .revenue-metric {
+            border-left-color: #28a745;
+        }
+        .system-metric {
+            border-left-color: #17a2b8;
+        }
+        .bot-metric {
+            border-left-color: #6f42c1;
+        }
+        .campaign-metric {
+            border-left-color: #fd7e14;
+        }
+        .affiliate-metric {
+            border-left-color: #e83e8c;
+        }
+        
+        .metric-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .alert-card {
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid;
+        }
+        .alert-success {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+        .alert-warning {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+        .alert-info {
+            background: #d1ecf1;
+            border-left-color: #17a2b8;
+        }
+        
+        .monitoring-controls {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        
+        .real-time-feed {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .activity-item {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+            border-left: 3px solid #3498db;
+        }
+        
+        .countdown-timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        
+        .performance-gauge {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: white;
+            margin: 0 auto;
+        }
+        
+        .gauge-optimal { background: conic-gradient(#28a745 0deg 360deg); }
+        .gauge-good { background: conic-gradient(#ffc107 0deg 300deg, #e9ecef 300deg 360deg); }
+        .gauge-warning { background: conic-gradient(#dc3545 0deg 240deg, #e9ecef 240deg 360deg); }
+    </style>
+</head>
+<body>
+    <!-- Audit Header -->
+    <section class="audit-header text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">EMPIRE AUDIT BOT</h1>
+            <p class="lead mb-4">
+                <span class="status-indicator status-active" id="monitoringIndicator"></span>
+                Real-Time Empire Monitoring • 5-Minute Updates • Complete System Oversight
+            </p>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="metric-number" id="totalRevenueToday">$0</div>
+                    <small>Revenue Today</small>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-number" id="revenueThisHour">$0</div>
+                    <small>This Hour</small>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-number" id="systemHealth">100%</div>
+                    <small>System Health</small>
+                </div>
+                <div class="col-md-3">
+                    <div class="countdown-timer" id="nextUpdate">--:--</div>
+                    <small>Next Update</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container-fluid py-4">
+        <!-- Monitoring Controls -->
+        <div class="monitoring-controls">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h3><i class="fas fa-robot me-3"></i>Audit Bot Controls</h3>
+                    <p class="mb-0">Monitor your entire empire with automated 5-minute updates on sales, performance, and activities</p>
+                    <div class="mt-2">
+                        <span class="badge bg-light text-dark me-2">Status: <span id="monitoringStatus">Stopped</span></span>
+                        <span class="badge bg-light text-dark me-2">Last Update: <span id="lastUpdate">Never</span></span>
+                        <span class="badge bg-light text-dark">Update Interval: 5 minutes</span>
+                    </div>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-light btn-lg me-2" id="startMonitoringBtn" onclick="startMonitoring()">
+                        <i class="fas fa-play me-2"></i>START MONITORING
+                    </button>
+                    <button class="btn btn-outline-light btn-lg me-2" id="stopMonitoringBtn" onclick="stopMonitoring()" style="display: none;">
+                        <i class="fas fa-stop me-2"></i>STOP
+                    </button>
+                    <button class="btn btn-warning" onclick="forceUpdate()">
+                        <i class="fas fa-sync me-2"></i>Force Update
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Revenue Metrics -->
+            <div class="col-lg-6">
+                <div class="metric-card revenue-metric">
+                    <h5><i class="fas fa-dollar-sign me-2"></i>Revenue Metrics</h5>
+                    <div class="row" id="revenueMetrics">
+                        <!-- Revenue data will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Performance -->
+            <div class="col-lg-6">
+                <div class="metric-card system-metric">
+                    <h5><i class="fas fa-server me-2"></i>System Performance</h5>
+                    <div class="text-center">
+                        <div class="performance-gauge gauge-optimal" id="performanceGauge">
+                            <span id="healthScore">100%</span>
+                        </div>
+                        <div class="mt-3" id="systemMetrics">
+                            <!-- System metrics will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Bot Activities -->
+            <div class="col-lg-6">
+                <div class="metric-card bot-metric">
+                    <h5><i class="fas fa-robot me-2"></i>Bot Activities</h5>
+                    <div id="botActivities">
+                        <!-- Bot activities will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Campaign Status -->
+            <div class="col-lg-6">
+                <div class="metric-card campaign-metric">
+                    <h5><i class="fas fa-bullhorn me-2"></i>Campaign Status</h5>
+                    <div id="campaignStatus">
+                        <!-- Campaign status will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Affiliate Performance -->
+            <div class="col-lg-6">
+                <div class="metric-card affiliate-metric">
+                    <h5><i class="fas fa-users me-2"></i>Affiliate Performance</h5>
+                    <div id="affiliatePerformance">
+                        <!-- Affiliate data will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real-Time Activity Feed -->
+            <div class="col-lg-6">
+                <div class="metric-card">
+                    <h5><i class="fas fa-stream me-2"></i>Real-Time Activity Feed</h5>
+                    <div class="real-time-feed" id="activityFeed">
+                        <!-- Activity feed will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="metric-card">
+                    <h5><i class="fas fa-bell me-2"></i>System Alerts</h5>
+                    <div id="systemAlerts">
+                        <!-- Alerts will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let updateInterval;
+        let countdownInterval;
+        let nextUpdateTime;
+
+        // Start monitoring
+        async function startMonitoring() {
+            try {
+                const response = await fetch('/api/start-audit-monitoring', {method: 'POST'});
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    document.getElementById('monitoringStatus').textContent = 'Active';
+                    document.getElementById('monitoringIndicator').className = 'status-indicator status-active';
+                    document.getElementById('startMonitoringBtn').style.display = 'none';
+                    document.getElementById('stopMonitoringBtn').style.display = 'inline-block';
+                    
+                    showNotification('Empire audit monitoring started!', 'success');
+                    
+                    // Start periodic updates
+                    startPeriodicUpdates();
+                    
+                    // Initial data load
+                    loadAuditData();
+                }
+            } catch (error) {
+                console.error('Error starting monitoring:', error);
+                showNotification('Error starting monitoring', 'error');
+            }
+        }
+
+        // Stop monitoring
+        async function stopMonitoring() {
+            try {
+                const response = await fetch('/api/stop-audit-monitoring', {method: 'POST'});
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    document.getElementById('monitoringStatus').textContent = 'Stopped';
+                    document.getElementById('monitoringIndicator').className = 'status-indicator status-error';
+                    document.getElementById('startMonitoringBtn').style.display = 'inline-block';
+                    document.getElementById('stopMonitoringBtn').style.display = 'none';
+                    
+                    showNotification('Empire audit monitoring stopped', 'info');
+                    
+                    // Stop periodic updates
+                    if (updateInterval) clearInterval(updateInterval);
+                    if (countdownInterval) clearInterval(countdownInterval);
+                }
+            } catch (error) {
+                console.error('Error stopping monitoring:', error);
+                showNotification('Error stopping monitoring', 'error');
+            }
+        }
+
+        // Force immediate update
+        async function forceUpdate() {
+            try {
+                showNotification('Forcing audit update...', 'info');
+                const response = await fetch('/api/force-audit-update', {method: 'POST'});
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showNotification('Audit update completed!', 'success');
+                    loadAuditData();
+                }
+            } catch (error) {
+                console.error('Error forcing update:', error);
+                showNotification('Error forcing update', 'error');
+            }
+        }
+
+        // Start periodic updates
+        function startPeriodicUpdates() {
+            // Update data every 30 seconds (more frequent than backend for responsiveness)
+            updateInterval = setInterval(loadAuditData, 30000);
+            
+            // Start countdown timer
+            nextUpdateTime = new Date(Date.now() + 300000); // 5 minutes from now
+            startCountdown();
+        }
+
+        // Countdown timer
+        function startCountdown() {
+            countdownInterval = setInterval(() => {
+                const now = new Date();
+                const timeLeft = nextUpdateTime - now;
+                
+                if (timeLeft <= 0) {
+                    nextUpdateTime = new Date(Date.now() + 300000);
+                }
+                
+                const minutes = Math.floor(timeLeft / 60000);
+                const seconds = Math.floor((timeLeft % 60000) / 1000);
+                
+                document.getElementById('nextUpdate').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        // Load audit data
+        async function loadAuditData() {
+            try {
+                const response = await fetch('/api/current-audit-data');
+                const data = await response.json();
+                
+                if (data.audit_data) {
+                    updateDashboard(data.audit_data);
+                    
+                    if (data.last_update) {
+                        document.getElementById('lastUpdate').textContent = 
+                            new Date(data.last_update).toLocaleTimeString();
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading audit data:', error);
+            }
+        }
+
+        // Update dashboard with audit data
+        function updateDashboard(auditData) {
+            // Update header metrics
+            document.getElementById('totalRevenueToday').textContent = 
+                `$${auditData.total_revenue_today?.toLocaleString() || '0'}`;
+            document.getElementById('revenueThisHour').textContent = 
+                `$${auditData.total_revenue_hour?.toLocaleString() || '0'}`;
+            
+            // Update system health
+            const healthScore = auditData.system_performance?.health_score || 100;
+            document.getElementById('systemHealth').textContent = `${healthScore}%`;
+            document.getElementById('healthScore').textContent = `${healthScore}%`;
+            
+            // Update performance gauge
+            const gauge = document.getElementById('performanceGauge');
+            gauge.className = `performance-gauge ${
+                healthScore > 85 ? 'gauge-optimal' : 
+                healthScore > 70 ? 'gauge-good' : 'gauge-warning'
+            }`;
+
+            // Update revenue metrics
+            updateRevenueMetrics(auditData.sales_metrics);
+            
+            // Update system metrics
+            updateSystemMetrics(auditData.system_performance);
+            
+            // Update bot activities
+            updateBotActivities(auditData.bot_activities);
+            
+            // Update campaign status
+            updateCampaignStatus(auditData.campaign_status);
+            
+            // Update affiliate performance
+            updateAffiliatePerformance(auditData.affiliate_performance);
+            
+            // Update activity feed
+            updateActivityFeed(auditData.bot_activities?.recent_actions);
+            
+            // Update alerts
+            updateAlerts(auditData.alerts);
+        }
+
+        function updateRevenueMetrics(salesMetrics) {
+            if (!salesMetrics) return;
+            
+            const container = document.getElementById('revenueMetrics');
+            container.innerHTML = `
+                <div class="col-6">
+                    <strong>Conversion Rate:</strong><br>
+                    <span class="text-success">${salesMetrics.conversion_rate || 0}%</span>
+                </div>
+                <div class="col-6">
+                    <strong>AOV:</strong><br>
+                    <span class="text-primary">$${salesMetrics.average_order_value || 0}</span>
+                </div>
+                <div class="col-6 mt-2">
+                    <strong>Top Product:</strong><br>
+                    <span class="text-info">${salesMetrics.top_product || 'N/A'}</span>
+                </div>
+                <div class="col-6 mt-2">
+                    <strong>Growth:</strong><br>
+                    <span class="text-success">+${salesMetrics.revenue_growth || 0}%</span>
+                </div>
+            `;
+        }
+
+        function updateSystemMetrics(systemPerf) {
+            if (!systemPerf) return;
+            
+            const container = document.getElementById('systemMetrics');
+            container.innerHTML = `
+                <div class="row text-center">
+                    <div class="col-4">
+                        <strong>CPU</strong><br>
+                        <span class="text-info">${systemPerf.cpu_usage || 0}%</span>
+                    </div>
+                    <div class="col-4">
+                        <strong>Memory</strong><br>
+                        <span class="text-warning">${systemPerf.memory_usage || 0}%</span>
+                    </div>
+                    <div class="col-4">
+                        <strong>Uptime</strong><br>
+                        <span class="text-success">${systemPerf.uptime_hours || 0}h</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateBotActivities(botData) {
+            if (!botData) return;
+            
+            const container = document.getElementById('botActivities');
+            const activeCount = botData.total_active_bots || 0;
+            
+            container.innerHTML = `
+                <div class="mb-3">
+                    <strong>Active Bots:</strong> <span class="badge bg-success">${activeCount}</span>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <strong>Telegram:</strong><br>
+                        <span class="text-primary">${botData.telegram_interactions || 0}</span>
+                    </div>
+                    <div class="col-6">
+                        <strong>Payments:</strong><br>
+                        <span class="text-success">${botData.payment_notifications || 0}</span>
+                    </div>
+                    <div class="col-6 mt-2">
+                        <strong>Affiliate:</strong><br>
+                        <span class="text-info">${botData.affiliate_actions || 0}</span>
+                    </div>
+                    <div class="col-6 mt-2">
+                        <strong>Campaigns:</strong><br>
+                        <span class="text-warning">${botData.campaign_executions || 0}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateCampaignStatus(campaignData) {
+            if (!campaignData) return;
+            
+            const container = document.getElementById('campaignStatus');
+            container.innerHTML = `
+                <div class="row">
+                    <div class="col-6">
+                        <strong>Active:</strong><br>
+                        <span class="text-success">${campaignData.total_campaigns || 0}</span>
+                    </div>
+                    <div class="col-6">
+                        <strong>Avg ROI:</strong><br>
+                        <span class="text-primary">${campaignData.average_roi || 0}x</span>
+                    </div>
+                    <div class="col-12 mt-2">
+                        <strong>Revenue:</strong><br>
+                        <span class="text-success">$${campaignData.total_campaign_revenue?.toLocaleString() || '0'}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateAffiliatePerformance(affiliateData) {
+            if (!affiliateData) return;
+            
+            const container = document.getElementById('affiliatePerformance');
+            container.innerHTML = `
+                <div class="row">
+                    <div class="col-6">
+                        <strong>Active:</strong><br>
+                        <span class="text-success">${affiliateData.active_affiliates || 0}</span>
+                    </div>
+                    <div class="col-6">
+                        <strong>Conv Rate:</strong><br>
+                        <span class="text-primary">${affiliateData.conversion_rate || 0}%</span>
+                    </div>
+                    <div class="col-6 mt-2">
+                        <strong>Commissions:</strong><br>
+                        <span class="text-info">$${affiliateData.total_commissions_paid?.toLocaleString() || '0'}</span>
+                    </div>
+                    <div class="col-6 mt-2">
+                        <strong>New Today:</strong><br>
+                        <span class="text-warning">${affiliateData.new_signups_today || 0}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateActivityFeed(activities) {
+            if (!activities) return;
+            
+            const container = document.getElementById('activityFeed');
+            container.innerHTML = activities.map(activity => `
+                <div class="activity-item">
+                    <div class="d-flex justify-content-between">
+                        <strong>${activity.bot}</strong>
+                        <small class="text-muted">${new Date(activity.timestamp).toLocaleTimeString()}</small>
+                    </div>
+                    <div class="small">${activity.action}: ${activity.details}</div>
+                </div>
+            `).join('');
+        }
+
+        function updateAlerts(alerts) {
+            if (!alerts) return;
+            
+            const container = document.getElementById('systemAlerts');
+            if (alerts.length === 0) {
+                container.innerHTML = '<p class="text-muted">No alerts at this time</p>';
+                return;
+            }
+            
+            container.innerHTML = alerts.map(alert => `
+                <div class="alert-card alert-${alert.type}">
+                    <div class="d-flex justify-content-between">
+                        <strong>${alert.title}</strong>
+                        <small>${new Date(alert.timestamp).toLocaleTimeString()}</small>
+                    </div>
+                    <div>${alert.message}</div>
+                </div>
+            `).join('');
+        }
+
+        function showNotification(message, type) {
+            const alertClass = type === 'success' ? 'alert-success' : 
+                             type === 'error' ? 'alert-danger' : 'alert-info';
+            
+            const notification = document.createElement('div');
+            notification.className = `alert ${alertClass} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 400px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 5000);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAuditData();
+        });
+    </script>
+</body>
+</html>
