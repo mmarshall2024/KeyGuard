@@ -70,6 +70,10 @@ app.register_blueprint(empire_bp)
 from routes.campaign_launcher import campaign_launcher
 app.register_blueprint(campaign_launcher, url_prefix='/campaigns')
 
+# Register instant money blueprint
+from routes.instant_money import instant_money
+app.register_blueprint(instant_money, url_prefix='/money')
+
 with app.app_context():
     # Import models to ensure tables are created
     import models
