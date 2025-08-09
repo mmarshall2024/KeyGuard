@@ -62,6 +62,10 @@ app.register_blueprint(main_nav_bp)
 from routes.payment_earnings_routes import payment_earnings_bp
 app.register_blueprint(payment_earnings_bp)
 
+# Register empire management blueprint
+from routes.empire_routes import empire_bp
+app.register_blueprint(empire_bp)
+
 with app.app_context():
     # Import models to ensure tables are created
     import models

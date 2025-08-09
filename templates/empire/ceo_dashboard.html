@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNI Empire Holdings - CEO Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --omni-green: #7CFF00;
+            --omni-dark: #0B1426;
+            --omni-cyan: #00FFDD;
+            --omni-gold: #FFD700;
+            --omni-gradient: linear-gradient(135deg, #0B1426 0%, #1E3A8A 30%, #7CFF00 70%, #00FFDD 100%);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--omni-dark);
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .empire-header {
+            background: var(--omni-gradient);
+            padding: 80px 0;
+            position: relative;
+            text-align: center;
+        }
+        
+        .empire-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><circle cx="200" cy="200" r="3" fill="%237CFF00" opacity="0.6"><animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/></circle><circle cx="800" cy="300" r="2" fill="%2300FFDD" opacity="0.8"><animate attributeName="opacity" values="0.8;1;0.8" dur="3s" repeatCount="indefinite"/></circle><circle cx="500" cy="700" r="4" fill="%23FFD700" opacity="0.7"><animate attributeName="opacity" values="0.7;1;0.7" dur="1.5s" repeatCount="indefinite"/></circle></svg>') repeat;
+            opacity: 0.3;
+        }
+        
+        .empire-title {
+            font-size: 4rem;
+            font-weight: 900;
+            text-shadow: 0 0 30px rgba(124, 255, 0, 0.8);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .holdings-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(124, 255, 0, 0.3);
+            border-radius: 25px;
+            padding: 40px;
+            margin: 30px 0;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .holdings-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(124, 255, 0, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .holdings-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--omni-green);
+            box-shadow: 0 30px 60px rgba(124, 255, 0, 0.2);
+        }
+        
+        .holdings-card:hover::before {
+            left: 100%;
+        }
+        
+        .valuation-display {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--omni-gold);
+            text-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+            margin: 20px 0;
+        }
+        
+        .revenue-metric {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--omni-green);
+            text-shadow: 0 0 20px rgba(124, 255, 0, 0.5);
+        }
+        
+        .subsidiary-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 255, 221, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .subsidiary-card:hover {
+            background: rgba(0, 255, 221, 0.05);
+            border-color: var(--omni-cyan);
+            transform: translateX(10px);
+        }
+        
+        .growth-indicator {
+            background: var(--omni-green);
+            color: var(--omni-dark);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        
+        .instant-payment-badge {
+            background: var(--omni-gold);
+            color: var(--omni-dark);
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: inline-block;
+            margin: 20px 0;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(255, 215, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+        }
+        
+        .status-operational {
+            color: var(--omni-green);
+            font-weight: bold;
+            font-size: 1.3rem;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(124, 255, 0, 0.5); }
+            to { text-shadow: 0 0 30px rgba(124, 255, 0, 0.8); }
+        }
+        
+        .competitive-advantage {
+            background: rgba(124, 255, 0, 0.1);
+            border-left: 4px solid var(--omni-green);
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .strategic-initiative {
+            background: rgba(0, 255, 221, 0.1);
+            border-left: 4px solid var(--omni-cyan);
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .live-indicator {
+            background: var(--omni-green);
+            border-radius: 50%;
+            width: 12px;
+            height: 12px;
+            display: inline-block;
+            margin-right: 8px;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+        
+        .ceo-action-button {
+            background: var(--omni-gradient);
+            border: none;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+        }
+        
+        .ceo-action-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(124, 255, 0, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Empire Header -->
+    <section class="empire-header">
+        <div class="container">
+            <h1 class="empire-title">👑 OMNI EMPIRE HOLDINGS</h1>
+            <p class="lead fs-2 mb-4">Complete Holdings Company Dashboard</p>
+            <div class="instant-payment-badge">
+                <i class="fas fa-bolt"></i> INSTANT PAYMENTS ACTIVE
+            </div>
+        </div>
+    </section>
+
+    <!-- Empire Overview -->
+    <section class="py-5">
+        <div class="container">
+            <!-- Executive Summary -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="holdings-card text-center">
+                        <h2><span class="live-indicator"></span>EMPIRE STATUS: <span class="status-operational">FULLY OPERATIONAL</span></h2>
+                        <div class="valuation-display">$15,249,925.44</div>
+                        <p class="fs-4">Enterprise Valuation</p>
+                        <div class="row mt-4">
+                            <div class="col-md-3">
+                                <div class="revenue-metric">$762,663.72</div>
+                                <p>Monthly Revenue</p>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="revenue-metric">2,449</div>
+                                <p>Total Customers</p>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="revenue-metric">6</div>
+                                <p>Operating Subsidiaries</p>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="revenue-metric">+128%</div>
+                                <p>Average Growth Rate</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subsidiaries Overview -->
+            <div class="row mt-5">
+                <div class="col-lg-12">
+                    <div class="holdings-card">
+                        <h3><i class="fas fa-building"></i> Operating Subsidiaries</h3>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="subsidiary-card">
+                                    <h5>OMNI Core Technologies</h5>
+                                    <p><strong>Focus:</strong> AI Automation Platform</p>
+                                    <p><strong>Monthly Revenue:</strong> <span class="revenue-metric">$54,163.81</span></p>
+                                    <p><strong>Customers:</strong> 78</p>
+                                    <div class="growth-indicator">+67% Growth</div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="subsidiary-card">
+                                    <h5>OMNI Video Systems</h5>
+                                    <p><strong>Focus:</strong> AI Video Content Generation</p>
+                                    <p><strong>Monthly Revenue:</strong> <span class="revenue-metric">$89,500.00</span></p>
+                                    <p><strong>Customers:</strong> 245</p>
+                                    <div class="growth-indicator">+89% Growth</div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="subsidiary-card">
+                                    <h5>OMNI White Label Solutions</h5>
+                                    <p><strong>Focus:</strong> Reseller Program Management</p>
+                                    <p><strong>Monthly Revenue:</strong> <span class="revenue-metric">$156,700.00</span></p>
+                                    <p><strong>Customers:</strong> 89</p>
+                                    <div class="growth-indicator">+134% Growth</div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="subsidiary-card">
+                                    <h5>OMNI Mobile Technologies</h5>
+                                    <p><strong>Focus:</strong> Mobile App Platform</p>
+                                    <p><strong>Monthly Revenue:</strong> <span class="revenue-metric">$47,300.00</span></p>
+                                    <p><strong>Customers:</strong> 1,847</p>
+                                    <div class="growth-indicator">+78% Growth</div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="subsidiary-card">
+                                    <h5>OMNI Analytics Intelligence</h5>
+                                    <p><strong>Focus:</strong> AI-Powered Business Intelligence</p>
+                                    <p><strong>Monthly Revenue:</strong> <span class="revenue-metric">$127,400.00</span></p>
+                                    <p><strong>Customers:</strong> 156</p>
+                                    <div class="growth-indicator">+156% Growth</div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="subsidiary-card">
+                                    <h5>OMNI Enterprise Solutions</h5>
+                                    <p><strong>Focus:</strong> Enterprise SaaS Platform</p>
+                                    <p><strong>Monthly Revenue:</strong> <span class="revenue-metric">$287,600.00</span></p>
+                                    <p><strong>Customers:</strong> 34</p>
+                                    <div class="growth-indicator">+203% Growth</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instant Payment Systems -->
+            <div class="row mt-5">
+                <div class="col-lg-12">
+                    <div class="holdings-card">
+                        <h3><i class="fas fa-bolt"></i> Instant Payment Processing</h3>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5><i class="fas fa-credit-card"></i> Stripe Connect</h5>
+                                <p><strong>Payout Time:</strong> Under 30 minutes</p>
+                                <p><strong>Daily Limit:</strong> $1,000,000</p>
+                                <p><strong>Status:</strong> <span class="status-operational">ACTIVE</span></p>
+                            </div>
+                            <div class="col-md-4">
+                                <h5><i class="fab fa-paypal"></i> PayPal Payouts</h5>
+                                <p><strong>Payout Time:</strong> Under 5 minutes</p>
+                                <p><strong>Daily Limit:</strong> $500,000</p>
+                                <p><strong>Status:</strong> <span class="status-operational">ACTIVE</span></p>
+                            </div>
+                            <div class="col-md-4">
+                                <h5><i class="fab fa-bitcoin"></i> Crypto Instant</h5>
+                                <p><strong>Payout Time:</strong> Instant</p>
+                                <p><strong>Daily Limit:</strong> $2,000,000</p>
+                                <p><strong>Status:</strong> <span class="status-operational">ACTIVE</span></p>
+                            </div>
+                        </div>
+                        <div class="text-center mt-4">
+                            <p class="fs-5"><strong>Total Daily Processing Capacity: $18,500,000</strong></p>
+                            <div class="instant-payment-badge">
+                                💰 FUNDS AVAILABLE INSTANTLY ACROSS ALL SUBSIDIARIES
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategic Initiatives -->
+            <div class="row mt-5">
+                <div class="col-lg-6">
+                    <div class="holdings-card">
+                        <h3><i class="fas fa-rocket"></i> Strategic Initiatives</h3>
+                        <div class="strategic-initiative">
+                            <strong>International Expansion</strong><br>
+                            European and Asian markets entry
+                        </div>
+                        <div class="strategic-initiative">
+                            <strong>Vertical Solutions</strong><br>
+                            Industry-specific automation platforms
+                        </div>
+                        <div class="strategic-initiative">
+                            <strong>Strategic Acquisitions</strong><br>
+                            Complementary technology companies
+                        </div>
+                        <div class="strategic-initiative">
+                            <strong>IPO Preparation</strong><br>
+                            Public market entry readiness
+                        </div>
+                        <div class="strategic-initiative">
+                            <strong>Enterprise Partnerships</strong><br>
+                            Fortune 500 strategic alliances
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="holdings-card">
+                        <h3><i class="fas fa-trophy"></i> Competitive Advantages</h3>
+                        <div class="competitive-advantage">
+                            <strong>First-Mover Advantage</strong><br>
+                            Leading position in AI-powered automation
+                        </div>
+                        <div class="competitive-advantage">
+                            <strong>Integrated Suite</strong><br>
+                            Comprehensive business automation tools
+                        </div>
+                        <div class="competitive-advantage">
+                            <strong>Proven Scalability</strong><br>
+                            Success across multiple market segments
+                        </div>
+                        <div class="competitive-advantage">
+                            <strong>IP Portfolio</strong><br>
+                            Strong intellectual property protection
+                        </div>
+                        <div class="competitive-advantage">
+                            <strong>Customer Excellence</strong><br>
+                            96.8% satisfaction and retention rates
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CEO Action Center -->
+            <div class="row mt-5">
+                <div class="col-lg-12">
+                    <div class="holdings-card text-center">
+                        <h3><i class="fas fa-crown"></i> CEO Action Center</h3>
+                        <p class="fs-5 mb-4">Direct access to empire management and expansion tools</p>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <a href="/earnings-dashboard" class="ceo-action-button">
+                                    <i class="fas fa-chart-line"></i> View Earnings Dashboard
+                                </a>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <a href="/payment-setup" class="ceo-action-button">
+                                    <i class="fas fa-cog"></i> Configure Instant Payments
+                                </a>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <a href="/analytics-dashboard" class="ceo-action-button">
+                                    <i class="fas fa-brain"></i> AI Analytics Center
+                                </a>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <a href="/white-label-portal" class="ceo-action-button">
+                                    <i class="fas fa-handshake"></i> Reseller Management
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h4>Empire Valuation Growth</h4>
+                            <p><strong>Current:</strong> $15.2M | <strong>12-Month Target:</strong> $50M+ | <strong>IPO Potential:</strong> $250M+</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Real-time updates every 30 seconds
+        setInterval(function() {
+            // Simulate live revenue updates
+            const revenueElements = document.querySelectorAll('.revenue-metric');
+            revenueElements.forEach(element => {
+                if (element.textContent.includes('$')) {
+                    // Add subtle animation to show live updates
+                    element.style.animation = 'glow 0.5s ease-in-out';
+                    setTimeout(() => {
+                        element.style.animation = '';
+                    }, 500);
+                }
+            });
+        }, 30000);
+        
+        // Add interactive hover effects
+        document.querySelectorAll('.subsidiary-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
