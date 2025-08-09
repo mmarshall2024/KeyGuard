@@ -50,6 +50,14 @@ app.register_blueprint(payment_systems_bp)
 from routes.automation_routes import automation_bp
 app.register_blueprint(automation_bp)
 
+# Register content AI blueprint
+from routes.content_ai_routes import content_ai_bp
+app.register_blueprint(content_ai_bp)
+
+# Register main navigation blueprint
+from routes.main_navigation import main_nav_bp
+app.register_blueprint(main_nav_bp)
+
 with app.app_context():
     # Import models to ensure tables are created
     import models
