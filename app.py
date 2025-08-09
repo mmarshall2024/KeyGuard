@@ -90,6 +90,16 @@ app.register_blueprint(lead_generation_bp)
 from routes.automation_engine import automation_engine_bp
 app.register_blueprint(automation_engine_bp)
 
+# Initialize global revenue activator
+def initialize_global_revenue_activator():
+    try:
+        from routes.global_revenue_activator import global_revenue_activator
+        logger.info("Global revenue activator initialized - continuous revenue optimization active")
+    except Exception as e:
+        logger.warning(f"Could not initialize global revenue activator: {str(e)}")
+
+initialize_global_revenue_activator()
+
 # Register automation blueprint
 from routes.automation_routes import automation_bp
 app.register_blueprint(automation_bp)
