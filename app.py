@@ -46,6 +46,10 @@ app.register_blueprint(revenue_bp)
 from routes.payment_systems import payment_systems_bp
 app.register_blueprint(payment_systems_bp)
 
+# Register Telegram payment integration blueprint
+from routes.telegram_payment_integration import telegram_payment_bp
+app.register_blueprint(telegram_payment_bp)
+
 # Register automation blueprint
 from routes.automation_routes import automation_bp
 app.register_blueprint(automation_bp)

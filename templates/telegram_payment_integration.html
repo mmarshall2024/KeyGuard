@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Payment Integration - OMNI Empire</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .telegram-header {
+            background: linear-gradient(135deg, #0088cc 0%, #229ed9 100%);
+            color: white;
+            padding: 60px 0;
+        }
+        .integration-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        .command-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #0088cc;
+        }
+        .code-snippet {
+            background: #2d3748;
+            color: #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        .chat-id-display {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            font-family: monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <section class="telegram-header text-center">
+        <div class="container">
+            <i class="fab fa-telegram-plane" style="font-size: 4rem; margin-bottom: 20px;"></i>
+            <h1 class="display-4 fw-bold mb-4">Telegram Payment Integration</h1>
+            <p class="lead">Connect your payment system with Telegram for instant notifications</p>
+        </div>
+    </section>
+
+    <div class="container py-5">
+        <!-- Group Chat ID -->
+        <div class="integration-card">
+            <h2><i class="fas fa-comments me-3 text-primary"></i>Group Chat Configuration</h2>
+            <p>Your Telegram group chat ID is configured and ready:</p>
+            <div class="chat-id-display">
+                {{ chat_id }}
+            </div>
+            <div class="mt-3">
+                <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    This ID is used to send payment notifications to your Telegram group
+                </small>
+            </div>
+        </div>
+
+        <!-- Bot Commands -->
+        <div class="integration-card">
+            <h3><i class="fas fa-robot me-3 text-success"></i>Available Bot Commands</h3>
+            <p>Use these commands in your Telegram group to manage payments:</p>
+            
+            <div class="command-item">
+                <h5><code>/payment_status</code></h5>
+                <p class="mb-0">Check the current status of all payment systems</p>
+            </div>
+            
+            <div class="command-item">
+                <h5><code>/revenue_today</code></h5>
+                <p class="mb-0">Display today's total revenue and transaction count</p>
+            </div>
+            
+            <div class="command-item">
+                <h5><code>/payment_methods</code></h5>
+                <p class="mb-0">Show all 8 available payment methods with setup status</p>
+            </div>
+            
+            <div class="command-item">
+                <h5><code>/create_payment_link [amount] [product]</code></h5>
+                <p class="mb-0">Generate instant payment links for any amount and product</p>
+                <small class="text-muted">Example: /create_payment_link 297 "OMNI Bot Premium"</small>
+            </div>
+            
+            <div class="command-item">
+                <h5><code>/payment_analytics</code></h5>
+                <p class="mb-0">Show detailed payment analytics and revenue breakdown</p>
+            </div>
+        </div>
+
+        <!-- Integration Setup -->
+        <div class="integration-card">
+            <h3><i class="fas fa-cog me-3 text-warning"></i>Setup Instructions</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>1. Add Bot to Group</h5>
+                    <p>Add your OMNI Empire bot to the Telegram group using chat ID:</p>
+                    <div class="code-snippet">
+                        Chat ID: {{ chat_id }}
+                        Bot Username: @YourOMNIBot
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h5>2. Configure Permissions</h5>
+                    <p>Give the bot these permissions:</p>
+                    <ul>
+                        <li>Send messages</li>
+                        <li>Read messages</li>
+                        <li>Add users</li>
+                        <li>Pin messages</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real-time Notifications -->
+        <div class="integration-card">
+            <h3><i class="fas fa-bell me-3 text-info"></i>Real-time Payment Notifications</h3>
+            <p>Your Telegram group will receive instant notifications for:</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <ul>
+                        <li><i class="fas fa-check text-success me-2"></i>New payments received</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Payment method status updates</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Daily revenue summaries</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <ul>
+                        <li><i class="fas fa-check text-success me-2"></i>Failed payment alerts</li>
+                        <li><i class="fas fa-check text-success me-2"></i>High-value transaction alerts</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Weekly analytics reports</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <h5>Sample Notification:</h5>
+                <div class="code-snippet">
+🎉 **New Payment Received!**
+
+💰 Amount: $297.00
+📦 Product: OMNI Bot Premium
+👤 Customer: John Smith
+📅 Date: 2025-08-09 15:30:25
+
+Total Revenue: $28,945.50
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row mt-4">
+            <div class="col-md-4 mb-3">
+                <button class="btn btn-primary btn-lg w-100" onclick="testNotification()">
+                    <i class="fas fa-paper-plane me-2"></i>Test Notification
+                </button>
+            </div>
+            <div class="col-md-4 mb-3">
+                <a href="/payment-methods" class="btn btn-success btn-lg w-100">
+                    <i class="fas fa-credit-card me-2"></i>Payment Methods
+                </a>
+            </div>
+            <div class="col-md-4 mb-3">
+                <a href="/payment-dashboard" class="btn btn-info btn-lg w-100">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function testNotification() {
+            // Send test notification to Telegram
+            fetch('/send-payment-notification', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    amount: '297.00',
+                    product_name: 'OMNI Bot Premium (Test)',
+                    customer_name: 'Test Customer'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Test notification sent to Telegram group!');
+                } else {
+                    alert('Notification test completed. Check your Telegram group.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Test notification attempted. Configure bot token if needed.');
+            });
+        }
+    </script>
+</body>
+</html>

@@ -79,12 +79,12 @@ def payment_success():
             from models_business import Transaction
             
             transaction = Transaction(
-                amount=session.amount_total / 100,  # Convert from cents
+                amount=session.amount_total / 100 if session.amount_total else 0,  # Convert from cents
                 currency='USD',
                 source='stripe',
                 transaction_id=session.payment_intent,
-                product_name=session.metadata.get('product_name', 'Unknown'),
-                customer_email=session.customer_details.email if session.customer_details else None,
+                product_name=session.metadata.get('product_name', 'Unknown') if session.metadata else 'Unknown',
+                customer_email=session.customer_details.email if hasattr(session, 'customer_details') and session.customer_details else None,
                 status='completed'
             )
             db.session.add(transaction)
@@ -270,10 +270,10 @@ def stripe_webhook():
             from models_business import Transaction
             
             transaction = Transaction(
-                amount=session['amount_total'] / 100,
+                amount=session['amount_total'] / 100 if session.get('amount_total') else 0,
                 currency='USD',
                 source='stripe_webhook',
-                transaction_id=session['payment_intent'],
+                transaction_id=session.get('payment_intent'),
                 product_name=session.get('metadata', {}).get('product_name', 'Unknown'),
                 status='completed'
             )
