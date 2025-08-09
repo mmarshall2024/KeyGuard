@@ -1,8 +1,8 @@
-modules = ["python-3.11", "postgresql-16", "dotnet-10.0", "dotnet-7.0", "dotnet-8.0", "dotnet-9.0", "angular-node-24", "angular-node-20", "bash", "bun-1.2", "bun-1.0", "c-clang14", "cpp-clang14", "clojure-1.12", "clojure-1.11", "dart-3.8", "dart-2.18", "elixir-1_15", "elixir-1_18", "go-1.24", "go-1.21", "go-1.20", "go-1.19", "gcloud", "haskell-ghc9.8", "haskell-ghc9.0", "haskell-ghc9.2", "haskell-ghc9.4", "hermit-0.38.2", "java-graalvm22.3", "lua-5.2", "nix", "nodejs-24", "nodejs-23", "nodejs-22", "nodejs-20", "nodejs-19", "nodejs-18", "nodejs-16", "nodejs-14", "php-8.4", "php-8.1", "python-3.9", "python-3.8", "python-base-3.13", "python-base-3.12", "python-3.12", "python-base-3.11", "python-3.10", "qbasic", "r-4.5", "r-4.2", "ruby-3.1", "ruby-3.2", "rust-nightly", "rust-stable", "svelte-kit-node-20", "swift-5.8", "swift-5.6", "typescript-language-server", "vue-node-20", "vue-node-18", "web", "pyright", "pyright-extended", "ruff", "zig-0.11", "nodejs-with-prybar-18", "python-with-prybar-3.10", "docker"]
+modules = ["python-3.11"]
 
 [nix]
 channel = "stable-25_05"
-packages = ["cargo", "geckodriver", "libiconv", "libxcrypt", "openssl", "pkg-config", "postgresql", "rustc", "unzip"]
+packages = ["openssl", "postgresql"]
 
 [deployment]
 deploymentTarget = "autoscale"
@@ -32,6 +32,3 @@ waitForPort = 5000
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[agent]
-integrations = ["python_sendgrid==1.0.0", "perplexity_v0==1.0.0", "python_log_in_with_replit==1.0.0", "flask_stripe==1.0.0", "python_database==1.0.0", "python_anthropic==1.0.0", "python_openai==1.0.0", "web_scraper==1.0.0"]
