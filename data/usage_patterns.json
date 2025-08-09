@@ -59,6 +59,30 @@
       "timestamp": "2025-08-08T23:12:51.469951",
       "hour": 23,
       "day_of_week": 4
+    },
+    {
+      "user_id": "7916410589",
+      "action": "payment_inquiry",
+      "context": {
+        "message_length": 102,
+        "user_name": "whitesmoke",
+        "contains_question": false
+      },
+      "timestamp": "2025-08-09T05:09:55.416521",
+      "hour": 5,
+      "day_of_week": 5
+    },
+    {
+      "user_id": "7916410589",
+      "action": "natural_chat",
+      "context": {
+        "message_length": 3,
+        "user_name": "whitesmoke",
+        "contains_question": false
+      },
+      "timestamp": "2025-08-09T05:10:13.228473",
+      "hour": 5,
+      "day_of_week": 5
     }
   ],
   "feature_requests": [],
