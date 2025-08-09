@@ -66,6 +66,10 @@ app.register_blueprint(payment_earnings_bp)
 from routes.empire_routes import empire_bp
 app.register_blueprint(empire_bp)
 
+# Register campaign launcher blueprint
+from routes.campaign_launcher import campaign_launcher
+app.register_blueprint(campaign_launcher, url_prefix='/campaigns')
+
 with app.app_context():
     # Import models to ensure tables are created
     import models

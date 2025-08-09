@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block title %}Maximum Campaign Launcher - OMNI Empire{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-gradient-dark text-white">
+                <div class="card-body text-center">
+                    <h1 class="display-4 fw-bold mb-3">🚀 MAXIMUM CAMPAIGN LAUNCHER</h1>
+                    <p class="lead">Deploy all OMNI Empire systems at maximum capacity</p>
+                    <div id="systemStatus" class="badge fs-6 px-4 py-2">READY TO LAUNCH</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Launch Controls -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3>🎯 Campaign Launch</h3>
+                    <button id="launchBtn" class="btn btn-success btn-lg mt-3">
+                        <i class="fas fa-rocket me-2"></i>LAUNCH ALL CAMPAIGNS
+                    </button>
+                    <button id="stopBtn" class="btn btn-danger btn-lg mt-3" style="display: none;">
+                        <i class="fas fa-stop me-2"></i>STOP ALL CAMPAIGNS
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h3>⚡ Launch Configuration</h3>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="maxTraffic" checked>
+                        <label class="form-check-label" for="maxTraffic">Maximum Traffic Generation</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="allPlugins" checked>
+                        <label class="form-check-label" for="allPlugins">Activate All 15 Plugins</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="socialAutomation" checked>
+                        <label class="form-check-label" for="socialAutomation">Social Media Automation</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="revenueOptimization" checked>
+                        <label class="form-check-label" for="revenueOptimization">Revenue Optimization</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Status Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5>🔌 Active Plugins</h5>
+                    <div class="display-6" id="activePlugins">15</div>
+                    <small class="text-muted">out of 15 available</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5>🎯 Traffic Engines</h5>
+                    <div class="display-6" id="trafficEngines">8</div>
+                    <small class="text-muted">engines running</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5>💰 Revenue Systems</h5>
+                    <div class="display-6" id="revenueSystems">4</div>
+                    <small class="text-muted">systems deployed</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5>🤖 Automation Engines</h5>
+                    <div class="display-6" id="automationEngines">6</div>
+                    <small class="text-muted">engines active</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Real-time Metrics -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>📊 Real-time Campaign Metrics</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="text-center">
+                                <div class="h4" id="totalRevenue">$289,000+</div>
+                                <small>Total Revenue</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="text-center">
+                                <div class="h4" id="activeCustomers">1,247+</div>
+                                <small>Active Customers</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="text-center">
+                                <div class="h4" id="dailyTraffic">15,000</div>
+                                <small>Daily Traffic</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="text-center">
+                                <div class="h4" id="conversionRate">8.5%</div>
+                                <small>Conversion Rate</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="text-center">
+                                <div class="h4" id="activeCampaigns">42</div>
+                                <small>Active Campaigns</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="text-center">
+                                <div class="h4" id="socialReach">25,000</div>
+                                <small>Social Reach</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Log -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>📝 Launch Activity Log</h3>
+                </div>
+                <div class="card-body">
+                    <div id="activityLog" class="border rounded p-3" style="height: 300px; overflow-y: scroll; background-color: #1e1e1e; color: #00ff00; font-family: monospace;">
+                        <div>System ready for maximum campaign launch...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const launchBtn = document.getElementById('launchBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const activityLog = document.getElementById('activityLog');
+    const systemStatus = document.getElementById('systemStatus');
+    
+    function addLogEntry(message) {
+        const timestamp = new Date().toLocaleTimeString();
+        const logEntry = document.createElement('div');
+        logEntry.textContent = `[${timestamp}] ${message}`;
+        activityLog.appendChild(logEntry);
+        activityLog.scrollTop = activityLog.scrollHeight;
+    }
+    
+    function updateSystemStatus(status, className = 'bg-success') {
+        systemStatus.textContent = status;
+        systemStatus.className = `badge fs-6 px-4 py-2 ${className}`;
+    }
+    
+    async function launchCampaigns() {
+        launchBtn.style.display = 'none';
+        updateSystemStatus('LAUNCHING SYSTEMS...', 'bg-warning');
+        addLogEntry('🚀 Initiating maximum campaign launch...');
+        
+        try {
+            const response = await fetch('/api/launch-maximum-campaigns', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                updateSystemStatus('ALL SYSTEMS OPERATIONAL', 'bg-success');
+                addLogEntry('✅ All campaigns launched successfully');
+                addLogEntry(`📊 Systems active: ${result.status.plugins_active} plugins, ${result.status.traffic_engines_running} traffic engines`);
+                stopBtn.style.display = 'inline-block';
+                
+                // Update metrics
+                document.getElementById('activePlugins').textContent = result.status.plugins_active;
+                document.getElementById('trafficEngines').textContent = result.status.traffic_engines_running;
+                document.getElementById('revenueSystems').textContent = result.status.revenue_systems_deployed;
+                document.getElementById('automationEngines').textContent = result.status.automation_engines_active;
+                
+            } else {
+                updateSystemStatus('LAUNCH FAILED', 'bg-danger');
+                addLogEntry(`❌ Launch failed: ${result.error}`);
+                launchBtn.style.display = 'inline-block';
+            }
+        } catch (error) {
+            updateSystemStatus('LAUNCH ERROR', 'bg-danger');
+            addLogEntry(`❌ Launch error: ${error.message}`);
+            launchBtn.style.display = 'inline-block';
+        }
+    }
+    
+    async function stopCampaigns() {
+        updateSystemStatus('STOPPING SYSTEMS...', 'bg-warning');
+        addLogEntry('🛑 Stopping all campaigns...');
+        
+        try {
+            const response = await fetch('/api/stop-campaigns', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                updateSystemStatus('SYSTEMS STOPPED', 'bg-secondary');
+                addLogEntry('🛑 All campaigns stopped successfully');
+                stopBtn.style.display = 'none';
+                launchBtn.style.display = 'inline-block';
+            } else {
+                addLogEntry(`❌ Stop failed: ${result.error}`);
+            }
+        } catch (error) {
+            addLogEntry(`❌ Stop error: ${error.message}`);
+        }
+    }
+    
+    async function updateMetrics() {
+        try {
+            const response = await fetch('/api/campaign-metrics');
+            const metrics = await response.json();
+            
+            document.getElementById('totalRevenue').textContent = `$${metrics.total_revenue_generated.toLocaleString()}`;
+            document.getElementById('activeCustomers').textContent = `${metrics.active_customers.toLocaleString()}+`;
+            document.getElementById('dailyTraffic').textContent = metrics.daily_traffic.toLocaleString();
+            document.getElementById('conversionRate').textContent = `${metrics.conversion_rate}%`;
+            document.getElementById('activeCampaigns').textContent = metrics.active_campaigns;
+            document.getElementById('socialReach').textContent = metrics.social_media_reach.toLocaleString();
+        } catch (error) {
+            console.error('Failed to update metrics:', error);
+        }
+    }
+    
+    // Event listeners
+    launchBtn.addEventListener('click', launchCampaigns);
+    stopBtn.addEventListener('click', stopCampaigns);
+    
+    // Update metrics every 30 seconds
+    setInterval(updateMetrics, 30000);
+    updateMetrics(); // Initial load
+});
+</script>
+{% endblock %}
