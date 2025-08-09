@@ -12,10 +12,16 @@ function showAlert(message, type = 'info', duration = 5000) {
     const alertDiv = document.createElement('div');
     alertDiv.className = `alert alert-${type} alert-dismissible fade show alert-floating position-fixed`;
     alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
-    alertDiv.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
+    
+    // Create message element safely to prevent XSS
+    const messageText = document.createTextNode(message);
+    const closeButton = document.createElement('button');
+    closeButton.type = 'button';
+    closeButton.className = 'btn-close';
+    closeButton.setAttribute('data-bs-dismiss', 'alert');
+    
+    alertDiv.appendChild(messageText);
+    alertDiv.appendChild(closeButton);
     
     document.body.appendChild(alertDiv);
     
@@ -32,9 +38,17 @@ function showAlert(message, type = 'info', duration = 5000) {
 // Loading spinner utility
 function showLoading(element, text = 'Loading...') {
     const originalContent = element.innerHTML;
-    element.innerHTML = `
-        <i class="fas fa-spinner fa-spin me-2"></i>${text}
-    `;
+    
+    // Create elements safely to prevent XSS
+    const spinner = document.createElement('i');
+    spinner.className = 'fas fa-spinner fa-spin me-2';
+    
+    const textNode = document.createTextNode(text);
+    
+    // Clear element and append safe content
+    element.innerHTML = '';
+    element.appendChild(spinner);
+    element.appendChild(textNode);
     element.disabled = true;
     
     return () => {
