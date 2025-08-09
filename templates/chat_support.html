@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNI Empire Chat Support - Professional AI Assistance</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .support-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            color: white;
+            padding: 60px 0;
+        }
+        
+        .chat-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        
+        .chat-widget {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .agent-selector {
+            background: #f8f9fa;
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .agent-button {
+            margin: 5px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            transition: all 0.3s ease;
+        }
+        .agent-button.active, .agent-button:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        
+        .message {
+            margin: 15px 0;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .message.user {
+            justify-content: flex-end;
+        }
+        
+        .message.agent {
+            justify-content: flex-start;
+        }
+        
+        .message-bubble {
+            max-width: 70%;
+            padding: 12px 18px;
+            border-radius: 18px;
+            position: relative;
+        }
+        
+        .message.user .message-bubble {
+            background: #667eea;
+            color: white;
+            margin-left: 20px;
+        }
+        
+        .message.agent .message-bubble {
+            background: white;
+            color: #333;
+            border: 1px solid #dee2e6;
+            margin-right: 20px;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin: 0 10px;
+        }
+        
+        .agent-avatar {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .user-avatar {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+        }
+        
+        .chat-input {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .chat-input-field {
+            border-radius: 25px;
+            border: 2px solid #dee2e6;
+            padding: 12px 60px 12px 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .chat-input-field:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .send-button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #667eea;
+            border: none;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .send-button:hover {
+            background: #5a6fd8;
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .typing-indicator {
+            display: none;
+            margin: 15px 0;
+        }
+        
+        .typing-dots {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 18px;
+            background: white;
+            border-radius: 18px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #667eea;
+            margin: 0 2px;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        
+        .quick-actions {
+            padding: 15px;
+            background: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .quick-action-btn {
+            margin: 5px;
+            padding: 8px 15px;
+            border-radius: 15px;
+            border: 1px solid #667eea;
+            background: white;
+            color: #667eea;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .quick-action-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .support-info {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .info-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+        
+        .chat-floating-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .chat-floating-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #2ecc71;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Support Header -->
+    <section class="support-header text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">OMNI Empire Chat Support</h1>
+            <p class="lead mb-4">Professional AI-Powered Assistance • Real-Time Help • Expert Solutions</p>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="h3">24/7</div>
+                        <small>Available Support</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="h3">2.3s</div>
+                        <small>Average Response</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="h3">98.7%</div>
+                        <small>Satisfaction Rate</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="h3">5+</div>
+                        <small>Expert Agents</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="chat-container">
+        <div class="row">
+            <!-- Chat Widget -->
+            <div class="col-lg-8">
+                <div class="chat-widget">
+                    <div class="chat-header">
+                        <h4><span class="status-indicator"></span>Live Chat Support</h4>
+                        <p class="mb-0">Connected to AI-powered assistance</p>
+                    </div>
+                    
+                    <div class="agent-selector">
+                        <small class="text-muted">Choose your specialist:</small><br>
+                        <button class="agent-button active" onclick="selectAgent('general')">General Support</button>
+                        <button class="agent-button" onclick="selectAgent('technical')">Technical Help</button>
+                        <button class="agent-button" onclick="selectAgent('sales')">Sales Advisor</button>
+                        <button class="agent-button" onclick="selectAgent('enterprise')">Enterprise</button>
+                    </div>
+                    
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-comments fa-3x mb-3"></i>
+                            <p>Start a conversation to get instant help!</p>
+                        </div>
+                    </div>
+                    
+                    <div class="typing-indicator" id="typingIndicator">
+                        <div class="message-avatar agent-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="typing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-actions">
+                        <small class="text-muted">Quick actions:</small><br>
+                        <button class="quick-action-btn" onclick="sendQuickMessage('I need help with pricing')">Pricing Info</button>
+                        <button class="quick-action-btn" onclick="sendQuickMessage('How do I get started?')">Getting Started</button>
+                        <button class="quick-action-btn" onclick="sendQuickMessage('Technical support needed')">Tech Support</button>
+                        <button class="quick-action-btn" onclick="sendQuickMessage('Enterprise solutions')">Enterprise</button>
+                    </div>
+                    
+                    <div class="chat-input">
+                        <div class="input-group">
+                            <input type="text" class="form-control chat-input-field" id="messageInput" 
+                                   placeholder="Type your message here..." onkeypress="handleKeyPress(event)">
+                            <button class="send-button" onclick="sendMessage()">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Support Information -->
+            <div class="col-lg-4">
+                <div class="support-info">
+                    <h5><i class="fas fa-info-circle me-2"></i>Support Information</h5>
+                    
+                    <div class="info-card">
+                        <h6><i class="fas fa-clock me-2"></i>Response Times</h6>
+                        <ul class="list-unstyled mb-0">
+                            <li>• General queries: Instant</li>
+                            <li>• Technical issues: 1-2 minutes</li>
+                            <li>• Enterprise inquiries: 5 minutes</li>
+                            <li>• Complex problems: 10 minutes</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h6><i class="fas fa-users me-2"></i>Our AI Specialists</h6>
+                        <ul class="list-unstyled mb-0">
+                            <li>• <strong>OMNI Assistant:</strong> General help</li>
+                            <li>• <strong>Tech Specialist:</strong> Technical issues</li>
+                            <li>• <strong>Sales Advisor:</strong> Product guidance</li>
+                            <li>• <strong>Enterprise Consultant:</strong> Business solutions</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h6><i class="fas fa-shield-alt me-2"></i>What We Can Help With</h6>
+                        <ul class="list-unstyled mb-0">
+                            <li>• Product information & pricing</li>
+                            <li>• Technical troubleshooting</li>
+                            <li>• Account setup & configuration</li>
+                            <li>• Billing & subscription questions</li>
+                            <li>• Enterprise implementation</li>
+                            <li>• Custom solution design</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h6><i class="fas fa-star me-2"></i>Customer Satisfaction</h6>
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="h4 text-success">98.7%</div>
+                                <small>Satisfaction Rate</small>
+                            </div>
+                            <div class="col-6">
+                                <div class="h4 text-primary">4.8/5</div>
+                                <small>Average Rating</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Chat Button -->
+    <div class="chat-floating-button" onclick="scrollToChat()">
+        <i class="fas fa-comments"></i>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentChatId = null;
+        let selectedAgent = 'general';
+        
+        // Select agent type
+        function selectAgent(agentType) {
+            selectedAgent = agentType;
+            
+            // Update active button
+            document.querySelectorAll('.agent-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Start new chat if one is active
+            if (currentChatId) {
+                startNewChat();
+            }
+        }
+        
+        // Start new chat session
+        async function startNewChat() {
+            try {
+                const response = await fetch('/api/start-chat', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        type: selectedAgent,
+                        user_id: generateUserId()
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    currentChatId = result.chat_id;
+                    
+                    // Clear messages and add welcome message
+                    const messagesContainer = document.getElementById('chatMessages');
+                    messagesContainer.innerHTML = '';
+                    
+                    addMessage('agent', result.welcome_message, result.agent_name);
+                    
+                    showNotification(`Connected to ${result.agent_name}`, 'success');
+                } else {
+                    showNotification('Failed to start chat', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Chat start error:', error);
+                showNotification('Connection error', 'error');
+            }
+        }
+        
+        // Send message
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Start chat if not active
+            if (!currentChatId) {
+                await startNewChat();
+                if (!currentChatId) return;
+            }
+            
+            // Add user message to chat
+            addMessage('user', message);
+            input.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            try {
+                const response = await fetch('/api/send-message', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        chat_id: currentChatId,
+                        message: message
+                    })
+                });
+                
+                const result = await response.json();
+                
+                hideTypingIndicator();
+                
+                if (result.status === 'success') {
+                    // Add AI response
+                    setTimeout(() => {
+                        addMessage('agent', result.response);
+                    }, 500);
+                } else {
+                    showNotification('Message failed to send', 'error');
+                }
+                
+            } catch (error) {
+                hideTypingIndicator();
+                console.error('Message send error:', error);
+                showNotification('Message failed to send', 'error');
+            }
+        }
+        
+        // Send quick message
+        function sendQuickMessage(message) {
+            document.getElementById('messageInput').value = message;
+            sendMessage();
+        }
+        
+        // Add message to chat
+        function addMessage(sender, message, agentName = null) {
+            const messagesContainer = document.getElementById('chatMessages');
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const avatarIcon = sender === 'user' ? 'fas fa-user' : 'fas fa-robot';
+            const avatarClass = sender === 'user' ? 'user-avatar' : 'agent-avatar';
+            
+            messageDiv.innerHTML = `
+                ${sender === 'agent' ? `<div class="message-avatar ${avatarClass}"><i class="${avatarIcon}"></i></div>` : ''}
+                <div class="message-bubble">
+                    ${agentName ? `<small class="text-muted d-block mb-1">${agentName}</small>` : ''}
+                    ${message}
+                    <small class="d-block mt-1 opacity-75">${new Date().toLocaleTimeString()}</small>
+                </div>
+                ${sender === 'user' ? `<div class="message-avatar ${avatarClass}"><i class="${avatarIcon}"></i></div>` : ''}
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        // Show typing indicator
+        function showTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'flex';
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        // Hide typing indicator
+        function hideTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'none';
+        }
+        
+        // Handle enter key press
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+        
+        // Generate user ID
+        function generateUserId() {
+            return 'USER-' + Math.random().toString(36).substr(2, 9);
+        }
+        
+        // Scroll to chat
+        function scrollToChat() {
+            document.querySelector('.chat-widget').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+        
+        // Show notification
+        function showNotification(message, type) {
+            const alertClass = type === 'success' ? 'alert-success' : 
+                             type === 'error' ? 'alert-danger' : 'alert-info';
+            
+            const notification = document.createElement('div');
+            notification.className = `alert ${alertClass} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 400px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 5000);
+        }
+        
+        // Initialize chat on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Auto-start chat after a brief delay
+            setTimeout(() => {
+                if (!currentChatId) {
+                    startNewChat();
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

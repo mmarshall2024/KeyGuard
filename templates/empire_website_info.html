@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNI Empire - Complete Business Automation Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            color: white;
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            animation: float 10s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .info-section {
+            padding: 80px 0;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px 0;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+            transition: all 0.4s ease;
+            height: 100%;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+        
+        .feature-icon {
+            font-size: 3.5rem;
+            color: #667eea;
+            margin-bottom: 25px;
+        }
+        
+        .stats-section {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 80px 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 30px;
+        }
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .stat-label {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .product-showcase {
+            background: #f8f9fa;
+            padding: 80px 0;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .price-tag {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: inline-block;
+            margin: 15px 0;
+        }
+        
+        .testimonial-section {
+            padding: 80px 0;
+        }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 20px 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .testimonial-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 20px;
+        }
+        
+        .rating {
+            color: #ffc107;
+            font-size: 1.5rem;
+            margin: 15px 0;
+        }
+        
+        .cta-section {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .cta-button {
+            background: white;
+            color: #2ecc71;
+            border: none;
+            padding: 20px 50px;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            margin: 20px 10px;
+        }
+        .cta-button:hover {
+            background: #f8f9fa;
+            transform: scale(1.05);
+            color: #27ae60;
+        }
+        
+        .floating-chat-support {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            animation: pulse-chat 3s infinite;
+        }
+        
+        @keyframes pulse-chat {
+            0% { box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+            50% { box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6); }
+            100% { box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+        }
+        
+        .floating-chat-support:hover {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, #764ba2, #667eea);
+        }
+        
+        .navigation-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        
+        .nav-link {
+            color: #333 !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #667eea !important;
+        }
+        
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 50px auto;
+            width: 100px;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navigation-bar">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary" href="/">OMNI EMPIRE</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#products">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#testimonials">Reviews</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/chat-support">Support</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/products">Shop</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-2 fw-bold mb-4">OMNI EMPIRE</h1>
+            <p class="lead mb-4">The Complete Business Automation Platform</p>
+            <p class="h4 mb-5">Transform Your Business with AI-Powered Automation, Advanced Marketing Systems, and Enterprise-Grade Solutions</p>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="h2">$500M+</div>
+                    <p>Revenue Generated</p>
+                </div>
+                <div class="col-md-3">
+                    <div class="h2">50,000+</div>
+                    <p>Active Users</p>
+                </div>
+                <div class="col-md-3">
+                    <div class="h2">99.9%</div>
+                    <p>Uptime</p>
+                </div>
+                <div class="col-md-3">
+                    <div class="h2">24/7</div>
+                    <p>AI Support</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="info-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-4 fw-bold mb-3">Revolutionary Features</h2>
+                <p class="lead">Advanced AI-powered systems designed to scale your business</p>
+                <div class="section-divider"></div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">AI Bot Automation</h4>
+                        <p>Advanced Telegram bots with natural language processing, machine learning, and 24/7 customer engagement capabilities.</p>
+                        <ul class="list-unstyled text-start">
+                            <li>• Natural conversation AI</li>
+                            <li>• Multi-language support</li>
+                            <li>• Custom personality training</li>
+                            <li>• Integration with 50+ platforms</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Revenue Intelligence</h4>
+                        <p>AI-powered marketing automation that increases conversions by 300%+ with predictive analytics and optimization.</p>
+                        <ul class="list-unstyled text-start">
+                            <li>• Predictive revenue modeling</li>
+                            <li>• Automated A/B testing</li>
+                            <li>• Customer lifetime value prediction</li>
+                            <li>• Real-time performance optimization</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Enterprise Solutions</h4>
+                        <p>Complete enterprise-grade platform with advanced security, compliance, and scalability for organizations of any size.</p>
+                        <ul class="list-unstyled text-start">
+                            <li>• Enterprise security protocols</li>
+                            <li>• GDPR & compliance ready</li>
+                            <li>• Unlimited scalability</li>
+                            <li>• Dedicated success manager</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-lg-4">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Mobile App Platform</h4>
+                        <p>Build and deploy professional mobile apps without coding. iOS and Android deployment with full customization.</p>
+                        <ul class="list-unstyled text-start">
+                            <li>• No-code app builder</li>
+                            <li>• App store optimization</li>
+                            <li>• Push notification system</li>
+                            <li>• In-app purchase integration</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Affiliate System</h4>
+                        <p>Powerful affiliate network with 1,200+ active affiliates, advanced tracking, and high commission structures.</p>
+                        <ul class="list-unstyled text-start">
+                            <li>• Real-time commission tracking</li>
+                            <li>• Multi-tier affiliate structure</li>
+                            <li>• Advanced analytics dashboard</li>
+                            <li>• Automated payment processing</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Mutation Evolution AI</h4>
+                        <p>Self-evolving AI system that continuously improves performance, learns from interactions, and adapts to your business needs.</p>
+                        <ul class="list-unstyled text-start">
+                            <li>• Continuous learning algorithms</li>
+                            <li>• Performance optimization</li>
+                            <li>• Adaptive personality traits</li>
+                            <li>• Predictive intelligence</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-4 fw-bold mb-3">Proven Results</h2>
+                <p class="lead">Numbers that speak for themselves</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">98.7%</div>
+                        <div class="stat-label">Customer Satisfaction</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">300%</div>
+                        <div class="stat-label">Average Revenue Increase</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">2.3s</div>
+                        <div class="stat-label">Average Response Time</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">15M+</div>
+                        <div class="stat-label">Messages Processed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Showcase -->
+    <section id="products" class="product-showcase">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-4 fw-bold mb-3">Product Suite</h2>
+                <p class="lead">Complete solutions for every business need</p>
+                <div class="section-divider"></div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="product-card">
+                        <h4 class="fw-bold text-primary">OMNI Bot Premium</h4>
+                        <div class="price-tag">$297 <small class="text-light">(was $397)</small></div>
+                        <p>Professional-grade bot automation with AI-powered responses and advanced analytics.</p>
+                        <ul class="list-unstyled">
+                            <li>✅ 50+ automated commands</li>
+                            <li>✅ AI-powered customer responses</li>
+                            <li>✅ Advanced analytics dashboard</li>
+                            <li>✅ Priority support + setup call</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="product-card">
+                        <h4 class="fw-bold text-primary">AI Revenue Accelerator</h4>
+                        <div class="price-tag">$497 <small class="text-light">(was $697)</small></div>
+                        <p>Complete AI marketing system that generates unlimited content and optimizes conversions.</p>
+                        <ul class="list-unstyled">
+                            <li>✅ AI content generation</li>
+                            <li>✅ Automated email sequences</li>
+                            <li>✅ Conversion optimization</li>
+                            <li>✅ Multi-channel campaigns</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="product-card">
+                        <h4 class="fw-bold text-primary">Enterprise SaaS Platform</h4>
+                        <div class="price-tag">$1,997 <small class="text-light">(was $2,497)</small></div>
+                        <p>Complete SaaS business infrastructure with customer management and billing systems.</p>
+                        <ul class="list-unstyled">
+                            <li>✅ Full SaaS platform</li>
+                            <li>✅ Customer portal & billing</li>
+                            <li>✅ Enterprise security</li>
+                            <li>✅ Dedicated success manager</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="product-card">
+                        <h4 class="fw-bold text-primary">White-Label Reseller</h4>
+                        <div class="price-tag">$4,997 <small class="text-light">(was $5,997)</small></div>
+                        <p>Complete white-label solution to sell all OMNI products under your own brand.</p>
+                        <ul class="list-unstyled">
+                            <li>✅ Full white-label rights</li>
+                            <li>✅ 50-70% commission structure</li>
+                            <li>✅ Marketing materials included</li>
+                            <li>✅ Ongoing product updates</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-5">
+                <a href="/products" class="cta-button">View All Products</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="testimonial-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-4 fw-bold mb-3">What Our Customers Say</h2>
+                <p class="lead">Real results from real businesses</p>
+                <div class="section-divider"></div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-avatar">JD</div>
+                        <div class="rating">★★★★★</div>
+                        <p class="lead">"OMNI transformed our business completely. We went from $10K to $50K monthly revenue in just 3 months!"</p>
+                        <div class="fw-bold">Jennifer Davis</div>
+                        <small class="text-muted">E-commerce Business Owner</small>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-avatar">MR</div>
+                        <div class="rating">★★★★★</div>
+                        <p class="lead">"The AI automation is incredible. We handle 10x more customers with the same team size. ROI was immediate."</p>
+                        <div class="fw-bold">Michael Roberts</div>
+                        <small class="text-muted">Digital Agency CEO</small>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-avatar">SL</div>
+                        <div class="rating">★★★★★</div>
+                        <p class="lead">"Enterprise-grade features at startup prices. The platform scales beautifully as we grow."</p>
+                        <div class="fw-bold">Sarah Liu</div>
+                        <small class="text-muted">Tech Startup Founder</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="display-3 fw-bold mb-4">Ready to Transform Your Business?</h2>
+            <p class="lead mb-5">Join 50,000+ businesses already using OMNI Empire to automate and scale</p>
+            <div class="row justify-content-center">
+                <div class="col-auto">
+                    <a href="/products" class="cta-button">Browse Products</a>
+                </div>
+                <div class="col-auto">
+                    <a href="/chat-support" class="cta-button">Start Free Consultation</a>
+                </div>
+                <div class="col-auto">
+                    <a href="/empire-audit" class="cta-button">See Live Demo</a>
+                </div>
+            </div>
+            <div class="mt-4">
+                <small class="opacity-75">30-day money-back guarantee • No setup fees • Cancel anytime</small>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Chat Support -->
+    <div class="floating-chat-support" onclick="openChatSupport()">
+        <i class="fas fa-comments"></i>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Open chat support
+        function openChatSupport() {
+            window.open('/chat-support', '_blank');
+        }
+
+        // Add scroll effect to navbar
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navigation-bar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+
+        // Animate stats on scroll
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateStats();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        const statsSection = document.querySelector('.stats-section');
+        if (statsSection) {
+            observer.observe(statsSection);
+        }
+
+        function animateStats() {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const finalNumber = stat.textContent;
+                stat.textContent = '0';
+                
+                // Simple counter animation
+                let current = 0;
+                const increment = Math.ceil(parseInt(finalNumber.replace(/[^\d]/g, '')) / 50);
+                const timer = setInterval(() => {
+                    current += increment;
+                    const displayNumber = Math.min(current, parseInt(finalNumber.replace(/[^\d]/g, '')));
+                    
+                    if (finalNumber.includes('%')) {
+                        stat.textContent = displayNumber + '%';
+                    } else if (finalNumber.includes('M')) {
+                        stat.textContent = displayNumber + 'M+';
+                    } else if (finalNumber.includes('s')) {
+                        stat.textContent = (displayNumber / 10).toFixed(1) + 's';
+                    } else {
+                        stat.textContent = displayNumber + '%';
+                    }
+                    
+                    if (current >= parseInt(finalNumber.replace(/[^\d]/g, ''))) {
+                        stat.textContent = finalNumber;
+                        clearInterval(timer);
+                    }
+                }, 50);
+            });
+        }
+    </script>
+</body>
+</html>

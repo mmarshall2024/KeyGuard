@@ -74,6 +74,14 @@ app.register_blueprint(empire_audit_bp)
 from routes.campaign_launcher import campaign_launcher_bp
 app.register_blueprint(campaign_launcher_bp)
 
+# Register chat support blueprint
+from routes.chat_support import chat_support_bp
+app.register_blueprint(chat_support_bp)
+
+# Register campaign performance dashboard blueprint
+from routes.campaign_performance_dashboard import campaign_performance_bp
+app.register_blueprint(campaign_performance_bp)
+
 # Register automation blueprint
 from routes.automation_routes import automation_bp
 app.register_blueprint(automation_bp)
@@ -125,6 +133,11 @@ with app.app_context():
 @app.route('/')
 def index():
     from flask import render_template
+    return render_template('empire_website_info.html')
+
+@app.route('/dashboard')
+def dashboard():
+    from flask import render_template
     return render_template('empire_master_dashboard.html')
 
 # Auto-start audit monitoring on app startup
@@ -138,6 +151,17 @@ def initialize_audit_monitoring():
 
 # Initialize audit monitoring after app setup
 initialize_audit_monitoring()
+
+# Initialize mutation evolution engine
+def initialize_mutation_evolution():
+    try:
+        from utils.mutation_evolution import mutation_engine
+        speech_activation = mutation_engine.activate_speech_synthesis()
+        logger.info(f"Mutation evolution engine initialized - Speech synthesis: {speech_activation['status']}")
+    except Exception as e:
+        logger.warning(f"Could not initialize mutation evolution: {str(e)}")
+
+initialize_mutation_evolution()
 
 @app.route('/empire-dashboard')
 def empire_dashboard():
