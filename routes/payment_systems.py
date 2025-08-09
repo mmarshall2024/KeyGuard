@@ -11,6 +11,16 @@ logger = logging.getLogger(__name__)
 # Configure Stripe
 stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 
+@payment_systems_bp.route('/payment-methods')
+def payment_methods():
+    """Display all available payment methods"""
+    return render_template('payment_methods.html')
+
+@payment_systems_bp.route('/payment-setup-guide')
+def payment_setup_guide():
+    """Payment setup instructions"""
+    return render_template('payment_setup_guide.html')
+
 @payment_systems_bp.route('/payment-dashboard')
 def payment_dashboard():
     """Complete payment systems dashboard"""
@@ -64,19 +74,20 @@ def payment_success():
         try:
             session = stripe.checkout.Session.retrieve(session_id)
             
-            # Record revenue (import models within function to avoid circular imports)
+            # Record transaction (import models within function to avoid circular imports)
             from app import db
-            from models_business import Revenue
+            from models_business import Transaction
             
-            revenue = Revenue(
+            transaction = Transaction(
                 amount=session.amount_total / 100,  # Convert from cents
                 currency='USD',
                 source='stripe',
                 transaction_id=session.payment_intent,
                 product_name=session.metadata.get('product_name', 'Unknown'),
-                created_at=datetime.utcnow()
+                customer_email=session.customer_details.email if session.customer_details else None,
+                status='completed'
             )
-            db.session.add(revenue)
+            db.session.add(transaction)
             db.session.commit()
             
             return render_template('payment_systems/success.html', session=session)
@@ -256,20 +267,20 @@ def stripe_webhook():
             
             # Record successful payment
             from app import db
-            from models_business import Revenue
+            from models_business import Transaction
             
-            revenue = Revenue(
+            transaction = Transaction(
                 amount=session['amount_total'] / 100,
                 currency='USD',
                 source='stripe_webhook',
                 transaction_id=session['payment_intent'],
                 product_name=session.get('metadata', {}).get('product_name', 'Unknown'),
-                created_at=datetime.utcnow()
+                status='completed'
             )
-            db.session.add(revenue)
+            db.session.add(transaction)
             db.session.commit()
             
-            logger.info(f"Payment recorded: ${revenue.amount} for {revenue.product_name}")
+            logger.info(f"Payment recorded: ${transaction.amount} for {transaction.product_name}")
         
         return jsonify({'status': 'success'})
         
@@ -282,19 +293,19 @@ def payment_analytics():
     """Payment systems analytics"""
     try:
         from app import db
-        from models_business import Revenue
+        from models_business import Transaction
         
         # Get payment statistics
-        total_revenue = db.session.query(db.func.sum(Revenue.amount)).scalar() or 0
-        payment_count = Revenue.query.count()
+        total_revenue = db.session.query(db.func.sum(Transaction.amount)).scalar() or 0
+        payment_count = Transaction.query.count()
         avg_payment = total_revenue / payment_count if payment_count > 0 else 0
         
         # Revenue by source
         revenue_by_source = db.session.query(
-            Revenue.source, 
-            db.func.sum(Revenue.amount), 
-            db.func.count(Revenue.id)
-        ).group_by(Revenue.source).all()
+            Transaction.source, 
+            db.func.sum(Transaction.amount), 
+            db.func.count(Transaction.id)
+        ).group_by(Transaction.source).all()
         
         analytics_data = {
             'total_revenue': round(total_revenue, 2),

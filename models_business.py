@@ -83,6 +83,18 @@ class Lead(db.Model):
     converted_at = db.Column(db.DateTime)
     notes = db.Column(db.Text)
 
+class Transaction(db.Model):
+    """Individual transaction tracking for payment processing"""
+    id = db.Column(db.Integer, primary_key=True)
+    amount = db.Column(db.Float, nullable=False)
+    currency = db.Column(db.String(3), default='USD')
+    source = db.Column(db.String(50), nullable=False)  # stripe, crypto, paypal, etc.
+    transaction_id = db.Column(db.String(200), unique=True)
+    product_name = db.Column(db.String(200))
+    customer_email = db.Column(db.String(120))
+    status = db.Column(db.String(20), default='completed')  # completed, pending, failed
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
 class BusinessMetrics(db.Model):
     """Business KPI tracking"""
     id = db.Column(db.Integer, primary_key=True)
