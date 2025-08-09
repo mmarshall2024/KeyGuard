@@ -58,6 +58,10 @@ app.register_blueprint(empire_master_bp)
 from routes.affiliate_bot_system import affiliate_bot_bp
 app.register_blueprint(affiliate_bot_bp)
 
+# Register setup checklist blueprint
+from routes.setup_checklist_bot import setup_checklist_bp
+app.register_blueprint(setup_checklist_bp)
+
 # Register automation blueprint
 from routes.automation_routes import automation_bp
 app.register_blueprint(automation_bp)

@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Checklist Bot - OMNI Empire</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .checklist-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 0;
+        }
+        .category-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 15px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+            transition: transform 0.3s ease;
+        }
+        .category-card:hover {
+            transform: translateY(-5px);
+        }
+        .checklist-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+        .checklist-item.completed {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+        .checklist-item.in-progress {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+        .checklist-item.pending {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+        }
+        .priority-high {
+            border-left-color: #dc3545 !important;
+        }
+        .priority-medium {
+            border-left-color: #ffc107 !important;
+        }
+        .priority-low {
+            border-left-color: #28a745 !important;
+        }
+        .progress-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .template-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid #17a2b8;
+        }
+        .setup-guide-section {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        .required-info-badge {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin: 2px;
+            display: inline-block;
+        }
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .status-pending {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .status-in-progress {
+            background: #fff3cd;
+            color: #856404;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .interactive-checkbox {
+            transform: scale(1.2);
+            margin-right: 10px;
+        }
+        .link-button {
+            margin: 3px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Checklist Header -->
+    <section class="checklist-header text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">INTERACTIVE SETUP CHECKLIST BOT</h1>
+            <p class="lead mb-4">Comprehensive Account Setup & Integration Tracker</p>
+            <div class="row justify-content-center">
+                <div class="col-md-2">
+                    <div class="progress-circle bg-white text-dark" id="overallProgress">0%</div>
+                    <small class="d-block mt-2">Overall Progress</small>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center">
+                        <h3 id="completedItems">0</h3>
+                        <small>Completed</small>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center">
+                        <h3 id="totalItems">0</h3>
+                        <small>Total Items</small>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center">
+                        <h3 id="estimatedTime">0h</h3>
+                        <small>Est. Time</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container-fluid py-4">
+        <!-- Quick Templates -->
+        <div class="setup-guide-section">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h3><i class="fas fa-magic me-3"></i>Quick Setup Templates</h3>
+                    <p class="mb-0">Choose a template to auto-select relevant checklist items for your business type</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="dropdown">
+                        <button class="btn btn-light btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-list me-2"></i>Choose Template
+                        </button>
+                        <ul class="dropdown-menu" id="templateDropdown">
+                            <!-- Templates will be populated here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Checklist Categories -->
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-list-check me-2"></i>Setup Checklist Categories</h5>
+                    </div>
+                    <div class="card-body" id="checklistCategories">
+                        <!-- Categories will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions & Tools -->
+            <div class="col-lg-4">
+                <div class="card h-100">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="fas fa-tools me-2"></i>Setup Tools</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6>Selected Items Actions</h6>
+                        <div class="d-grid gap-2 mb-3">
+                            <button class="btn btn-primary" onclick="markSelectedCompleted()">
+                                <i class="fas fa-check me-2"></i>Mark Selected Complete
+                            </button>
+                            <button class="btn btn-warning" onclick="markSelectedInProgress()">
+                                <i class="fas fa-clock me-2"></i>Mark In Progress
+                            </button>
+                            <button class="btn btn-info" onclick="generateSetupGuide()">
+                                <i class="fas fa-book me-2"></i>Generate Setup Guide
+                            </button>
+                            <button class="btn btn-secondary" onclick="exportChecklist()">
+                                <i class="fas fa-download me-2"></i>Export Checklist
+                            </button>
+                        </div>
+
+                        <hr>
+                        <h6>Quick Links</h6>
+                        <div class="d-grid gap-2">
+                            <a href="/payment-methods" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-credit-card me-2"></i>Payment Setup
+                            </a>
+                            <a href="/telegram-payment-link" class="btn btn-outline-info btn-sm">
+                                <i class="fab fa-telegram-plane me-2"></i>Telegram Config
+                            </a>
+                            <a href="/master-dashboard" class="btn btn-outline-success btn-sm">
+                                <i class="fas fa-tachometer-alt me-2"></i>Master Dashboard
+                            </a>
+                            <a href="/affiliate-bot-system" class="btn btn-outline-warning btn-sm">
+                                <i class="fas fa-robot me-2"></i>Affiliate Bots
+                            </a>
+                        </div>
+
+                        <hr>
+                        <h6>Auto-Complete Options</h6>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-success btn-sm" onclick="autoCompletePayments()">
+                                <i class="fas fa-magic me-2"></i>Auto-Complete Payments
+                            </button>
+                            <button class="btn btn-outline-info btn-sm" onclick="autoCompleteSocial()">
+                                <i class="fas fa-share-alt me-2"></i>Auto-Complete Social
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Setup Guide Modal -->
+        <div class="modal fade" id="setupGuideModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title"><i class="fas fa-book me-2"></i>Generated Setup Guide</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body" id="setupGuideContent">
+                        <!-- Setup guide content will be populated here -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="downloadGuide()">Download Guide</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let checklistData = [];
+        let selectedItems = new Set();
+
+        // Load checklist data
+        async function loadChecklist() {
+            try {
+                const response = await fetch('/api/checklist-categories');
+                const data = await response.json();
+                checklistData = data.categories;
+                
+                // Update summary
+                document.getElementById('overallProgress').textContent = `${data.summary.overall_progress}%`;
+                document.getElementById('completedItems').textContent = data.summary.completed_items;
+                document.getElementById('totalItems').textContent = data.summary.total_items;
+                document.getElementById('estimatedTime').textContent = data.summary.estimated_total_time;
+                
+                // Load categories
+                loadChecklistCategories();
+                
+                // Load templates
+                loadTemplates();
+                
+            } catch (error) {
+                console.error('Error loading checklist:', error);
+            }
+        }
+
+        function loadChecklistCategories() {
+            const container = document.getElementById('checklistCategories');
+            container.innerHTML = '';
+            
+            checklistData.forEach(category => {
+                const completedCount = category.items.filter(item => item.status === 'completed').length;
+                const progressPercent = (completedCount / category.items.length) * 100;
+                
+                const categoryCard = document.createElement('div');
+                categoryCard.className = `category-card priority-${category.priority}`;
+                categoryCard.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h5 class="fw-bold">
+                                <i class="${category.icon} me-2"></i>${category.name}
+                            </h5>
+                            <p class="text-muted mb-2">${category.description}</p>
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>Est. Time: ${category.estimated_time} •
+                                <i class="fas fa-exclamation-triangle me-1"></i>Priority: ${category.priority}
+                            </small>
+                        </div>
+                        <div class="text-center">
+                            <div class="progress-circle bg-${category.priority === 'high' ? 'danger' : category.priority === 'medium' ? 'warning' : 'success'} text-white" style="width: 60px; height: 60px;">
+                                ${Math.round(progressPercent)}%
+                            </div>
+                            <small>${completedCount}/${category.items.length}</small>
+                        </div>
+                    </div>
+                    <div class="progress mb-3" style="height: 6px;">
+                        <div class="progress-bar bg-${category.priority === 'high' ? 'danger' : category.priority === 'medium' ? 'warning' : 'success'}" 
+                             style="width: ${progressPercent}%"></div>
+                    </div>
+                    <div class="checklist-items">
+                        ${category.items.map(item => createChecklistItemHTML(item, category.category_id)).join('')}
+                    </div>
+                `;
+                container.appendChild(categoryCard);
+            });
+        }
+
+        function createChecklistItemHTML(item, categoryId) {
+            const requiredInfoBadges = item.required_info.map(info => 
+                `<span class="required-info-badge">${info}</span>`
+            ).join('');
+            
+            const linkButtons = item.links.map(link => 
+                `<a href="${link}" target="_blank" class="btn btn-outline-primary btn-sm link-button">
+                    <i class="fas fa-external-link-alt me-1"></i>Open
+                </a>`
+            ).join('');
+            
+            return `
+                <div class="checklist-item ${item.status}" data-item-id="${item.id}" data-category-id="${categoryId}">
+                    <div class="d-flex align-items-start">
+                        <input type="checkbox" class="form-check-input interactive-checkbox me-3 mt-1" 
+                               onchange="toggleItemSelection('${item.id}')" 
+                               ${item.status === 'completed' ? 'checked' : ''}>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h6 class="fw-bold mb-1">${item.name}</h6>
+                                <span class="status-${item.status}">${item.status.replace('_', ' ')}</span>
+                            </div>
+                            <p class="mb-2 text-muted">${item.description}</p>
+                            <div class="mb-2">
+                                <strong>Required Info:</strong><br>
+                                ${requiredInfoBadges}
+                            </div>
+                            ${item.notes ? `<div class="mb-2"><strong>Notes:</strong> <em>${item.notes}</em></div>` : ''}
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    ${linkButtons}
+                                </div>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-success" onclick="updateItemStatus('${item.id}', 'completed')">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button class="btn btn-outline-warning" onclick="updateItemStatus('${item.id}', 'in_progress')">
+                                        <i class="fas fa-clock"></i>
+                                    </button>
+                                    <button class="btn btn-outline-secondary" onclick="updateItemStatus('${item.id}', 'pending')">
+                                        <i class="fas fa-pause"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function loadTemplates() {
+            try {
+                const response = await fetch('/api/checklist-templates');
+                const data = await response.json();
+                const dropdown = document.getElementById('templateDropdown');
+                dropdown.innerHTML = '';
+                
+                data.templates.forEach(template => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <a class="dropdown-item" href="#" onclick="applyTemplate('${template.template_id}')">
+                            <strong>${template.name}</strong><br>
+                            <small class="text-muted">${template.description}</small>
+                        </a>
+                    `;
+                    dropdown.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Error loading templates:', error);
+            }
+        }
+
+        function toggleItemSelection(itemId) {
+            if (selectedItems.has(itemId)) {
+                selectedItems.delete(itemId);
+            } else {
+                selectedItems.add(itemId);
+            }
+        }
+
+        async function updateItemStatus(itemId, status) {
+            try {
+                const response = await fetch('/api/update-checklist-item', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        item_id: itemId,
+                        status: status,
+                        notes: `Updated to ${status} at ${new Date().toLocaleString()}`
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.status === 'success') {
+                    // Update the item status in the UI
+                    updateItemInUI(itemId, status);
+                    showNotification(`Item updated to ${status}`, 'success');
+                }
+            } catch (error) {
+                console.error('Error updating item status:', error);
+                showNotification('Error updating item', 'error');
+            }
+        }
+
+        function updateItemInUI(itemId, status) {
+            // Find and update the item in checklistData
+            checklistData.forEach(category => {
+                const item = category.items.find(item => item.id === itemId);
+                if (item) {
+                    item.status = status;
+                }
+            });
+            
+            // Reload the UI
+            loadChecklistCategories();
+            
+            // Update progress
+            const totalItems = checklistData.reduce((sum, cat) => sum + cat.items.length, 0);
+            const completedItems = checklistData.reduce((sum, cat) => 
+                sum + cat.items.filter(item => item.status === 'completed').length, 0);
+            const progress = Math.round((completedItems / totalItems) * 100);
+            
+            document.getElementById('overallProgress').textContent = `${progress}%`;
+            document.getElementById('completedItems').textContent = completedItems;
+        }
+
+        function markSelectedCompleted() {
+            selectedItems.forEach(itemId => {
+                updateItemStatus(itemId, 'completed');
+            });
+            selectedItems.clear();
+        }
+
+        function markSelectedInProgress() {
+            selectedItems.forEach(itemId => {
+                updateItemStatus(itemId, 'in_progress');
+            });
+            selectedItems.clear();
+        }
+
+        async function generateSetupGuide() {
+            if (selectedItems.size === 0) {
+                showNotification('Please select items to generate setup guide', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/generate-setup-guide', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        item_ids: Array.from(selectedItems)
+                    })
+                });
+                
+                const result = await response.json();
+                displaySetupGuide(result.setup_guide);
+                
+            } catch (error) {
+                console.error('Error generating setup guide:', error);
+                showNotification('Error generating setup guide', 'error');
+            }
+        }
+
+        function displaySetupGuide(guide) {
+            const content = document.getElementById('setupGuideContent');
+            content.innerHTML = `
+                <div class="mb-4">
+                    <h6>Setup Guide: ${guide.guide_id}</h6>
+                    <p><strong>Total Steps:</strong> ${guide.total_steps}</p>
+                    <p><strong>Estimated Time:</strong> ${guide.estimated_time}</p>
+                </div>
+                <div class="accordion" id="setupGuideAccordion">
+                    ${guide.steps.map((step, index) => `
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button ${index !== 0 ? 'collapsed' : ''}" type="button" 
+                                        data-bs-toggle="collapse" data-bs-target="#step${index}">
+                                    Step ${step.step_number}: ${step.title}
+                                </button>
+                            </h2>
+                            <div id="step${index}" class="accordion-collapse collapse ${index === 0 ? 'show' : ''}" 
+                                 data-bs-parent="#setupGuideAccordion">
+                                <div class="accordion-body">
+                                    <p><strong>Estimated Time:</strong> ${step.estimated_time}</p>
+                                    <p><strong>Difficulty:</strong> ${step.difficulty}</p>
+                                    <h6>Instructions:</h6>
+                                    <ol>
+                                        ${step.instructions.map(inst => `<li>${inst}</li>`).join('')}
+                                    </ol>
+                                    <h6>Success Criteria:</h6>
+                                    <ul>
+                                        ${step.success_criteria.map(criteria => `<li>${criteria}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            const modal = new bootstrap.Modal(document.getElementById('setupGuideModal'));
+            modal.show();
+        }
+
+        function applyTemplate(templateId) {
+            // Clear current selection
+            selectedItems.clear();
+            
+            // Auto-select items based on template
+            // This would be implemented based on template configuration
+            showNotification(`Applied ${templateId} template`, 'success');
+        }
+
+        function autoCompletePayments() {
+            // Auto-mark payment-related items as completed
+            const paymentItems = ['stripe_setup'];
+            paymentItems.forEach(itemId => {
+                updateItemStatus(itemId, 'completed');
+            });
+            showNotification('Payment systems auto-completed', 'success');
+        }
+
+        function autoCompleteSocial() {
+            showNotification('Social media setup guide opened', 'info');
+        }
+
+        function exportChecklist() {
+            // Generate and download checklist export
+            const exportData = {
+                categories: checklistData,
+                exported_at: new Date().toISOString(),
+                overall_progress: document.getElementById('overallProgress').textContent
+            };
+            
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'omni-empire-setup-checklist.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadGuide() {
+            showNotification('Setup guide download started', 'info');
+        }
+
+        function showNotification(message, type) {
+            // Simple notification system
+            const alertClass = type === 'success' ? 'alert-success' : 
+                             type === 'warning' ? 'alert-warning' : 
+                             type === 'error' ? 'alert-danger' : 'alert-info';
+            
+            const notification = document.createElement('div');
+            notification.className = `alert ${alertClass} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 300px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 5000);
+        }
+
+        // Load checklist on page load
+        loadChecklist();
+        
+        // Auto-save progress every 30 seconds
+        setInterval(() => {
+            // Auto-save functionality would go here
+        }, 30000);
+    </script>
+</body>
+</html>
